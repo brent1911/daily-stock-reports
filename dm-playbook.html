@@ -1,0 +1,1954 @@
+<title>Inbox to Client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F3F6;
+  --surface:#FFFFFF;
+  --surface-2:#E8EAF0;
+  --line:#D6DAE3;
+  --line-strong:#B6BDCB;
+  --ink:#10151D;
+  --ink-2:#343E4C;
+  --muted:#69748A;
+  --accent:#1F52E0;
+  --accent-ink:#1A44BC;
+  --accent-soft:#E3E9FD;
+  --good:#0B7A54;
+  --good-soft:#DCF0E8;
+  --warn:#8A5A00;
+  --warn-soft:#F9EBD1;
+  --bad:#B4302A;
+  --bad-soft:#F9DEDB;
+  --them:#E8EAF0;
+  --them-ink:#10151D;
+  --you:#1F52E0;
+  --you-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(16,21,29,.06), 0 8px 24px -16px rgba(16,21,29,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1016;
+    --surface:#141A23;
+    --surface-2:#1C242F;
+    --line:#27303D;
+    --line-strong:#3B4657;
+    --ink:#E7ECF3;
+    --ink-2:#BAC4D2;
+    --muted:#8794A7;
+    --accent:#8AA6FF;
+    --accent-ink:#A9BEFF;
+    --accent-soft:#1A2440;
+    --good:#5BD3A6;
+    --good-soft:#0F2A22;
+    --warn:#E5B76A;
+    --warn-soft:#2B2314;
+    --bad:#FF8A80;
+    --bad-soft:#2E1A19;
+    --them:#212A36;
+    --them-ink:#E7ECF3;
+    --you:#2C51BE;
+    --you-ink:#FFFFFF;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1016;
+  --surface:#141A23;
+  --surface-2:#1C242F;
+  --line:#27303D;
+  --line-strong:#3B4657;
+  --ink:#E7ECF3;
+  --ink-2:#BAC4D2;
+  --muted:#8794A7;
+  --accent:#8AA6FF;
+  --accent-ink:#A9BEFF;
+  --accent-soft:#1A2440;
+  --good:#5BD3A6;
+  --good-soft:#0F2A22;
+  --warn:#E5B76A;
+  --warn-soft:#2B2314;
+  --bad:#FF8A80;
+  --bad-soft:#2E1A19;
+  --them:#212A36;
+  --them-ink:#E7ECF3;
+  --you:#2C51BE;
+  --you-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -18px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  font-weight:700;
+  line-height:1.12;
+  text-wrap:balance;
+  margin:0;
+  letter-spacing:-.018em;
+}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:3px}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- top bar ---------- */
+.top{
+  position:sticky;
+  top:env(safe-area-inset-top, 0px);
+  z-index:40;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.top-in{
+  max-width:1160px;margin:0 auto;
+  padding:10px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+.brand span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .spacer{flex:1}
+.tbtn{
+  font:600 12px/1 "Instrument Sans",sans-serif;
+  color:var(--ink-2);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;
+  padding:8px 13px;cursor:pointer;white-space:nowrap;
+}
+.tbtn:hover{border-color:var(--line-strong);color:var(--ink)}
+
+/* ---------- shell ---------- */
+.shell{
+  max-width:1160px;margin:0 auto;
+  padding-inline:20px;
+  padding-block:0 72px;
+  display:grid;
+  grid-template-columns:212px minmax(0,1fr);
+  gap:44px;
+  align-items:start;
+}
+.rail{
+  position:sticky;
+  top:calc(env(safe-area-inset-top, 0px) + 62px);
+  padding-block:34px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.rail-h{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;padding-left:11px;
+}
+.rail a{
+  display:flex;gap:9px;align-items:baseline;
+  font-size:13.2px;line-height:1.35;
+  color:var(--ink-2);text-decoration:none;
+  padding:7px 11px;border-radius:7px;
+  border-left:2px solid transparent;
+}
+.rail a i{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  color:var(--muted);font-style:normal;flex:none;width:14px;
+}
+.rail a:hover{background:var(--surface);color:var(--ink)}
+.rail a.on{background:var(--accent-soft);color:var(--accent-ink);border-left-color:var(--accent);font-weight:600}
+.rail a.on i{color:var(--accent-ink)}
+
+.main{padding-block:34px 0;max-width:760px;min-width:0}
+
+/* ---------- hero ---------- */
+.hero{margin-bottom:8px}
+.kicker{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+  display:block;margin-bottom:16px;
+}
+.hero h1{font-size:clamp(34px,7vw,54px);font-weight:800;letter-spacing:-.033em}
+.hero .sub{
+  margin-top:18px;font-size:17.5px;line-height:1.58;color:var(--ink-2);max-width:60ch;
+}
+.hero .sub strong{color:var(--ink);font-weight:600}
+.facts{
+  margin-top:26px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.fact{
+  font:500 12px/1.4 "JetBrains Mono",monospace;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:7px 12px;color:var(--ink-2);
+}
+.fact b{color:var(--ink);font-weight:700}
+
+/* ---------- sections ---------- */
+.sec{
+  padding-top:52px;
+  scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 74px);
+}
+.sec-h{
+  display:flex;gap:14px;align-items:baseline;
+  padding-bottom:10px;margin-bottom:22px;
+  border-bottom:1px solid var(--line-strong);
+}
+.sec-h em{
+  font:700 11px/1 "JetBrains Mono",monospace;font-style:normal;
+  color:var(--accent);flex:none;padding-top:4px;
+}
+.sec-h h2{font-size:clamp(23px,3.6vw,29px)}
+.lede{color:var(--ink-2);font-size:16.5px;margin-bottom:22px;max-width:66ch}
+.sec h3{font-size:18.5px;margin:34px 0 10px}
+.sec h4{font-size:15px;margin:22px 0 7px;letter-spacing:-.005em}
+.sec p + p{margin-top:12px}
+.body-p{max-width:66ch;color:var(--ink-2)}
+.body-p strong{color:var(--ink);font-weight:600}
+
+ul.plain{margin:12px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;max-width:66ch}
+ul.plain li{position:relative;padding-left:20px;color:var(--ink-2)}
+ul.plain li::before{
+  content:"";position:absolute;left:3px;top:.62em;
+  width:6px;height:6px;border-radius:50%;background:var(--line-strong);
+}
+ul.plain li strong{color:var(--ink);font-weight:600}
+ol.steps{margin:14px 0 0;padding-left:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:12px;max-width:66ch}
+ol.steps li{position:relative;padding-left:32px;counter-increment:s;color:var(--ink-2)}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;
+  width:21px;height:21px;border-radius:6px;
+  background:var(--accent-soft);color:var(--accent-ink);
+  font:700 11px/21px "JetBrains Mono",monospace;text-align:center;
+}
+ol.steps li strong{color:var(--ink);font-weight:600}
+
+/* ---------- rule cards ---------- */
+.rules{display:grid;gap:12px;margin-top:20px}
+.rule{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:11px;padding:16px 18px;
+}
+.rule b{
+  display:block;font-family:"Bricolage Grotesque",sans-serif;
+  font-size:15.5px;font-weight:700;margin-bottom:5px;letter-spacing:-.012em;
+}
+.rule span{color:var(--ink-2);font-size:14.8px;line-height:1.55;display:block}
+.rule .num{
+  font:700 10px/1 "JetBrains Mono",monospace;color:var(--accent);
+  display:block;margin-bottom:9px;letter-spacing:.1em;
+}
+
+/* ---------- stage ---------- */
+.stage{
+  border:1px solid var(--line);border-radius:13px;
+  background:var(--surface);
+  margin-top:16px;overflow:hidden;
+}
+.stage-h{
+  display:flex;gap:13px;align-items:flex-start;
+  padding:16px 18px;background:var(--surface-2);
+  border-bottom:1px solid var(--line);
+}
+.stage-n{
+  flex:none;width:26px;height:26px;border-radius:7px;
+  background:var(--accent);color:#fff;
+  font:700 12px/26px "JetBrains Mono",monospace;text-align:center;
+}
+.stage-h div{min-width:0}
+.stage-h h3{margin:0;font-size:17px}
+.stage-h p{font-size:13.4px;color:var(--muted);margin-top:3px;line-height:1.45}
+.stage-b{padding:18px}
+.stage-b > *:first-child{margin-top:0}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;
+}
+.chip{
+  font:500 11px/1.3 "JetBrains Mono",monospace;
+  border:1px solid var(--line);border-radius:6px;
+  padding:5px 9px;color:var(--muted);background:var(--paper);
+}
+.chip b{color:var(--ink-2);font-weight:700}
+
+/* ---------- chat thread ---------- */
+.thread{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px 14px;
+  display:flex;flex-direction:column;gap:7px;
+  margin:18px 0;
+}
+.thread-cap{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:4px;padding-inline:4px;
+}
+.msg{
+  max-width:81%;padding:9px 13px;border-radius:16px;
+  font-size:14.6px;line-height:1.5;width:fit-content;
+}
+.msg.them{background:var(--them);color:var(--them-ink);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.you{background:var(--you);color:var(--you-ink);border-bottom-right-radius:5px;align-self:flex-end}
+.msg.you a{color:#fff}
+.gap{
+  align-self:center;
+  font:500 10.5px/1 "JetBrains Mono",monospace;
+  color:var(--muted);padding:5px 0;letter-spacing:.06em;
+}
+.annot{
+  align-self:flex-start;max-width:90%;
+  font-size:12.8px;line-height:1.5;color:var(--muted);
+  padding:2px 4px 6px;font-style:italic;
+}
+.annot.r{align-self:flex-end;text-align:right}
+
+/* ---------- script block ---------- */
+.script{
+  border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:var(--surface);border-radius:9px;
+  margin:14px 0;overflow:hidden;
+}
+.script-h{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-bottom:1px solid var(--line);
+  background:var(--surface-2);
+}
+.script-h span{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex:1;
+}
+.copy{
+  font:600 11px/1 "Instrument Sans",sans-serif;
+  border:1px solid var(--line-strong);background:var(--surface);
+  color:var(--ink-2);border-radius:6px;padding:6px 10px;cursor:pointer;flex:none;
+}
+.copy:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.copy.done{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.script-b{
+  padding:13px 15px;font-size:14.8px;line-height:1.62;color:var(--ink);
+  white-space:pre-wrap;font-family:"Instrument Sans",sans-serif;margin:0;
+}
+.script-b .fill{
+  background:var(--warn-soft);color:var(--warn);
+  border-radius:4px;padding:0 4px;font-weight:600;
+}
+
+/* ---------- do / dont ---------- */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.dd > div{border-radius:10px;padding:14px 16px;border:1px solid}
+.dd .do{background:var(--good-soft);border-color:color-mix(in srgb, var(--good) 34%, transparent)}
+.dd .no{background:var(--bad-soft);border-color:color-mix(in srgb, var(--bad) 34%, transparent)}
+.dd b{
+  display:block;font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px;
+}
+.dd .do b{color:var(--good)}
+.dd .no b{color:var(--bad)}
+.dd ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:6px}
+.dd li{font-size:14.2px;line-height:1.5;color:var(--ink-2)}
+
+.callout{
+  border-radius:10px;padding:15px 17px;margin:20px 0;
+  border:1px solid;display:flex;gap:12px;align-items:flex-start;
+}
+.callout b{
+  font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.13em;
+  text-transform:uppercase;flex:none;padding-top:4px;
+}
+.callout p{font-size:14.6px;line-height:1.56}
+.callout.warn{background:var(--warn-soft);border-color:color-mix(in srgb, var(--warn) 36%, transparent)}
+.callout.warn b{color:var(--warn)}
+.callout.warn p{color:var(--ink-2)}
+.callout.stop{background:var(--bad-soft);border-color:color-mix(in srgb, var(--bad) 40%, transparent)}
+.callout.stop b{color:var(--bad)}
+.callout.stop p{color:var(--ink-2)}
+.callout.key{background:var(--accent-soft);border-color:color-mix(in srgb, var(--accent) 34%, transparent)}
+.callout.key b{color:var(--accent-ink)}
+.callout.key p{color:var(--ink-2)}
+
+/* ---------- traffic light ---------- */
+.lights{display:grid;gap:10px;margin-top:18px}
+.light{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;
+  border:1px solid var(--line);border-radius:11px;
+  background:var(--surface);padding:15px 17px;
+}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:7px}
+.light.g .dot{background:var(--good)}
+.light.a .dot{background:var(--warn)}
+.light.r .dot{background:var(--bad)}
+.light h4{margin:0 0 4px;font-size:15px}
+.light.g h4{color:var(--good)}
+.light.a h4{color:var(--warn)}
+.light.r h4{color:var(--bad)}
+.light p{font-size:14.2px;color:var(--ink-2);line-height:1.55}
+.light .act{
+  margin-top:8px;font-size:13.6px;color:var(--ink);
+  padding-top:8px;border-top:1px dashed var(--line-strong);
+}
+.light .act b{font-weight:600}
+
+/* ---------- filter ---------- */
+.filter{
+  position:sticky;
+  top:calc(env(safe-area-inset-top, 0px) + 58px);
+  z-index:20;
+  background:color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter:blur(10px);
+  padding-block:12px;margin-bottom:6px;
+  border-bottom:1px solid var(--line);
+}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter input{
+  flex:1 1 200px;min-width:0;
+  font:400 14.5px/1 "Instrument Sans",sans-serif;
+  color:var(--ink);background:var(--surface);
+  border:1px solid var(--line-strong);border-radius:8px;
+  padding:10px 13px;
+}
+.filter input::placeholder{color:var(--muted)}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.cat{
+  font:600 11.5px/1 "Instrument Sans",sans-serif;
+  border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-2);border-radius:999px;padding:7px 11px;cursor:pointer;
+}
+.cat:hover{border-color:var(--line-strong)}
+.cat[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.count{font:500 11.5px/1 "JetBrains Mono",monospace;color:var(--muted);margin-top:9px;display:block}
+
+/* ---------- play cards ---------- */
+.plays{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.play{
+  border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);overflow:hidden;box-shadow:var(--shadow);
+}
+.play-h{padding:15px 17px 13px;border-bottom:1px solid var(--line)}
+.play-tag{
+  font:700 9.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  display:block;margin-bottom:8px;
+}
+.play-h h4{margin:0;font-size:16.5px;line-height:1.3}
+.play-h h4::before{content:"“";color:var(--muted)}
+.play-h h4::after{content:"”";color:var(--muted)}
+.play-h.nq h4::before,.play-h.nq h4::after{content:none}
+.play-b{padding:15px 17px}
+.play-b > *:first-child{margin-top:0}
+.play-b > *:last-child{margin-bottom:0}
+.lbl{
+  font:700 9.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;
+  display:block;margin:16px 0 6px;color:var(--accent-ink);
+}
+.lbl:first-child{margin-top:0}
+.lbl.read{color:var(--muted)}
+.lbl.never{color:var(--bad)}
+.play-b p{font-size:14.6px;line-height:1.58;color:var(--ink-2)}
+.play-b p strong{color:var(--ink);font-weight:600}
+
+/* ---------- ladder ---------- */
+.ladder{
+  margin-top:20px;border-left:2px solid var(--line-strong);
+  padding-left:0;display:flex;flex-direction:column;gap:2px;
+}
+.rung{position:relative;padding:14px 0 14px 24px}
+.rung::before{
+  content:"";position:absolute;left:-5px;top:21px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);outline:3px solid var(--paper);
+}
+.rung .when{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.1em;color:var(--accent);text-transform:uppercase;
+}
+.rung h4{margin:7px 0 5px;font-size:15.5px}
+.rung p{font-size:14.3px;color:var(--ink-2);line-height:1.55}
+.rung .say{
+  margin-top:9px;background:var(--surface);border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;font-size:14.4px;line-height:1.55;color:var(--ink);
+}
+.rung.end::before{background:var(--muted)}
+.rung.end .when{color:var(--muted)}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.2px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font:700 10px/1.3 "JetBrains Mono",monospace;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+  background:var(--surface-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+td strong{font-weight:600}
+
+/* ---------- checklist ---------- */
+.check{display:flex;flex-direction:column;gap:2px;margin-top:18px}
+.check label{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:12px;align-items:baseline;
+  padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface);cursor:pointer;
+}
+.check label:hover{border-color:var(--line-strong)}
+.check input{margin:0;width:17px;height:17px;accent-color:var(--accent);transform:translateY(3px)}
+.check .t{font:500 11px/1.4 "JetBrains Mono",monospace;color:var(--accent-ink);white-space:nowrap}
+.check .d{font-size:14.4px;color:var(--ink-2);line-height:1.5}
+.check .d b{color:var(--ink);font-weight:600;display:block}
+.check input:checked ~ .d{opacity:.5;text-decoration:line-through}
+.check input:checked ~ .t{opacity:.5}
+
+/* ---------- never list ---------- */
+.nevers{display:grid;gap:9px;margin-top:18px}
+.never{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;
+  background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--bad);border-radius:10px;padding:13px 16px;
+}
+.never .x{
+  font:700 13px/1 "JetBrains Mono",monospace;color:var(--bad);padding-top:4px;
+}
+.never b{display:block;font-size:14.8px;font-weight:600;margin-bottom:3px}
+.never span{font-size:13.8px;color:var(--muted);line-height:1.5}
+
+footer{
+  margin-top:64px;padding-top:26px;border-top:1px solid var(--line-strong);
+  font-size:13.4px;color:var(--muted);line-height:1.6;max-width:66ch;
+}
+footer b{color:var(--ink-2)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0;padding-inline:16px}
+  .main{padding-block:26px 0;max-width:none}
+  .rail{
+    position:sticky;top:calc(env(safe-area-inset-top, 0px) + 52px);
+    z-index:30;flex-direction:row;gap:6px;
+    overflow-x:auto;padding-block:10px;
+    margin-inline:-16px;padding-inline:16px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    -webkit-overflow-scrolling:touch;
+  }
+  .rail-h{display:none}
+  .rail a{
+    white-space:nowrap;border:1px solid var(--line);border-left-width:1px;
+    border-radius:999px;padding:7px 12px;background:var(--surface);font-size:12.6px;
+  }
+  .rail a.on{border-color:var(--accent)}
+  .filter{top:calc(env(safe-area-inset-top, 0px) + 104px)}
+  .sec{scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 116px)}
+  .dd{grid-template-columns:minmax(0,1fr)}
+  .msg{max-width:88%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+html{scroll-behavior:smooth}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <b>Inbox&nbsp;to&nbsp;Client</b>
+      <span>DM setting system for coaches</span>
+    </div>
+    <div class="spacer"></div>
+    <button class="tbtn" id="theme-toggle" type="button">Theme</button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="rail" aria-label="Sections">
+    <div class="rail-h">Contents</div>
+    <a href="#rules"><i>01</i>The 7 rules</a>
+    <a href="#pipeline"><i>02</i>The 5 stages</a>
+    <a href="#openers"><i>03</i>Openers by source</a>
+    <a href="#qualify"><i>04</i>Qualifying (GAPT)</a>
+    <a href="#transition"><i>05</i>The transition</a>
+    <a href="#booking"><i>06</i>Booking &amp; show-up</a>
+    <a href="#matrix"><i>07</i>When this → do this</a>
+    <a href="#ladder"><i>08</i>Follow-up ladder</a>
+    <a href="#mechanics"><i>09</i>Message mechanics</a>
+    <a href="#never"><i>10</i>Never do this</a>
+    <a href="#day"><i>11</i>The daily rhythm</a>
+    <a href="#numbers"><i>12</i>Numbers to track</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="hero">
+      <span class="kicker">Coach enablement · v1</span>
+      <h1>Every DM has a next right move.</h1>
+      <p class="sub">This is the whole system: how to open, how to qualify, how to get from a story reply to a booked call, and — the part most coaches get wrong — <strong>exactly what to say when something unexpected happens.</strong> Read it once end to end. After that, live in section 07.</p>
+      <div class="facts">
+        <span class="fact"><b>5</b> pipeline stages</span>
+        <span class="fact"><b>32</b> situation plays</span>
+        <span class="fact"><b>7</b> follow-up touches</span>
+        <span class="fact">Read time <b>~25 min</b></span>
+      </div>
+    </div>
+
+    <div class="callout key" style="margin-top:34px">
+      <b>Core</b>
+      <p><strong>The DM does not sell coaching. The DM books the call.</strong> That is its entire job. Every message you send should make the next reply easier to give, and move the conversation one step closer to a specific time in a calendar. If you find yourself pasting a price list, a programme outline, or a 200-word pitch into a DM, you have already lost the thread — get back to booking the call.</p>
+    </div>
+
+    <!-- ================= 01 RULES ================= -->
+    <section class="sec" id="rules">
+      <div class="sec-h"><em>01</em><h2>The seven rules</h2></div>
+      <p class="lede">Break these and no script below will save you. These are non-negotiable across every conversation, every lead source, every coach on the team.</p>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="num">RULE 01</span>
+          <b>One question per message.</b>
+          <span>A DM is a conversation, not a form. Two questions in one message means they answer the easy one and ignore the important one. Ask one thing, wait, then ask the next.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 02</span>
+          <b>Match their energy and their length.</b>
+          <span>They send six words, you send six to fifteen. They use one emoji, you use at most one. If they write in lowercase with no punctuation, don't reply with a formatted essay. Mirroring builds rapport faster than anything you can say.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 03</span>
+          <b>Never pitch in the first message.</b>
+          <span>Not a soft pitch. Not "let me know if you ever want help with that." The first message earns a reply and nothing else. Pitching on message one is the single fastest way to train someone to ignore you forever.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 04</span>
+          <b>Get permission before you offer.</b>
+          <span>"Can I ask you something?" — "Do you want my honest take?" — "Want me to have a look at it?" A yes before the offer changes the whole frame: now they're pulling, not being pushed.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 05</span>
+          <b>Never say anything you can't back up.</b>
+          <span>No guaranteed results. No "you'll lose 10kg in 6 weeks." No medical or clinical claims. No testimonials or before/afters you don't have written permission to use. One exaggeration that gets screenshotted costs more than a year of closed deals.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 06</span>
+          <b>Two unanswered messages, then stop.</b>
+          <span>Never send a third message into silence in the same window. Back off, use the follow-up ladder in section 08, and let time do the work. Chasing reads as desperate and desperate doesn't close.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 07</span>
+          <b>A clear "no" ends it, permanently.</b>
+          <span>When someone says no, thank them, leave the door open once, and never bring it up again unless they do. Respecting a no is what makes the yeses arrive months later — and roughly a third of them do.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 02 PIPELINE ================= -->
+    <section class="sec" id="pipeline">
+      <div class="sec-h"><em>02</em><h2>The five stages</h2></div>
+      <p class="lede">Every conversation that ends in a client passes through these five stages in this order. They are numbered because the order genuinely matters — you cannot qualify someone who hasn't replied, and you cannot book someone you haven't qualified. Before you send any message, know which stage you're in and what it needs to achieve.</p>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">1</span>
+          <div>
+            <h3>Open</h3>
+            <p>Goal: a real, human reply. Not a like, not an emoji — words.</p>
+          </div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 1–2</span>
+            <span class="chip"><b>Time:</b> minutes</span>
+            <span class="chip"><b>Exit when:</b> they write a sentence</span>
+          </div>
+          <p class="body-p">The opener is about them and costs them almost nothing to answer. It refers to something specific and real — their story, their comment, their post, the thing they actually asked for. Generic openers ("Hey! How's training going? 💪") get generic outcomes.</p>
+          <p class="body-p">If you cannot name a specific reason you are messaging this person, do not message this person.</p>
+          <div class="dd">
+            <div class="do">
+              <b>Do</b>
+              <ul>
+                <li>Reference the exact thing they posted or said</li>
+                <li>Ask something answerable in under ten words</li>
+                <li>Use their first name once, spelled right</li>
+                <li>Send one message, then wait</li>
+              </ul>
+            </div>
+            <div class="no">
+              <b>Don't</b>
+              <ul>
+                <li>Open with "Hey hun" or "Hey beautiful"</li>
+                <li>Send a paragraph as your first message</li>
+                <li>Compliment something you didn't actually look at</li>
+                <li>Copy-paste the identical opener to 200 people</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">2</span>
+          <div>
+            <h3>Qualify</h3>
+            <p>Goal: understand the goal, the history, the real obstacle and the timeline.</p>
+          </div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 4–8</span>
+            <span class="chip"><b>Time:</b> same day, sometimes 2–3 days</span>
+            <span class="chip"><b>Exit when:</b> you can state their problem back to them</span>
+          </div>
+          <p class="body-p">This is where the deal is actually made, and it's the stage most coaches rush. You are trying to learn four things — covered properly in section 04 — and, just as importantly, to make them <strong>feel heard</strong>. Most people have never had anyone ask them careful questions about their training and it lands harder than any pitch.</p>
+          <p class="body-p">Test for exiting this stage: can you write one sentence that describes their situation so accurately they'd say "yeah, exactly"? If not, ask another question.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">3</span>
+          <div>
+            <h3>Transition</h3>
+            <p>Goal: permission to talk about working together.</p>
+          </div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 1–2</span>
+            <span class="chip"><b>Time:</b> immediately after qualifying</span>
+            <span class="chip"><b>Exit when:</b> they say yes to hearing more</span>
+          </div>
+          <p class="body-p">The bridge from friendly chat to business. It has two beats: reflect their problem back, then ask permission. Skipping the permission beat is what makes a conversation feel like it suddenly turned into an advert. Full scripts in section 05.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">4</span>
+          <div>
+            <h3>Book</h3>
+            <p>Goal: a specific time on a specific day, in the calendar, with the right contact details.</p>
+          </div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 2–3</span>
+            <span class="chip"><b>Time:</b> aim for a slot inside 72 hours</span>
+            <span class="chip"><b>Exit when:</b> invite sent and they've confirmed receipt</span>
+          </div>
+          <p class="body-p">"When are you free?" is not booking — it's homework. Offer two concrete times. Sooner is better: a call booked nine days out shows up far less often than one booked for Thursday.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">5</span>
+          <div>
+            <h3>Confirm &amp; show</h3>
+            <p>Goal: they actually turn up. This stage exists because booked ≠ showed.</p>
+          </div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Touches:</b> 3</span>
+            <span class="chip"><b>When:</b> on booking · night before · 1 hour before</span>
+            <span class="chip"><b>Exit when:</b> the call happens</span>
+          </div>
+          <p class="body-p">Most coaches stop at "booked" and then wonder why half their calendar evaporates. Three short, warm touches routinely take show rates from around half to the high seventies. Exact messages in section 06.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 03 OPENERS ================= -->
+    <section class="sec" id="openers">
+      <div class="sec-h"><em>03</em><h2>Openers by lead source</h2></div>
+      <p class="lede">The same opener does not work everywhere. What you say depends entirely on how they arrived and how warm they are. Warm sources first — always work your warm inbox to zero before you start any cold outreach.</p>
+
+      <h3>A. They replied to your story</h3>
+      <p class="body-p">The warmest lead you will get. They raised their hand. Do not waste it by replying with a thumbs up.</p>
+      <div class="thread">
+        <div class="thread-cap">Story: "most people train hard and recover like idiots"</div>
+        <div class="msg them">ha this is me 😅</div>
+        <div class="msg you">Ha — what's your version of it? Sleep, food, or just never taking a deload?</div>
+        <div class="annot r">One question. Gives them three easy doors in.</div>
+        <div class="msg them">honestly all three but mostly sleep, i'm up at 5 for work</div>
+        <div class="msg you">That's a rough hand to play. How long have you been training around the 5am starts?</div>
+        <div class="annot r">Now you're in Stage 2 and it took two messages.</div>
+      </div>
+
+      <h3>B. They just followed you</h3>
+      <div class="script">
+        <div class="script-h"><span>New follower · opener</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span> — thanks for the follow. Curious what brought you over, are you training at the minute or trying to get back into it?</p>
+      </div>
+      <p class="body-p">The binary question ("training / getting back into it") does the heavy lifting. Either answer tells you something, and both are easy to send back one-handed.</p>
+
+      <h3>C. They commented on a post</h3>
+      <div class="script">
+        <div class="script-h"><span>Commenter · opener</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span>, saw your comment on the <span class="fill">[topic]</span> post — you said <span class="fill">[quote their words back]</span>. Is that something you're dealing with right now or more of a past thing?</p>
+      </div>
+
+      <h3>D. They downloaded your free guide / lead magnet</h3>
+      <p class="body-p">Message within the hour while the intent is hot. Deliver value first, ask second.</p>
+      <div class="script">
+        <div class="script-h"><span>Lead magnet · opener</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span> — sent the <span class="fill">[guide name]</span> over, let me know if it didn't land.
+
+Quick one while you're here: what made you grab it? Trying to sort a specific thing or just having a look?</p>
+      </div>
+
+      <h3>E. Old lead you spoke to before</h3>
+      <p class="body-p">No guilt, no "you went quiet on me". Treat it as a clean slate.</p>
+      <div class="script">
+        <div class="script-h"><span>Re-engagement · 60–90 days later</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span>, been a while — no agenda, just thought of you. Last time we spoke you were trying to sort <span class="fill">[their exact goal]</span>. Did you end up cracking it?</p>
+      </div>
+
+      <h3>F. Cold outreach</h3>
+      <p class="body-p">The lowest-yield source and the easiest to do badly. Only message people with a genuine, visible reason — they follow you, they're in a community you're in, they posted publicly about the thing you help with. Twenty researched messages will beat two hundred blasted ones, and the blasted ones will get your account restricted.</p>
+      <div class="script">
+        <div class="script-h"><span>Cold · opener</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span> — random one, I saw your post in <span class="fill">[group/place]</span> about <span class="fill">[specific thing]</span>. I coach people through exactly that. Not pitching you, genuinely just curious — did you get it sorted?</p>
+      </div>
+      <div class="callout warn">
+        <b>Careful</b>
+        <p>"Not pitching you" is only usable if it is true <em>in that message</em>. If they reply and you immediately pitch, you've lied and they'll feel it. Earn the conversation first.</p>
+      </div>
+    </section>
+
+    <!-- ================= 04 QUALIFY ================= -->
+    <section class="sec" id="qualify">
+      <div class="sec-h"><em>04</em><h2>Qualifying: the GAPT questions</h2></div>
+      <p class="lede">Four things you need to know before you offer anything. Ask them in this order, one message at a time, and react to each answer like a human before moving on. If you fire all four back-to-back it reads like an interrogation and people bail.</p>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="num">G — GOAL</span>
+          <b>What are they actually trying to do?</b>
+          <span>"What are you working towards at the minute?" · "If this went perfectly, what's different in six months?" — You want something concrete. "Get in shape" is not a goal, it's a mood. Push gently for specifics: a number, an event, a feeling they can describe.</span>
+        </div>
+        <div class="rule">
+          <span class="num">A — ATTEMPTS</span>
+          <b>What have they already tried?</b>
+          <span>"What have you tried so far?" · "What's worked best of everything you've done?" — This tells you whether they're a beginner or someone who's been burned, and it's the single best predictor of how you should pitch on the call.</span>
+        </div>
+        <div class="rule">
+          <span class="num">P — PAIN</span>
+          <b>Where does it actually break down?</b>
+          <span>"What's the bit that keeps tripping you up?" · "Where does it usually fall apart — the training or the food?" — People rarely lack information. They lack structure, accountability or a plan that survives a bad week. Find the specific breakdown point.</span>
+        </div>
+        <div class="rule">
+          <span class="num">T — TIMELINE</span>
+          <b>Is this a now thing or a someday thing?</b>
+          <span>"Is this a 'starting now' thing or more of a 'thinking about it' thing?" — The most skipped question and the most useful. It's a permission-giving question: it lets them tell you they're not ready without feeling awkward, and it saves you a week of chasing someone who was never going to start until March.</span>
+        </div>
+      </div>
+
+      <h3>Reading the answers</h3>
+      <p class="body-p">Once you have all four, score the conversation. Be honest with yourself here — coaches lose entire weeks pushing amber leads that should have been parked.</p>
+
+      <div class="lights">
+        <div class="light g">
+          <span class="dot"></span>
+          <div>
+            <h4>Green — go now</h4>
+            <p>Specific goal. Specific-ish deadline or trigger event. Has tried on their own and it hasn't worked. Describes the pain in their own words without you dragging it out. Asks you a question back about how you work.</p>
+            <p class="act"><b>Action:</b> transition immediately. Do not add more value, do not send another tip. Move to section 05 in your very next message.</p>
+          </div>
+        </div>
+        <div class="light a">
+          <span class="dot"></span>
+          <div>
+            <h4>Amber — nurture</h4>
+            <p>Vague goal, no timeline, engaged but casual. Interested in the topic rather than in changing anything. Often genuinely lovely to talk to, which is exactly why they eat your time.</p>
+            <p class="act"><b>Action:</b> give one genuinely useful thing, make no offer, and set a diary reminder to check in at a natural moment — after their holiday, start of the month, after the event they mentioned. Then leave them alone until then.</p>
+          </div>
+        </div>
+        <div class="light r">
+          <span class="dot"></span>
+          <div>
+            <h4>Red — exit gracefully</h4>
+            <p>Not looking for coaching. Only wants free programming. Cannot afford it under any structure you actually offer. Needs a doctor, physio or registered dietitian rather than a coach. Under 18 without a guardian involved. Showing signs of disordered eating (see play 25).</p>
+            <p class="act"><b>Action:</b> give one useful thing for free, say clearly and kindly that you're not the right fit, and end it warmly. Red leads who are treated well send referrals. Red leads who are pushed leave reviews.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 05 TRANSITION ================= -->
+    <section class="sec" id="transition">
+      <div class="sec-h"><em>05</em><h2>The transition</h2></div>
+      <p class="lede">Two beats, in this order, and never skip beat one. This is the highest-leverage twenty seconds in the whole conversation.</p>
+
+      <ol class="steps">
+        <li><strong>Reflect.</strong> Say their problem back to them in your own words, accurately and without embellishment. You are proving you listened. If they reply "yeah exactly" or "100%", you've nailed it.</li>
+        <li><strong>Ask permission.</strong> A small, easy yes that opens the door to the offer. Never offer without it.</li>
+      </ol>
+
+      <div class="thread">
+        <div class="thread-cap">The transition, in full</div>
+        <div class="msg them">yeah I'll be good for 3 weeks then one bad week and I've completely fallen off again</div>
+        <div class="msg you">So it's not that you don't know what to do — it's that nothing's holding it together when life gets in the way. Does that sound about right?</div>
+        <div class="annot r">Beat 1: reflect.</div>
+        <div class="msg them">yes that's exactly it</div>
+        <div class="msg you">That's honestly the main thing I fix for people. Can I ask — are you open to having someone coach you through it, or are you set on figuring it out solo?</div>
+        <div class="annot r">Beat 2: permission. The "or solo" option is real — let them take it.</div>
+        <div class="msg them">no I'm definitely open to it, been thinking about it for a while</div>
+        <div class="msg you">Cool. Easiest thing is a quick 15 min call so I can get the full picture and tell you straight whether I can actually help. No pitch, and if I'm not the right fit I'll say so. Want me to send a couple of times?</div>
+      </div>
+
+      <div class="script">
+        <div class="script-h"><span>Transition · beat 1 · reflect</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">So if I've got this right — it's not that you <span class="fill">[the thing they clearly can do]</span>, it's that <span class="fill">[the actual breakdown point]</span>. Is that fair?</p>
+      </div>
+
+      <div class="script">
+        <div class="script-h"><span>Transition · beat 2 · permission</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">That's pretty much exactly what I help people with. Can I ask — are you open to having someone coach you through it, or are you set on doing it solo?</p>
+      </div>
+
+      <div class="script">
+        <div class="script-h"><span>Transition · the ask</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Easiest thing is a quick 15 minute call so I can hear the full picture and tell you straight whether I can help. No pitch, and if I'm not the right fit I'll tell you. Want me to send over a couple of times?</p>
+      </div>
+
+      <div class="callout key">
+        <b>Why</b>
+        <p>"If I'm not the right fit I'll tell you" is the most important line in the script — and it only works if you actually do it. Say it, mean it, and turn people away on calls when it's true. The coaches who do this close a higher percentage than the ones who don't, because prospects can feel the difference between someone assessing them and someone hunting them.</p>
+      </div>
+    </section>
+
+    <!-- ================= 06 BOOKING ================= -->
+    <section class="sec" id="booking">
+      <div class="sec-h"><em>06</em><h2>Booking and getting them to show</h2></div>
+      <p class="lede">Booking is a mechanical skill. Follow the sequence exactly and your show rate takes care of itself.</p>
+
+      <h3>Offer two times, not a link and not an open question</h3>
+      <p class="body-p">A booking link is a hurdle, an open question is homework. Two specific times is a decision someone can make in three seconds. Make the times oddly specific — 7:10, 12:40 — because it signals a real calendar rather than a sales grid.</p>
+      <div class="script">
+        <div class="script-h"><span>Booking · the two-option close</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">I've got <span class="fill">[Thursday 7:10pm]</span> or <span class="fill">[Friday 12:40pm]</span> — which suits you better?</p>
+      </div>
+      <p class="body-p">If neither works: <em>"No worries — morning or evening generally better for you?"</em> then offer two more. Never open it up to "whenever you like".</p>
+
+      <h3>Lock the details, then send the invite</h3>
+      <div class="script">
+        <div class="script-h"><span>Booking · confirm details</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Perfect. What's the best number to reach you on, and an email for the invite?</p>
+      </div>
+
+      <h3>The three show-up touches</h3>
+      <p class="body-p">Send all three, every time, to every booking. This is the cheapest lift in the entire system.</p>
+
+      <div class="ladder">
+        <div class="rung">
+          <span class="when">Touch 1 · immediately on booking</span>
+          <h4>Invite + expectations + one prep question</h4>
+          <p>Tells them it's real, tells them it's short, and gets a small commitment that makes skipping it feel rude.</p>
+          <div class="say">Sent the invite over 👍 It'll take about 15 minutes — I'll ask you a bit about your training and where it's getting stuck, then tell you honestly whether I can help.<br><br>One thing before we talk: what would need to come out of the call for it to be worth your time?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Touch 2 · night before</span>
+          <h4>The soft confirm</h4>
+          <p>Short. One question. Gives them a graceful way to move it rather than ghost it.</p>
+          <div class="say">Hey [name] — still good for 7:10 tomorrow?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Touch 3 · one hour before</span>
+          <h4>The practical reminder</h4>
+          <p>Removes every small point of friction: who's calling, on what, and whether they can talk.</p>
+          <div class="say">Calling you in an hour on [number]. Somewhere you can talk properly?</div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <b>Note</b>
+        <p>If they don't reply to touch 2 or touch 3, still make the call at the booked time. A surprising number of people simply don't check DMs and will pick up. Not answering the phone is a no-show — handle it with play 30.</p>
+      </div>
+    </section>
+
+    <!-- ================= 07 MATRIX ================= -->
+    <section class="sec" id="matrix">
+      <div class="sec-h"><em>07</em><h2>When this happens → do this</h2></div>
+      <p class="lede">The reference section. Thirty-two situations you will hit, what each one usually means, what to do, and the words to use. Search or filter to find yours fast. Every script here is a starting point — rewrite it in your own voice before you send it, because a script you can't say naturally sounds like a script.</p>
+
+      <div class="filter">
+        <div class="filter-row">
+          <label for="play-search" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Search situations</label>
+          <input id="play-search" type="search" placeholder="Search — e.g. “expensive”, “ghost”, “partner”, “injury”" autocomplete="off">
+        </div>
+        <div class="cats" id="play-cats">
+          <button class="cat" type="button" data-cat="all" aria-pressed="true">All</button>
+          <button class="cat" type="button" data-cat="quiet" aria-pressed="false">Gone quiet</button>
+          <button class="cat" type="button" data-cat="money" aria-pressed="false">Money</button>
+          <button class="cat" type="button" data-cat="timing" aria-pressed="false">Timing</button>
+          <button class="cat" type="button" data-cat="trust" aria-pressed="false">Trust</button>
+          <button class="cat" type="button" data-cat="logistics" aria-pressed="false">Logistics</button>
+          <button class="cat" type="button" data-cat="sensitive" aria-pressed="false">Sensitive</button>
+          <button class="cat" type="button" data-cat="after" aria-pressed="false">After the call</button>
+        </div>
+        <span class="count mono" id="play-count" aria-live="polite">Showing all 32</span>
+      </div>
+
+      <div class="plays" id="plays">
+
+        <!-- ---- QUIET ---- -->
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 01 · Gone quiet</span>
+            <h4>They've left you on read for less than 24 hours</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Nothing. They're at work, driving, with their kids, or they opened it on a lock screen and forgot. Silence under a day carries almost no information.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Nothing at all.</strong> Do not double-text inside the same day. Log it, set the follow-up for tomorrow, move to the next conversation.</p>
+            <span class="lbl never">Never</span>
+            <p>"You still there?" · "??" · "Hello?" — these are the three most expensive characters in DM selling.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 02 · Gone quiet</span>
+            <h4>They've gone quiet for 24–48 hours mid-conversation</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Genuinely forgot, or your last message was too much work to answer. Check your last message — if it was long, or asked two questions, or asked something they'd need to think about, that's your answer.</p>
+            <span class="lbl">Do this</span>
+            <p>One short bump that is easy to answer and doesn't reference the silence. Re-ask in a lighter form if your previous question was heavy.</p>
+            <div class="script">
+              <div class="script-h"><span>Soft bump</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Hey <span class="fill">[name]</span> — no rush at all, just didn't want this to get buried. Where did you land on <span class="fill">[the thing]</span>?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Guilt them for not replying, or apologise for messaging ("sorry to bother you!"). Both lower your status in the conversation.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 03 · Gone quiet</span>
+            <h4>They reply with just 👍 or "haha" or "true"</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They're being polite and closing the conversation gently. It is not rejection — it's a lack of a reason to keep typing. You have to supply one.</p>
+            <span class="lbl">Do this</span>
+            <p>Ask one open, low-cost, slightly personal question. Do not react to the emoji and do not send a statement — a statement lets them thumbs-up you again.</p>
+            <div class="script">
+              <div class="script-h"><span>Re-open</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ha — genuinely though, how's training actually going at the minute? Good patch or a messy one?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 04 · Gone quiet</span>
+            <h4>Three one-word answers in a row</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Wrong person or wrong moment. You are pulling a conversation uphill and they are not helping. Continuing costs you time and costs them goodwill.</p>
+            <span class="lbl">Do this</span>
+            <p>One calibrated question that lets them off the hook honestly, then park it based on the answer.</p>
+            <div class="script">
+              <div class="script-h"><span>The honest out</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Can I ask you straight — is this something you actually want to sort right now, or have I caught you at a bad time? Either's completely fine.</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>If they say bad time: agree a specific date to revisit and diarise it. If they say not really: thank them, leave one door open, move on.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 05 · Gone quiet</span>
+            <h4>They resurface weeks later out of nowhere</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Something changed — a bad weigh-in, a photo they didn't like, a holiday booked, a birthday. They're back because the pain moved, not because they owe you anything.</p>
+            <span class="lbl">Do this</span>
+            <p>Treat it as a brand new conversation with a head start. Pick up warmly, do not mention the gap, and re-run the T of GAPT because their timeline has almost certainly changed.</p>
+            <div class="script">
+              <div class="script-h"><span>Warm restart</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Good to hear from you! Has anything changed since we last spoke, or is it still <span class="fill">[their old goal]</span>?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>"Oh look who it is 👀" or "thought you'd disappeared on me". Even jokingly. It makes them feel caught out and they'll go quiet again.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 06 · Gone quiet</span>
+            <h4>They unfollow, mute, or block you</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>A clear no, delivered without words.</p>
+            <span class="lbl">Do this</span>
+            <p>Stop. Mark the lead closed-lost, note the source so you can learn from it, and move on.</p>
+            <span class="lbl never">Never</span>
+            <p>Message them from a second account, from your personal account, or through a mutual friend. It is the fastest route to a screenshot in a group chat and, on most platforms, to your account being restricted.</p>
+          </div>
+        </article>
+
+        <!-- ---- MONEY ---- -->
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 07 · Money</span>
+            <h4>How much is it?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Asked early, this is almost never a buying signal — it's a filtering question. They want to know whether to keep reading. It is also completely reasonable.</p>
+            <span class="lbl">Do this</span>
+            <p>Give a real range, then earn the right to ask two questions. The range matters: dodging entirely reads as "it's expensive and I'm hiding it", which is worse than any number.</p>
+            <div class="script">
+              <div class="script-h"><span>Early price question</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Fair question — it runs from <span class="fill">[£X]</span> to <span class="fill">[£Y]</span> a month depending on how much support you actually need. I'd rather not throw a number at you before I know if I can even help though. Can I ask you two quick things first?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Say "it depends" and nothing else. Say "let's jump on a call and I'll explain" as your only answer. Both feel evasive and both cost you the lead.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 08 · Money</span>
+            <h4>No seriously, just tell me the price</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They asked twice. They have now decided you're being slippery, and they're right. Trust is draining in real time.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Answer it straight, immediately, with a number.</strong> Then offer the context as a separate, optional thing.</p>
+            <div class="script">
+              <div class="script-h"><span>Straight answer</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Course — <span class="fill">[£X]</span> a month, minimum <span class="fill">[3]</span> months. That's <span class="fill">[what's included]</span>. Want me to break down what that actually looks like week to week?</p>
+            </div>
+            <div class="callout key" style="margin-top:14px">
+              <b>Rule</b>
+              <p>Never dodge a price question twice. One deferral with a range is professional. Two is evasive, and people who feel handled do not buy.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 09 · Money</span>
+            <h4>That's too expensive</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>One of two completely different things, and you cannot respond well until you know which. Either the money genuinely isn't there right now, or they aren't convinced it's worth that much yet. The first is a budget fact. The second is a value conversation.</p>
+            <span class="lbl">Do this</span>
+            <p>Separate the two with one question, asked without defensiveness.</p>
+            <div class="script">
+              <div class="script-h"><span>The split</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Totally fair. Just so I know which it is — is it more that the number's out of reach at the minute, or that you're not convinced it's worth it yet? Genuinely no wrong answer.</p>
+            </div>
+            <span class="lbl">If it's out of reach</span>
+            <p>Be honest and be kind. Offer the lower-tier option <em>only if you genuinely run one</em>. Otherwise: <em>"Honestly then, now's not the time and that's completely fine. Can I check back in [month]? In the meantime here's [genuinely useful free thing]."</em></p>
+            <span class="lbl">If it's a value question</span>
+            <p>That belongs on the call, not in a DM. <em>"That's a completely fair thing to want to test. That's exactly what the call's for — I'll walk you through what the first month actually looks like and you can decide from there."</em></p>
+            <span class="lbl never">Never</span>
+            <p>Suggest credit cards, buy-now-pay-later, or borrowing. Never use "you're worth the investment" as a pressure line. Pushing someone into a payment they can't afford creates a refund, a chargeback and a very public review.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 10 · Money</span>
+            <h4>Can you do me a discount?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Often a habit rather than a real barrier — plenty of people ask reflexively. Sometimes it's play 09 wearing a different hat.</p>
+            <span class="lbl">Do this</span>
+            <p>Hold the price, and offer <strong>less scope</strong> rather than a lower price for the same thing. Discounting the same service teaches everyone the price was never real — including the clients who paid it.</p>
+            <div class="script">
+              <div class="script-h"><span>Hold the line, warmly</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I keep the price the same for everyone — wouldn't be fair on the people already paying it. What I can do is <span class="fill">[smaller option: fewer check-ins / training-only / shorter block]</span> at <span class="fill">[£Y]</span>. Want me to explain how that one works?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 11 · Money</span>
+            <h4>Can I pay in instalments / pay next month?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually a genuine cash-flow timing issue, not a value objection. Often very close to a yes.</p>
+            <span class="lbl">Do this</span>
+            <p>Offer only what you actually operate. If you have a split-payment option, name it plainly with the real total. If you don't, offer a start date that lines up with their payday instead — and then honour it.</p>
+            <div class="script">
+              <div class="script-h"><span>Payday start</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I don't run instalments, but there's no reason we can't start on <span class="fill">[date after payday]</span>. I'll hold you a spot and send everything over the day before. Does that work?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a payment plan on the spot that your systems can't take, or quote a split total that hides extra cost. Always state the full amount they'll pay.</p>
+          </div>
+        </article>
+
+        <!-- ---- TIMING ---- -->
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 12 · Timing</span>
+            <h4>I'll have a think about it</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>There is one specific unresolved thing and they don't want to say it out loud. It is nearly always money, time, or "will this actually work for someone like me". Your job is to find out which — not to overcome it.</p>
+            <span class="lbl">Do this</span>
+            <p>Give them three named doors. People will pick a door far more readily than they'll volunteer an objection.</p>
+            <div class="script">
+              <div class="script-h"><span>Three doors</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Course — what's the bit you want to think over? The money, the time it takes, or whether it'll actually work for you? Whichever it is I'd rather just talk about it straight.</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>Whatever they name, address that one thing honestly, then agree a specific day to speak again. "Let me know!" is where deals go to die — replace it with <em>"Shall I check in Thursday?"</em></p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 13 · Timing</span>
+            <h4>I'm too busy at the minute</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Either genuinely swamped this fortnight, or "this isn't a priority" said politely. Those need different responses, so don't assume.</p>
+            <span class="lbl">Do this</span>
+            <p>Acknowledge it honestly — then separate short-term chaos from a genuine seasonal no.</p>
+            <div class="script">
+              <div class="script-h"><span>Busy, split</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Makes sense — and honestly being busy is why most people bring me in, the whole point is that it fits around everything else. But genuinely: is this a "not this fortnight" or a "not this year"? I'd rather know so I stop bugging you.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Argue with their schedule, or imply they'd find the time if they cared enough. Telling someone their priorities are wrong has never once resulted in a sale.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 14 · Timing</span>
+            <h4>Ask me again after my holiday / in January</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Sometimes a real date, sometimes a soft no. Either way, treating it as real costs you nothing and wins you the ones who meant it.</p>
+            <span class="lbl">Do this</span>
+            <p>Pin the exact date, say you'll message then, put it in your diary, and actually do it. Coaches who follow up on the promised day close a meaningful share of these.</p>
+            <div class="script">
+              <div class="script-h"><span>Pin the date</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No problem. When are you back — <span class="fill">[date]</span>? I'll put a note in my diary and message you the week after. Enjoy it 👍</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>The promised follow-up</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Hey <span class="fill">[name]</span> — said I'd message you when you were back. How was <span class="fill">[the holiday/event]</span>? Still fancy getting stuck into <span class="fill">[goal]</span>?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 15 · Timing</span>
+            <h4>I need to speak to my partner first</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually completely genuine — it's a shared household expense and a shared time commitment. Occasionally it's a polite exit. Respect it either way; a partner who feels bypassed will veto on principle.</p>
+            <span class="lbl">Do this</span>
+            <p>Support the conversation instead of trying to get around it. Arm them with the two or three things their partner will actually ask about: cost, time commitment, and what changes at home.</p>
+            <div class="script">
+              <div class="script-h"><span>Arm them</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Completely get it. So you've got the actual numbers for them: it's <span class="fill">[£X]</span> a month, about <span class="fill">[X]</span> hours a week, and the main change at home is <span class="fill">[the realistic one]</span>. Happy to jump on a quick call with both of you if that's easier. When are you speaking to them?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>"It's your body, it's your decision" or anything that nudges them to go around their partner. It's insulting, it's manipulative, and it loses the deal roughly every time.</p>
+          </div>
+        </article>
+
+        <!-- ---- TRUST ---- -->
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 16 · Trust</span>
+            <h4>I've had a coach before and it didn't work</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Gold, not an objection. They've already proven they'll pay for coaching. You just need to find out what broke last time so you can say honestly whether you'd do it differently.</p>
+            <span class="lbl">Do this</span>
+            <p>Get curious, and let them talk. This is the single best qualifying question you'll ever ask.</p>
+            <div class="script">
+              <div class="script-h"><span>Dig in</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">That's really useful to know — what went wrong? Was it the plan itself, or more that you didn't get the support you needed around it?</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>Name specifically how you work differently on <em>that exact thing</em>. If you don't actually work differently, say so and tell them you might not be the fix — you'll lose one sale and gain a reputation.</p>
+            <span class="lbl never">Never</span>
+            <p>Slag off the other coach. It reads as insecure, and the client often still likes them.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 17 · Trust</span>
+            <h4>Have you worked with anyone like me?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>"I'm worried I'm a special case." Usually it's about age, a body type, shift work, an injury, or having a lot to lose.</p>
+            <span class="lbl">Do this</span>
+            <p>Give one specific, relevant, true example — with the detail that makes it land. One real story beats ten vague claims.</p>
+            <div class="script">
+              <div class="script-h"><span>One real example</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Yeah — <span class="fill">[first name or "a client"]</span>, <span class="fill">[similar situation]</span>. <span class="fill">[What specifically changed and roughly how long it took.]</span> Everyone's different, but the pattern's usually the same.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a client. Share a photo, name or result without written permission. Use someone else's transformation images. Every one of those is a sackable, potentially legal problem, and screenshots last forever.</p>
+            <span class="lbl">If the honest answer is no</span>
+            <p>Say so, and say what you'd do about it: <em>"Not with that exact thing, no. What I'd want to do is [specific plan], and if I thought you needed someone more specialist I'd tell you."</em></p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 18 · Trust</span>
+            <h4>How do I know this isn't a scam?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Reasonable caution, often from someone who has been burned online before. Do not take it personally and do not get defensive — defensiveness is exactly what they're testing for.</p>
+            <span class="lbl">Do this</span>
+            <p>Be boringly transparent. Real name, real business, real terms, no payment until after a conversation.</p>
+            <div class="script">
+              <div class="script-h"><span>Transparency</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Completely fair thing to ask. I'm <span class="fill">[full name]</span>, I coach under <span class="fill">[business name]</span> — <span class="fill">[website]</span>. Nothing gets paid before we've spoken, you'll get terms in writing, and <span class="fill">[refund/cancellation policy in one line]</span>. Have a look and ask me anything.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h nq">
+            <span class="play-tag">Play 19 · Trust</span>
+            <h4>They keep asking for free advice and never engage with anything else</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Either they don't know coaching is an option, or they've decided your inbox is a free service. Answer once generously — the second is only clear after you've tested the first.</p>
+            <span class="lbl">Do this</span>
+            <p>Give one genuinely good answer. Then transition once, cleanly. If they take the answer and ask another question, cap it warmly.</p>
+            <div class="script">
+              <div class="script-h"><span>Answer, then transition</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b"><span class="fill">[Genuinely useful answer in 2–3 lines.]</span>
+
+That'll get you moving. Out of interest — are you piecing this together yourself, or would you rather someone just built it around you?</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>The kind cap</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Happy to keep answering the odd thing, but this is properly the stuff I get paid for so I can't build you a plan over DM 😅 If you ever want it done properly, say the word and I'll sort you out.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ---- LOGISTICS ---- -->
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 20 · Logistics</span>
+            <h4>Do you do in-person? I'd prefer face to face</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually not a location preference at heart — it's a worry about accountability and about technique. Address the real concern.</p>
+            <span class="lbl">Do this</span>
+            <p>Answer the factual question first, then speak to the concern underneath it. Never oversell online as identical to in-person; name honestly what it does better and what it doesn't.</p>
+            <div class="script">
+              <div class="script-h"><span>Online, honestly</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b"><span class="fill">[Straight answer on whether you do in-person.]</span> What most people are actually worried about is form and accountability — the way I handle that is <span class="fill">[video form checks / weekly calls / daily check-ins]</span>. What online does better is you get me every week rather than for one hour. What it can't do is physically move your elbow — so I'm fussy about video.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 21 · Logistics</span>
+            <h4>Can you just send me a programme?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They believe the missing piece is information. Based on everything they've told you, it usually isn't — but saying "you don't know what you need" is not the move.</p>
+            <span class="lbl">Do this</span>
+            <p>Sell what you actually sell. If you have a programme-only product, offer it honestly. If you don't, explain the gap between what a programme does and what they described, without being sniffy about it.</p>
+            <div class="script">
+              <div class="script-h"><span>Programme vs coaching</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I can — but going off what you said earlier, the plan isn't really the bit that's broken. You said you're fine for three weeks then one bad week knocks you off. A PDF doesn't fix that, a person does. <span class="fill">[If you sell programmes: "Happy to sell you the plan on its own at £X if you'd rather start there."]</span></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 22 · Logistics</span>
+            <h4>I'm in a completely different timezone</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>A practical question about whether you'll actually be available to them.</p>
+            <span class="lbl">Do this</span>
+            <p>Confirm what you can genuinely commit to and never promise availability you won't deliver. Offer times in <strong>their</strong> local time, and always write the timezone out.</p>
+            <div class="script">
+              <div class="script-h"><span>Timezone booking</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No problem — where are you based? I'll send times in your local time. For day-to-day, check-ins are <span class="fill">[async/voice note]</span> so the gap doesn't matter, and calls I'd do <span class="fill">[your realistic window]</span>.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h nq">
+            <span class="play-tag">Play 23 · Logistics</span>
+            <h4>They ask something you genuinely don't know the answer to</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Nothing bad. It happens constantly and it is not a test.</p>
+            <span class="lbl">Do this</span>
+            <p>Say you don't know, say when you'll come back, then come back. Coaches lose far more deals by bluffing than by admitting a gap — and a confident wrong answer about training or nutrition can genuinely hurt someone.</p>
+            <div class="script">
+              <div class="script-h"><span>Honest gap</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Honest answer — I'm not sure off the top of my head and I don't want to guess at something that matters. Let me check properly and come back to you tonight.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ---- SENSITIVE ---- -->
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 24 · Sensitive</span>
+            <h4>They turn out to be under 18</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it matters</span>
+            <p>Safeguarding, insurance and, in many places, law. This is not a judgement call to make on the fly.</p>
+            <span class="lbl">Do this</span>
+            <p>Stop the sales conversation. Do not coach a minor without a parent or guardian involved and consenting, and follow whatever your insurer and local rules require. Be warm — they're a kid who wants to get fitter, which is a good thing.</p>
+            <div class="script">
+              <div class="script-h"><span>Under 18</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ah — I can't take anyone under 18 on without a parent or guardian involved, that's just how it has to work. Genuinely though, fair play for taking it seriously. If a parent wants to chat, they're very welcome to message me.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Continue a one-to-one sales conversation with a minor, take payment from a minor, or discuss weight loss, calorie targets or body composition with them.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 25 · Sensitive</span>
+            <h4>You see possible signs of disordered eating</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Signs to watch for</span>
+            <p>Requests for extreme deficits or very rapid loss. Mentions of purging, laxatives, fasting for days, or "earning" food. Intense body-hate language. Already very lean and wanting to lose more. Fixation on a number that doesn't match what they describe of themselves.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Leave sales mode entirely and do not return to it in this conversation.</strong> Respond as a person, don't diagnose, don't lecture, and point them toward appropriate support. This is the one situation where the right business decision and the right human decision are identical: do not take this sale.</p>
+            <div class="script">
+              <div class="script-h"><span>Step out of sales</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I'm going to be straight with you because I'd rather be honest than get a client. What you're describing isn't something I'd coach — taking it on would risk making things worse for you, and I'm not the right person for it.
+
+Talking to your GP or a specialist about it would be a genuinely good move. There's real support out there and it does help.
+
+I'm not disappearing on you, I'm just not the right fit for this.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Sell them a fat-loss package. Give them a calorie target. Tell them they "just need discipline". Diagnose anything. And never continue the pitch after this message — flag it to your lead coach instead.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 26 · Sensitive</span>
+            <h4>They disclose an injury, a medical condition, medication, or pregnancy</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Why it matters</span>
+            <p>Scope of practice. A personal training or nutrition qualification does not make you a physiotherapist, a doctor or a registered dietitian, and acting like one is how coaches get sued and clients get hurt.</p>
+            <span class="lbl">Do this</span>
+            <p>Thank them for telling you, don't speculate about the condition, and be clear about where your lane ends. Then either work alongside their clinician with clearance, or refer out.</p>
+            <div class="script">
+              <div class="script-h"><span>Scope of practice</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Thanks for flagging that — good that you did. I'm not going to guess at anything medical, that's not my lane. What I'd normally do is work around it with clearance from <span class="fill">[your GP / physio / consultant]</span>, and stay in touch with them if they're happy to. Have you spoken to them about training?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Say "that's fine, we'll train around it" without clearance. Comment on their medication. Suggest they stop or change a prescription. Claim training will treat, cure or manage a diagnosed condition.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 27 · Sensitive</span>
+            <h4>The conversation turns flirty or inappropriate</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Doesn't matter. The response is the same regardless of intent.</p>
+            <span class="lbl">Do this</span>
+            <p>One clear, unapologetic boundary. No joke to soften it, no laughing emoji — ambiguity gets read as an invitation. If it continues at all: screenshot, block, report, and tell your lead coach.</p>
+            <div class="script">
+              <div class="script-h"><span>The boundary</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I'm going to keep this professional — that's not what this is. If you want to talk training I'm happy to, otherwise I'll leave it here.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Play along to keep a sale alive. Reply with "haha 😂" and change the subject. Keep the conversation going out of politeness. No deal is worth this.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 28 · Sensitive</span>
+            <h4>They're rude, sarcastic, or aggressive</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Almost always about their day, not about you. Occasionally someone fishing for a reaction to screenshot.</p>
+            <span class="lbl">Do this</span>
+            <p>Never match it. One neutral, gracious line, then leave. Write every message assuming it will be screenshotted, because the hostile ones usually are.</p>
+            <div class="script">
+              <div class="script-h"><span>Exit gracefully</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">All good — I'll leave you to it. If you ever do want a hand with it, you know where I am 👍</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 29 · Sensitive</span>
+            <h4>They disclose something heavy — grief, a breakup, mental health</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They're telling you the real reason training fell apart. It's trust, and it deserves to be treated as trust rather than as an opening.</p>
+            <span class="lbl">Do this</span>
+            <p>Be a person. Acknowledge it properly and <strong>make no offer in that message.</strong> Not a soft one. If it's right to pick the conversation back up, do it days later and let them lead.</p>
+            <div class="script">
+              <div class="script-h"><span>Human first</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ah mate, I'm really sorry. That's a lot to be carrying and training is rightly the last thing on the list right now. No agenda from me at all — if you fancy picking it back up down the line just shout.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Use it as leverage ("training would really help with that right now"). Even when it's true, saying it in that moment is transparently self-serving and people remember it.</p>
+          </div>
+        </article>
+
+        <!-- ---- AFTER THE CALL ---- -->
+        <article class="play" data-cat="after">
+          <div class="play-h nq">
+            <span class="play-tag">Play 30 · After the call</span>
+            <h4>They no-show the booked call</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>About half are genuine — work overran, kid kicked off, phone on silent. The other half got cold feet. Assume the first out loud, plan for the second.</p>
+            <span class="lbl">Do this</span>
+            <p>Message within ten minutes, assume the best, and offer <strong>one</strong> reschedule with two specific times.</p>
+            <div class="script">
+              <div class="script-h"><span>No-show · +10 min</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No worries if something's come up — I know how it goes. Want to grab <span class="fill">[tomorrow 6:40pm]</span> or <span class="fill">[Thursday 1:10pm]</span> instead?</p>
+            </div>
+            <span class="lbl">If they no-show twice</span>
+            <p>Stop booking calls. Move them to the follow-up ladder. Two no-shows means the intent isn't there yet, and a third booking just clutters your calendar.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="after">
+          <div class="play-h nq">
+            <span class="play-tag">Play 31 · After the call</span>
+            <h4>They said yes on the call, then went silent on payment</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually friction or second thoughts, not dishonesty. The link didn't work, the card got declined, they wanted to check the account, or the excitement faded on the drive home.</p>
+            <span class="lbl">Do this</span>
+            <p>Remove friction first, before you ever apply any pressure. Two messages maximum, then let it breathe.</p>
+            <div class="script">
+              <div class="script-h"><span>Message 1 · same day</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Hey <span class="fill">[name]</span> — did the link come through alright? Shout if anything's playing up and I'll sort it another way.</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>Message 2 · +48h</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No stress either way — has anything changed since we spoke? Completely fine if you've had second thoughts, I'd just rather know than keep the spot held.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a deadline that doesn't exist, or claim the price is going up when it isn't. Fake urgency is the single most common reason people feel scammed by fitness coaches.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="after">
+          <div class="play-h nq">
+            <span class="play-tag">Play 32 · After the call</span>
+            <h4>They said no on the call</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Not now. It very rarely means never — a meaningful share of "no" leads buy within the year, from the coach who took the no well.</p>
+            <span class="lbl">Do this</span>
+            <p>Thank them properly, leave one genuinely useful thing behind, and ask permission to check back at a specific point. Then hold to it.</p>
+            <div class="script">
+              <div class="script-h"><span>Take the no well</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Appreciate you being straight with me, genuinely. Based on what you said, the one thing I'd actually do if I were you is <span class="fill">[one specific, useful action]</span>.
+
+Alright if I check in around <span class="fill">[60 days / specific month]</span> to see how you're getting on? No pitch, just curious.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Go cold, get short, or stop replying once the money's off the table. Prospects notice instantly, and that's the moment they decide whether to ever recommend you.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================= 08 LADDER ================= -->
+    <section class="sec" id="ladder">
+      <div class="sec-h"><em>08</em><h2>The follow-up ladder</h2></div>
+      <p class="lede">For a qualified lead who has gone quiet. Seven touches over thirty days, each with a different job. The point of varying the angle is simple: if four messages in a row all say "are you still interested", you've given them the same reason to ignore you four times.</p>
+
+      <div class="callout key">
+        <b>Rule</b>
+        <p>Never send two rungs of this ladder in the same day, and never send a rung immediately after an unanswered one. If they reply at any point, you leave the ladder and go back to the conversation.</p>
+      </div>
+
+      <div class="ladder">
+        <div class="rung">
+          <span class="when">Day 0 · 4–6 hours later</span>
+          <h4>The easy bump</h4>
+          <p>Same-day, light, and re-asks your question in a form that takes five seconds to answer.</p>
+          <div class="say">Quick one so I don't leave you hanging — was it more [option A] or [option B]?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 1</span>
+          <h4>Value, with no ask attached</h4>
+          <p>Send one thing that is genuinely useful for the exact problem they described. No question, no pitch. This resets the relationship from "someone selling me" to "someone helping me".</p>
+          <div class="say">Not chasing you — this just made me think of what you said about [their problem]: [link / tip / short voice note]. Might be useful.</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 3</span>
+          <h4>The direct one</h4>
+          <p>Light but unambiguous. Gives them a clean way to park it without feeling rude.</p>
+          <div class="say">Did you want to park this for now or pick it back up? Either's completely fine, just don't want to be that guy messaging into the void 😅</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 7</span>
+          <h4>The reframe</h4>
+          <p>Come at the problem from a new angle, or share a relevant (real, permitted) client outcome that maps onto their situation.</p>
+          <div class="say">Random — just had a client hit [specific thing] and she started in almost exactly the spot you described. Made me think of you. How's it going?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 14</span>
+          <h4>The permission close</h4>
+          <p>The most effective message in the ladder. Asking permission to stop very often gets a reply, because it's easy to answer and it's disarmingly honest. Mean it.</p>
+          <div class="say">Totally fine if the timing's off — want me to stop bringing it up? Genuinely no hard feelings either way.</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 30</span>
+          <h4>The reset</h4>
+          <p>A new month, a natural restart point, no reference to the previous silence.</p>
+          <div class="say">New month. Is [their goal] still on the list, or has it dropped off?</div>
+        </div>
+        <div class="rung end">
+          <span class="when">After day 30 · nurture only</span>
+          <h4>Stop DMing. Stay visible.</h4>
+          <p>Move them out of active follow-up. Watch their stories, react genuinely, reply when they post something relevant. No more direct messages unless they message you. A good number of leads come back on their own from exactly here — but only if you left on good terms.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 09 MECHANICS ================= -->
+    <section class="sec" id="mechanics">
+      <div class="sec-h"><em>09</em><h2>Message mechanics</h2></div>
+      <p class="lede">The small stuff that decides whether you read as a person or as a pipeline.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Thing</th><th>Standard</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Reply speed</strong></td><td class="n">&lt; 15 min</td><td>Inside your working hours. Fast enough to feel present, not so fast it feels automated.</td></tr>
+            <tr><td><strong>Out of hours</strong></td><td class="n">Don't</td><td>Replying at 11:40pm sets an expectation you cannot keep for a year. Schedule it for the morning.</td></tr>
+            <tr><td><strong>Message length</strong></td><td class="n">1–3 lines</td><td>Anything longer gets saved for later, and later never arrives.</td></tr>
+            <tr><td><strong>Messages in a row</strong></td><td class="n">Max 2</td><td>Three stacked blue bubbles reads as panic, whatever they say.</td></tr>
+            <tr><td><strong>Emoji</strong></td><td class="n">0–1</td><td>Match their usage. Never more than they use.</td></tr>
+            <tr><td><strong>Their name</strong></td><td class="n">Once</td><td>Once is warm. Three times is a sales script and everyone can feel it.</td></tr>
+            <tr><td><strong>Voice notes</strong></td><td class="n">&lt; 45 sec</td><td>Only after four-plus exchanges. Never as a first message — it reads as an ambush.</td></tr>
+            <tr><td><strong>Links</strong></td><td class="n">Late only</td><td>An early link is a request to leave the conversation. Keep them in it.</td></tr>
+            <tr><td><strong>Questions per message</strong></td><td class="n">1</td><td>Two questions means one gets answered and it's usually the wrong one.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>When to use a voice note</h3>
+      <ul class="plain">
+        <li><strong>Good:</strong> explaining something with nuance that would take four paragraphs to type.</li>
+        <li><strong>Good:</strong> after a hard objection, where tone does the work that text can't.</li>
+        <li><strong>Good:</strong> answering a technical question about their training.</li>
+        <li><strong>Bad:</strong> the first message. The pitch. Anything containing a price. Anything over a minute.</li>
+      </ul>
+      <p class="body-p">Structure for a good one: name them, name the thing they said, give the answer, ask one question, stop. Record it once — a polished second take sounds like an advert.</p>
+
+      <h3>Writing style</h3>
+      <ul class="plain">
+        <li>Write how you talk. If you wouldn't say it out loud in a gym, don't type it.</li>
+        <li>Contractions always. "I'd", "you're", "that's" — not "I would", "you are".</li>
+        <li>Cut the first sentence of anything you write. It's almost always throat-clearing.</li>
+        <li>No jargon until they use it first. "Progressive overload" and "TDEE" mean nothing to most people and quietly make them feel stupid.</li>
+        <li>Never open with "Hope you're well!" — it marks the message as business before they've read a word.</li>
+      </ul>
+    </section>
+
+    <!-- ================= 10 NEVER ================= -->
+    <section class="sec" id="never">
+      <div class="sec-h"><em>10</em><h2>Never do this</h2></div>
+      <p class="lede">These aren't style preferences. Each one either breaks trust permanently, breaks a platform's rules, or exposes you and the business to real liability. There is no sale worth any of them.</p>
+
+      <div class="nevers">
+        <div class="never"><span class="x">✕</span><div><b>Fake scarcity</b><span>"Only 2 spots left this month" when it isn't true. People buy, then find the same post next month, and tell everyone.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Guaranteed results</b><span>No promising a specific weight, timeline or outcome. Depending on where you are, it can also be an unlawful claim.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Medical or clinical claims</b><span>Training and nutrition coaching does not treat, cure or manage a diagnosed condition. Stay in your lane, refer out, say so plainly.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Unconsented photos or testimonials</b><span>Never use a client's images, name or results without explicit written permission — and never anyone else's, ever.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Invented clients or results</b><span>One fabricated success story, discovered, ends the business. It always gets discovered.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Body-shaming as a hook</b><span>No "summer's coming", no commenting on someone's appearance uninvited, no framing their body as a problem you're here to fix.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Automated or bulk DM tools</b><span>Against the terms of every major platform, gets accounts restricted and shadowbanned, and the messages read as spam anyway.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Messaging after a no</b><span>A clear no ends the pipeline. Continuing is harassment, and it's what generates the screenshots that circulate.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Pressuring someone into debt</b><span>No credit cards, no BNPL suggestions, no "can you borrow it". If they can't afford it, they can't afford it.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Discussing other clients identifiably</b><span>Their information is confidential. "A client of mine" is fine; details that identify them are not.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Hidden terms</b><span>Minimum term, cancellation policy and total cost get stated plainly before payment, every time, in writing.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Selling to someone who needs a clinician</b><span>Disordered eating, an undiagnosed injury, a medical red flag. Refer out. Every time. No exceptions.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= 11 DAY ================= -->
+    <section class="sec" id="day">
+      <div class="sec-h"><em>11</em><h2>The daily rhythm</h2></div>
+      <p class="lede">Roughly 105 minutes, in this order. The order is the point: warm beats cold every single time, so the inbox always gets served before you go looking for new conversations. Tick these off as you go — they save in this browser.</p>
+
+      <div class="check" id="daily">
+        <label for="d1"><input type="checkbox" id="d1"><span class="t">30 min</span><span class="d"><b>Clear the inbox</b>Reply to every open thread before anything else. Warm leads decay by the hour — a reply at 9am is worth several at 6pm.</span></label>
+        <label for="d2"><input type="checkbox" id="d2"><span class="t">15 min</span><span class="d"><b>Yesterday's bookings</b>Send touch 2 and touch 3 to everyone with a call in the next 24 hours. Non-negotiable.</span></label>
+        <label for="d3"><input type="checkbox" id="d3"><span class="t">20 min</span><span class="d"><b>Story engagement</b>Reply genuinely to the stories of people in your audience. Not "🔥" — an actual reaction. This is what generates tomorrow's inbound.</span></label>
+        <label for="d4"><input type="checkbox" id="d4"><span class="t">30 min</span><span class="d"><b>New conversations</b>Open 15–20 researched conversations. Twenty specific messages beat two hundred generic ones, and won't get your account flagged.</span></label>
+        <label for="d5"><input type="checkbox" id="d5"><span class="t">15 min</span><span class="d"><b>Follow-up ladder</b>Work today's due rungs from section 08. This is where most of the month's revenue quietly comes from.</span></label>
+        <label for="d6"><input type="checkbox" id="d6"><span class="t">10 min</span><span class="d"><b>Update the pipeline</b>Log every stage change and every next action with a date. A conversation with no next action is a lost conversation.</span></label>
+      </div>
+
+      <div class="callout warn">
+        <b>Watch</b>
+        <p>The most common failure mode is spending the whole session on step 4 because new conversations feel productive, while twelve qualified leads sit unanswered in the inbox. Inbound first. Always.</p>
+      </div>
+    </section>
+
+    <!-- ================= 12 NUMBERS ================= -->
+    <section class="sec" id="numbers">
+      <div class="sec-h"><em>12</em><h2>Numbers to track</h2></div>
+      <p class="lede">Log these weekly. You cannot fix a funnel you can't see, and "it's been quiet" is not a diagnosis. The benchmarks below are starting reference points for warm inbound — your own numbers, once you have four weeks of them, are the only ones that matter.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>What you count</th><th>Starting benchmark</th><th>If it's low</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Opened</strong></td><td>Conversations you started</td><td class="n">15–20 / day</td><td>A volume problem. Block the time and protect it.</td></tr>
+            <tr><td><strong>Replied</strong></td><td>Got a real worded reply</td><td class="n">30–50%</td><td>Your opener is generic or your audience is wrong. Rewrite section 03.</td></tr>
+            <tr><td><strong>Qualified</strong></td><td>All four GAPT answers</td><td class="n">40–60% of replies</td><td>You're pitching too early, or asking two questions per message.</td></tr>
+            <tr><td><strong>Booked</strong></td><td>A time in the calendar</td><td class="n">40–60% of qualified</td><td>Weak transition. You skipped the permission beat or offered a link instead of two times.</td></tr>
+            <tr><td><strong>Showed</strong></td><td>Call actually happened</td><td class="n">70–85% of booked</td><td>You're not sending all three confirm touches, or booking too far out.</td></tr>
+            <tr><td><strong>Closed</strong></td><td>Paid and started</td><td class="n">Track your own</td><td>A call problem, not a DM problem — but check whether you're booking unqualified leads.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What to log on every lead</h3>
+      <ul class="plain">
+        <li><strong>Source</strong> — story reply, follower, comment, lead magnet, referral, cold. You will find one source is carrying everything.</li>
+        <li><strong>Stage</strong> — one of the five from section 02, and only one.</li>
+        <li><strong>Their goal, in their words</strong> — paste the actual sentence. It's what you'll open with in three weeks.</li>
+        <li><strong>Next action + date</strong> — every single lead has one, or it isn't a lead any more.</li>
+        <li><strong>Objection heard</strong> — track which of the plays in section 07 you're hitting most. If it's always play 09, your qualifying is the problem, not your pricing.</li>
+      </ul>
+
+      <div class="callout key">
+        <b>Weekly</b>
+        <p>Pick the single worst conversion step in the table above and work on only that for a week. Fixing reply rate from 20% to 40% doubles everything downstream — improving six things by a little improves nothing you can measure.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p><b>How to use this document.</b> Read it once end to end before you send another DM. Then keep section 07 open while you work — it's built to be searched mid-conversation. Rewrite every script in your own voice before you use it; a script you can't say out loud naturally will sound exactly like a script.</p>
+      <p style="margin-top:12px">Benchmarks are reference ranges for warm inbound, not promises — replace them with your own after four weeks of tracking. Nothing here is legal, medical or financial advice: follow your own insurer's requirements, your qualifications' scope of practice, and the consumer and advertising rules where you operate.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- theme toggle ---------- */
+  var root = document.documentElement;
+  var tbtn = document.getElementById("theme-toggle");
+  function prefersDark(){
+    try { return window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){ return false; }
+  }
+  try {
+    var saved = localStorage.getItem("dmplaybook-theme");
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+  } catch(e){}
+  if (tbtn) {
+    tbtn.addEventListener("click", function(){
+      var cur = root.getAttribute("data-theme");
+      if (!cur) cur = prefersDark() ? "dark" : "light";
+      var next = cur === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("dmplaybook-theme", next); } catch(e){}
+    });
+  }
+
+  /* ---------- copy buttons ---------- */
+  function copyText(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function(){ return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+  function legacyCopy(text){
+    return new Promise(function(resolve, reject){
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok ? resolve() : reject();
+      } catch(e){ reject(e); }
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function(btn){
+    btn.addEventListener("click", function(){
+      var block = btn.closest(".script");
+      if (!block) return;
+      var body = block.querySelector(".script-b");
+      if (!body) return;
+      var text = body.innerText.replace(/ /g, " ");
+      copyText(text).then(function(){
+        btn.textContent = "Copied";
+        btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("done"); }, 1600);
+      }).catch(function(){
+        btn.textContent = "Select it";
+        setTimeout(function(){ btn.textContent = "Copy"; }, 1600);
+        try {
+          var r = document.createRange();
+          r.selectNodeContents(body);
+          var s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(r);
+        } catch(e){}
+      });
+    });
+  });
+
+  /* ---------- play filter ---------- */
+  var plays = Array.prototype.slice.call(document.querySelectorAll("#plays .play"));
+  var search = document.getElementById("play-search");
+  var cats = document.getElementById("play-cats");
+  var count = document.getElementById("play-count");
+  var activeCat = "all";
+
+  plays.forEach(function(p){ p.dataset.text = p.innerText.toLowerCase(); });
+
+  function applyFilter(){
+    var q = (search && search.value ? search.value : "").trim().toLowerCase();
+    var shown = 0;
+    plays.forEach(function(p){
+      var catOk = activeCat === "all" || p.getAttribute("data-cat") === activeCat;
+      var textOk = !q || p.dataset.text.indexOf(q) !== -1;
+      var show = catOk && textOk;
+      p.hidden = !show;
+      if (show) shown++;
+    });
+    if (count) {
+      if (shown === plays.length) count.textContent = "Showing all " + plays.length;
+      else if (shown === 0) count.textContent = "No situations match — try a different word";
+      else count.textContent = "Showing " + shown + " of " + plays.length;
+    }
+  }
+
+  if (search) search.addEventListener("input", applyFilter);
+  if (cats) {
+    cats.addEventListener("click", function(e){
+      var btn = e.target.closest(".cat");
+      if (!btn) return;
+      activeCat = btn.getAttribute("data-cat");
+      Array.prototype.forEach.call(cats.querySelectorAll(".cat"), function(b){
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      applyFilter();
+    });
+  }
+  applyFilter();
+
+  /* ---------- daily checklist persistence ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#daily input[type=checkbox]"));
+  var KEY = "dmplaybook-daily";
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var state = JSON.parse(raw);
+      if (state && state.day === new Date().toDateString() && Array.isArray(state.done)) {
+        boxes.forEach(function(b){ if (state.done.indexOf(b.id) !== -1) b.checked = true; });
+      }
+    }
+  } catch(e){}
+  function saveDaily(){
+    try {
+      var done = boxes.filter(function(b){ return b.checked; }).map(function(b){ return b.id; });
+      localStorage.setItem(KEY, JSON.stringify({ day: new Date().toDateString(), done: done }));
+    } catch(e){}
+  }
+  boxes.forEach(function(b){ b.addEventListener("change", saveDaily); });
+
+  /* ---------- scroll spy ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll(".rail a"));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
+  function spy(){
+    var y = window.scrollY + 140;
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].offsetTop <= y) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle("on", i === idx); });
+  }
+  var ticking = false;
+  window.addEventListener("scroll", function(){
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function(){ spy(); ticking = false; });
+  }, { passive: true });
+  spy();
+})();
+</script>
