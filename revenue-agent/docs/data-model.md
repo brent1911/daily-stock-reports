@@ -117,8 +117,9 @@ When you tighten the attribution rule in six months — and you will — last
 quarter's invoices must not silently change. You freeze the decision when the
 case resolves and keep the historical number defensible.
 
-This is the single most commercially important column in the schema. See the
-open question below.
+This is the single most commercially important column in the schema. The rule
+that sets it is documented in [`attribution.md`](attribution.md) and enforced
+by `evaluate_attribution()` in migration `0002`.
 
 ---
 
@@ -136,6 +137,7 @@ write is allowed through.
 | Exactly one live agent config per gym | partial unique index `where is_active` |
 | A replayed provider webhook cannot double-charge or double-text | partial unique indexes on `(provider, provider_*_id)` |
 | Money cannot go negative | check constraints on every `*_cents` column |
+| A case counted as recovered must carry its receipt | `recovery_cases_attributed_has_basis` check |
 
 The idempotency indexes matter more than they look. Twilio and Stripe both
 retry webhook deliveries. Without those indexes, one network hiccup becomes a
@@ -183,12 +185,11 @@ Listed so the omissions are visible choices rather than oversights:
 These are business decisions, not technical ones, and the first paying
 customer settles them.
 
-1. **What counts as recovered?** If the agent texts on Monday and the member
-   updates their card on Thursday without replying, did you recover it? The
-   schema supports any answer via `attribution_basis`; you have to pick one
-   that survives a skeptical gym owner reading it. Suggested starting rule:
-   agent touched the case, and payment succeeded within 14 days, and no staff
-   member contacted them first. Write it down before the first invoice.
+1. ~~**What counts as recovered?**~~ **Settled** — conservative rule v1, see
+   [`attribution.md`](attribution.md). Agent touched the case, payment cleared
+   within 14 days, no staff member got there first. Enforced by
+   `evaluate_attribution()` in migration `0002`, with four of six test cases
+   asserting it refuses to count something.
 2. **Whose data is it in a white-label deal?** When a partner churns, does
    their gyms' conversation history go with them? The schema supports a clean
    per-partner export; the contract needs to say so.
@@ -201,10 +202,18 @@ customer settles them.
 
 ```bash
 createdb revagent
-psql "postgresql://localhost/revagent" -v ON_ERROR_STOP=1 -f db/migrations/0001_init.sql
-psql "postgresql://localhost/revagent" -v ON_ERROR_STOP=1 -f db/smoke_test.sql
+export DB="postgresql://localhost/revagent"
+
+# migrations, in order
+psql "$DB" -v ON_ERROR_STOP=1 -f db/migrations/0001_init.sql
+psql "$DB" -v ON_ERROR_STOP=1 -f db/migrations/0002_attribution_rule.sql
+
+# tests
+psql "$DB" -v ON_ERROR_STOP=1 -f db/smoke_test.sql
+psql "$DB" -v ON_ERROR_STOP=1 -f db/attribution_test.sql
 ```
 
-The smoke test walks a declined card through to recovered revenue, asserts the
-five guarantees above, prints the dashboard, and rolls back. It leaves nothing
-behind.
+`smoke_test.sql` walks a declined card through to recovered revenue, asserts
+the five guarantees above, and prints the dashboard. `attribution_test.sql`
+runs six scenarios through the attribution rule, four of which must be
+refused. Both roll back and leave nothing behind.

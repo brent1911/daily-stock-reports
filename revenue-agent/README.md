@@ -31,10 +31,13 @@ Three jobs, all pointed at money that already exists and is leaking:
 ```
 revenue-agent/
   db/
-    migrations/0001_init.sql   the schema, annotated with every WHY
-    smoke_test.sql             one scenario end to end + five assertions
+    migrations/0001_init.sql          the schema, annotated with every WHY
+    migrations/0002_attribution_rule.sql  when we may claim we recovered money
+    smoke_test.sql                    one scenario end to end + five assertions
+    attribution_test.sql              six attribution scenarios, four refused
   docs/
     data-model.md              the map, the arguments, the open questions
+    attribution.md             the recovery rule, written for a customer
 ```
 
 ## Quick start
@@ -43,11 +46,14 @@ Requires Postgres 13 or newer.
 
 ```bash
 createdb revagent
-psql "postgresql://localhost/revagent" -v ON_ERROR_STOP=1 -f db/migrations/0001_init.sql
-psql "postgresql://localhost/revagent" -v ON_ERROR_STOP=1 -f db/smoke_test.sql
+export DB="postgresql://localhost/revagent"
+
+for f in db/migrations/*.sql; do psql "$DB" -v ON_ERROR_STOP=1 -f "$f"; done
+psql "$DB" -v ON_ERROR_STOP=1 -f db/smoke_test.sql
+psql "$DB" -v ON_ERROR_STOP=1 -f db/attribution_test.sql
 ```
 
-The smoke test rolls back, so it is safe to run repeatedly.
+Both test files roll back, so they are safe to run repeatedly.
 
 ## What comes next
 
@@ -59,7 +65,8 @@ In order, smallest first:
    `appointments`, escalate when it should.
 3. **Stripe webhooks in** — `webhook_events` → `payment_attempts` →
    open a `recovery_case`.
-4. **The dashboard** — three numbers: conversations handled, trials booked,
-   revenue recovered.
+4. **The dashboard** — three numbers, read from `v_recovered_revenue` and
+   `v_agent_activity`: conversations handled, trials booked, revenue
+   recovered.
 
 Nothing else until three gyms that you do not own are paying.
