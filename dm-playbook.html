@@ -1,0 +1,2380 @@
+<title>Inbox to Client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F3F6;
+  --surface:#FFFFFF;
+  --surface-2:#E8EAF0;
+  --line:#D6DAE3;
+  --line-strong:#B6BDCB;
+  --ink:#10151D;
+  --ink-2:#343E4C;
+  --muted:#69748A;
+  --accent:#1F52E0;
+  --accent-ink:#1A44BC;
+  --accent-soft:#E3E9FD;
+  --good:#0B7A54;
+  --good-soft:#DCF0E8;
+  --warn:#8A5A00;
+  --warn-soft:#F9EBD1;
+  --bad:#B4302A;
+  --bad-soft:#F9DEDB;
+  --them:#E8EAF0;
+  --them-ink:#10151D;
+  --you:#1F52E0;
+  --you-ink:#FFFFFF;
+  --bot:#D9DEE8;
+  --bot-ink:#39424F;
+  --shadow:0 1px 2px rgba(16,21,29,.06), 0 8px 24px -16px rgba(16,21,29,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1016;
+    --surface:#141A23;
+    --surface-2:#1C242F;
+    --line:#27303D;
+    --line-strong:#3B4657;
+    --ink:#E7ECF3;
+    --ink-2:#BAC4D2;
+    --muted:#8794A7;
+    --accent:#8AA6FF;
+    --accent-ink:#A9BEFF;
+    --accent-soft:#1A2440;
+    --good:#5BD3A6;
+    --good-soft:#0F2A22;
+    --warn:#E5B76A;
+    --warn-soft:#2B2314;
+    --bad:#FF8A80;
+    --bad-soft:#2E1A19;
+    --them:#212A36;
+    --them-ink:#E7ECF3;
+    --you:#2C51BE;
+    --you-ink:#FFFFFF;
+    --bot:#2A3442;
+    --bot-ink:#9AA6B6;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1016;
+  --surface:#141A23;
+  --surface-2:#1C242F;
+  --line:#27303D;
+  --line-strong:#3B4657;
+  --ink:#E7ECF3;
+  --ink-2:#BAC4D2;
+  --muted:#8794A7;
+  --accent:#8AA6FF;
+  --accent-ink:#A9BEFF;
+  --accent-soft:#1A2440;
+  --good:#5BD3A6;
+  --good-soft:#0F2A22;
+  --warn:#E5B76A;
+  --warn-soft:#2B2314;
+  --bad:#FF8A80;
+  --bad-soft:#2E1A19;
+  --them:#212A36;
+  --them-ink:#E7ECF3;
+  --you:#2C51BE;
+  --you-ink:#FFFFFF;
+  --bot:#2A3442;
+  --bot-ink:#9AA6B6;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -18px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  font-weight:700;
+  line-height:1.12;
+  text-wrap:balance;
+  margin:0;
+  letter-spacing:-.018em;
+}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:3px}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- top bar ---------- */
+.top{
+  position:sticky;
+  top:env(safe-area-inset-top, 0px);
+  z-index:40;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.top-in{
+  max-width:1160px;margin:0 auto;
+  padding:10px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+.brand span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .spacer{flex:1}
+.tbtn{
+  font:600 12px/1 "Instrument Sans",sans-serif;
+  color:var(--ink-2);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;
+  padding:8px 13px;cursor:pointer;white-space:nowrap;
+}
+.tbtn:hover{border-color:var(--line-strong);color:var(--ink)}
+
+/* ---------- shell ---------- */
+.shell{
+  max-width:1160px;margin:0 auto;
+  padding-inline:20px;
+  padding-block:0 72px;
+  display:grid;
+  grid-template-columns:218px minmax(0,1fr);
+  gap:44px;
+  align-items:start;
+}
+.rail{
+  position:sticky;
+  top:calc(env(safe-area-inset-top, 0px) + 62px);
+  padding-block:34px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.rail-h{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;padding-left:11px;
+}
+.rail a{
+  display:flex;gap:9px;align-items:baseline;
+  font-size:13.2px;line-height:1.35;
+  color:var(--ink-2);text-decoration:none;
+  padding:7px 11px;border-radius:7px;
+  border-left:2px solid transparent;
+}
+.rail a i{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  color:var(--muted);font-style:normal;flex:none;width:14px;
+}
+.rail a:hover{background:var(--surface);color:var(--ink)}
+.rail a.on{background:var(--accent-soft);color:var(--accent-ink);border-left-color:var(--accent);font-weight:600}
+.rail a.on i{color:var(--accent-ink)}
+
+.main{padding-block:34px 0;max-width:760px;min-width:0}
+
+/* ---------- hero ---------- */
+.hero{margin-bottom:8px}
+.kicker{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+  display:block;margin-bottom:16px;
+}
+.hero h1{font-size:clamp(33px,6.8vw,53px);font-weight:800;letter-spacing:-.033em}
+.hero .sub{
+  margin-top:18px;font-size:17.5px;line-height:1.58;color:var(--ink-2);max-width:60ch;
+}
+.hero .sub strong{color:var(--ink);font-weight:600}
+.facts{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px}
+.fact{
+  font:500 12px/1.4 "JetBrains Mono",monospace;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:7px 12px;color:var(--ink-2);
+}
+.fact b{color:var(--ink);font-weight:700}
+
+/* ---------- sections ---------- */
+.sec{
+  padding-top:52px;
+  scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 74px);
+}
+.sec-h{
+  display:flex;gap:14px;align-items:baseline;
+  padding-bottom:10px;margin-bottom:22px;
+  border-bottom:1px solid var(--line-strong);
+}
+.sec-h em{
+  font:700 11px/1 "JetBrains Mono",monospace;font-style:normal;
+  color:var(--accent);flex:none;padding-top:4px;
+}
+.sec-h h2{font-size:clamp(23px,3.6vw,29px)}
+.lede{color:var(--ink-2);font-size:16.5px;margin-bottom:22px;max-width:66ch}
+.sec h3{font-size:18.5px;margin:34px 0 10px}
+.sec h4{font-size:15px;margin:22px 0 7px;letter-spacing:-.005em}
+.body-p{max-width:66ch;color:var(--ink-2)}
+.body-p + .body-p{margin-top:12px}
+.body-p strong{color:var(--ink);font-weight:600}
+
+ul.plain{margin:12px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;max-width:66ch}
+ul.plain li{position:relative;padding-left:20px;color:var(--ink-2)}
+ul.plain li::before{
+  content:"";position:absolute;left:3px;top:.62em;
+  width:6px;height:6px;border-radius:50%;background:var(--line-strong);
+}
+ul.plain li strong{color:var(--ink);font-weight:600}
+ol.steps{margin:14px 0 0;padding-left:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:12px;max-width:66ch}
+ol.steps li{position:relative;padding-left:32px;counter-increment:s;color:var(--ink-2)}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;
+  width:21px;height:21px;border-radius:6px;
+  background:var(--accent-soft);color:var(--accent-ink);
+  font:700 11px/21px "JetBrains Mono",monospace;text-align:center;
+}
+ol.steps li strong{color:var(--ink);font-weight:600}
+
+/* ---------- rule cards ---------- */
+.rules{display:grid;gap:12px;margin-top:20px}
+.rule{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:11px;padding:16px 18px;
+}
+.rule b{
+  display:block;font-family:"Bricolage Grotesque",sans-serif;
+  font-size:15.5px;font-weight:700;margin-bottom:5px;letter-spacing:-.012em;
+}
+.rule span{color:var(--ink-2);font-size:14.8px;line-height:1.55;display:block}
+.rule .num{
+  font:700 10px/1 "JetBrains Mono",monospace;color:var(--accent);
+  display:block;margin-bottom:9px;letter-spacing:.1em;
+}
+
+/* ---------- stage ---------- */
+.stage{
+  border:1px solid var(--line);border-radius:13px;
+  background:var(--surface);margin-top:16px;overflow:hidden;
+}
+.stage-h{
+  display:flex;gap:13px;align-items:flex-start;
+  padding:16px 18px;background:var(--surface-2);
+  border-bottom:1px solid var(--line);
+}
+.stage-n{
+  flex:none;width:26px;height:26px;border-radius:7px;
+  background:var(--accent);color:#fff;
+  font:700 12px/26px "JetBrains Mono",monospace;text-align:center;
+}
+.stage-h div{min-width:0}
+.stage-h h3{margin:0;font-size:17px}
+.stage-h p{font-size:13.4px;color:var(--muted);margin-top:3px;line-height:1.45}
+.stage-b{padding:18px}
+.stage-b > *:first-child{margin-top:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.chip{
+  font:500 11px/1.3 "JetBrains Mono",monospace;
+  border:1px solid var(--line);border-radius:6px;
+  padding:5px 9px;color:var(--muted);background:var(--paper);
+}
+.chip b{color:var(--ink-2);font-weight:700}
+
+/* ---------- chat thread ---------- */
+.thread{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:12px;padding:16px 14px;
+  display:flex;flex-direction:column;gap:7px;margin:18px 0;
+}
+.thread-cap{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:4px;padding-inline:4px;
+}
+.msg{
+  max-width:81%;padding:9px 13px;border-radius:16px;
+  font-size:14.6px;line-height:1.5;width:fit-content;
+}
+.msg.them{background:var(--them);color:var(--them-ink);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.you{background:var(--you);color:var(--you-ink);border-bottom-right-radius:5px;align-self:flex-end}
+.msg.auto{
+  background:var(--bot);color:var(--bot-ink);
+  border-bottom-right-radius:5px;align-self:flex-end;
+  border:1px dashed var(--line-strong);
+}
+.msg.auto::before{
+  content:"AUTOMATED";display:block;
+  font:700 8.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;opacity:.75;margin-bottom:5px;
+}
+.msg.ad{
+  background:transparent;border:1px solid var(--line-strong);
+  color:var(--muted);align-self:center;max-width:94%;
+  border-radius:9px;font-size:13px;text-align:center;font-style:italic;
+}
+.msg.ad::before{
+  content:"AD CREATIVE";display:block;
+  font:700 8.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;margin-bottom:5px;font-style:normal;color:var(--accent);
+}
+.gap{
+  align-self:center;
+  font:500 10.5px/1 "JetBrains Mono",monospace;
+  color:var(--muted);padding:5px 0;letter-spacing:.06em;
+}
+.annot{
+  align-self:flex-start;max-width:90%;
+  font-size:12.8px;line-height:1.5;color:var(--muted);
+  padding:2px 4px 6px;font-style:italic;
+}
+.annot.r{align-self:flex-end;text-align:right}
+
+/* ---------- script block ---------- */
+.script{
+  border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:var(--surface);border-radius:9px;margin:14px 0;overflow:hidden;
+}
+.script-h{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-bottom:1px solid var(--line);
+  background:var(--surface-2);
+}
+.script-h span{
+  font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex:1;
+}
+.copy{
+  font:600 11px/1 "Instrument Sans",sans-serif;
+  border:1px solid var(--line-strong);background:var(--surface);
+  color:var(--ink-2);border-radius:6px;padding:6px 10px;cursor:pointer;flex:none;
+}
+.copy:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.copy.done{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.script-b{
+  padding:13px 15px;font-size:14.8px;line-height:1.62;color:var(--ink);
+  white-space:pre-wrap;font-family:"Instrument Sans",sans-serif;margin:0;
+}
+.script-b .fill{
+  background:var(--warn-soft);color:var(--warn);
+  border-radius:4px;padding:0 4px;font-weight:600;
+}
+
+/* ---------- do / dont ---------- */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.dd > div{border-radius:10px;padding:14px 16px;border:1px solid}
+.dd .do{background:var(--good-soft);border-color:color-mix(in srgb, var(--good) 34%, transparent)}
+.dd .no{background:var(--bad-soft);border-color:color-mix(in srgb, var(--bad) 34%, transparent)}
+.dd b{
+  display:block;font:700 10px/1 "JetBrains Mono",monospace;
+  letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px;
+}
+.dd .do b{color:var(--good)}
+.dd .no b{color:var(--bad)}
+.dd ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:6px}
+.dd li{font-size:14.2px;line-height:1.5;color:var(--ink-2)}
+
+.callout{
+  border-radius:10px;padding:15px 17px;margin:20px 0;
+  border:1px solid;display:flex;gap:12px;align-items:flex-start;
+}
+.callout b{
+  font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.13em;
+  text-transform:uppercase;flex:none;padding-top:4px;
+}
+.callout p{font-size:14.6px;line-height:1.56;color:var(--ink-2)}
+.callout p + p{margin-top:9px}
+.callout.warn{background:var(--warn-soft);border-color:color-mix(in srgb, var(--warn) 36%, transparent)}
+.callout.warn b{color:var(--warn)}
+.callout.stop{background:var(--bad-soft);border-color:color-mix(in srgb, var(--bad) 40%, transparent)}
+.callout.stop b{color:var(--bad)}
+.callout.key{background:var(--accent-soft);border-color:color-mix(in srgb, var(--accent) 34%, transparent)}
+.callout.key b{color:var(--accent-ink)}
+
+/* ---------- traffic light ---------- */
+.lights{display:grid;gap:10px;margin-top:18px}
+.light{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;
+  border:1px solid var(--line);border-radius:11px;
+  background:var(--surface);padding:15px 17px;
+}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:7px}
+.light.g .dot{background:var(--good)}
+.light.a .dot{background:var(--warn)}
+.light.r .dot{background:var(--bad)}
+.light h4{margin:0 0 4px;font-size:15px}
+.light.g h4{color:var(--good)}
+.light.a h4{color:var(--warn)}
+.light.r h4{color:var(--bad)}
+.light p{font-size:14.2px;color:var(--ink-2);line-height:1.55}
+.light .act{
+  margin-top:8px;font-size:13.6px;color:var(--ink);
+  padding-top:8px;border-top:1px dashed var(--line-strong);
+}
+.light .act b{font-weight:600}
+
+/* ---------- messaging window ---------- */
+.win{
+  margin:20px 0;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);overflow:hidden;
+}
+.win-h{
+  padding:13px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);
+  font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted);
+}
+.win-b{padding:18px 16px}
+.bar{
+  display:flex;height:34px;border-radius:8px;overflow:hidden;
+  border:1px solid var(--line-strong);
+}
+.bar div{
+  display:flex;align-items:center;justify-content:center;
+  font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.06em;
+  text-align:center;padding-inline:4px;
+}
+.bar .b1{flex:1;background:var(--good);color:#fff}
+.bar .b2{flex:3;background:var(--good-soft);color:var(--good)}
+.bar .b3{flex:2;background:var(--warn-soft);color:var(--warn)}
+.bar .b4{flex:2.4;background:var(--bad-soft);color:var(--bad)}
+.bar-k{
+  display:flex;justify-content:space-between;margin-top:8px;
+  font:500 10.5px/1.3 "JetBrains Mono",monospace;color:var(--muted);
+}
+
+/* ---------- formula ---------- */
+.formula{
+  margin:20px 0;padding:18px 16px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;
+}
+.fnode{
+  flex:1 1 130px;min-width:0;border:1px solid var(--line);
+  border-radius:9px;padding:12px 13px;background:var(--paper);
+}
+.fnode b{
+  display:block;font:700 9.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:7px;
+}
+.fnode span{display:block;font-size:13.6px;line-height:1.45;color:var(--ink-2)}
+.fnode .eq{
+  display:block;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line-strong);
+  font:500 11.5px/1.4 "JetBrains Mono",monospace;color:var(--ink);
+}
+
+/* ---------- filter ---------- */
+.filter{
+  position:sticky;
+  top:calc(env(safe-area-inset-top, 0px) + 58px);
+  z-index:20;
+  background:color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter:blur(10px);
+  padding-block:12px;margin-bottom:6px;
+  border-bottom:1px solid var(--line);
+}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter input{
+  flex:1 1 200px;min-width:0;
+  font:400 14.5px/1 "Instrument Sans",sans-serif;
+  color:var(--ink);background:var(--surface);
+  border:1px solid var(--line-strong);border-radius:8px;padding:10px 13px;
+}
+.filter input::placeholder{color:var(--muted)}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.cat{
+  font:600 11.5px/1 "Instrument Sans",sans-serif;
+  border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-2);border-radius:999px;padding:7px 11px;cursor:pointer;
+}
+.cat:hover{border-color:var(--line-strong)}
+.cat[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.count{font:500 11.5px/1 "JetBrains Mono",monospace;color:var(--muted);margin-top:9px;display:block}
+
+/* ---------- play cards ---------- */
+.plays{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.play{
+  border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);overflow:hidden;box-shadow:var(--shadow);
+}
+.play-h{padding:15px 17px 13px;border-bottom:1px solid var(--line)}
+.play-tag{
+  font:700 9.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  display:block;margin-bottom:8px;
+}
+.play-h h4{margin:0;font-size:16.5px;line-height:1.3}
+.play-h:not(.nq) h4::before{content:"“";color:var(--muted)}
+.play-h:not(.nq) h4::after{content:"”";color:var(--muted)}
+.play-b{padding:15px 17px}
+.play-b > *:first-child{margin-top:0}
+.play-b > *:last-child{margin-bottom:0}
+.lbl{
+  font:700 9.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;
+  display:block;margin:16px 0 6px;color:var(--accent-ink);
+}
+.lbl:first-child{margin-top:0}
+.lbl.read{color:var(--muted)}
+.lbl.never{color:var(--bad)}
+.play-b p{font-size:14.6px;line-height:1.58;color:var(--ink-2)}
+.play-b p strong{color:var(--ink);font-weight:600}
+
+/* ---------- ladder ---------- */
+.ladder{
+  margin-top:20px;border-left:2px solid var(--line-strong);
+  padding-left:0;display:flex;flex-direction:column;gap:2px;
+}
+.rung{position:relative;padding:14px 0 14px 24px}
+.rung::before{
+  content:"";position:absolute;left:-5px;top:21px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);outline:3px solid var(--paper);
+}
+.rung .when{
+  font:700 10.5px/1 "JetBrains Mono",monospace;
+  letter-spacing:.1em;color:var(--accent);text-transform:uppercase;
+}
+.rung h4{margin:7px 0 5px;font-size:15.5px}
+.rung p{font-size:14.3px;color:var(--ink-2);line-height:1.55}
+.rung .say{
+  margin-top:9px;background:var(--surface);border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;font-size:14.4px;line-height:1.55;color:var(--ink);
+}
+.rung.end::before{background:var(--muted)}
+.rung.end .when{color:var(--muted)}
+.rung.edge::before{background:var(--warn)}
+.rung.edge .when{color:var(--warn)}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:14.2px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font:700 10px/1.3 "JetBrains Mono",monospace;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+  background:var(--surface-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+td strong{font-weight:600}
+
+/* ---------- checklist ---------- */
+.check{display:flex;flex-direction:column;gap:2px;margin-top:18px}
+.check label{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:12px;align-items:baseline;
+  padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface);cursor:pointer;
+}
+.check label:hover{border-color:var(--line-strong)}
+.check input{margin:0;width:17px;height:17px;accent-color:var(--accent);transform:translateY(3px)}
+.check .t{font:500 11px/1.4 "JetBrains Mono",monospace;color:var(--accent-ink);white-space:nowrap}
+.check .d{font-size:14.4px;color:var(--ink-2);line-height:1.5}
+.check .d b{color:var(--ink);font-weight:600;display:block}
+.check input:checked ~ .d{opacity:.5;text-decoration:line-through}
+.check input:checked ~ .t{opacity:.5}
+
+/* ---------- never list ---------- */
+.nevers{display:grid;gap:9px;margin-top:18px}
+.never{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;
+  background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--bad);border-radius:10px;padding:13px 16px;
+}
+.never .x{font:700 13px/1 "JetBrains Mono",monospace;color:var(--bad);padding-top:4px}
+.never b{display:block;font-size:14.8px;font-weight:600;margin-bottom:3px}
+.never span{font-size:13.8px;color:var(--muted);line-height:1.5}
+
+footer{
+  margin-top:64px;padding-top:26px;border-top:1px solid var(--line-strong);
+  font-size:13.4px;color:var(--muted);line-height:1.6;max-width:66ch;
+}
+footer b{color:var(--ink-2)}
+footer p + p{margin-top:12px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0;padding-inline:16px}
+  .main{padding-block:26px 0;max-width:none}
+  .rail{
+    position:sticky;top:calc(env(safe-area-inset-top, 0px) + 52px);
+    z-index:30;flex-direction:row;gap:6px;
+    overflow-x:auto;padding-block:10px;
+    margin-inline:-16px;padding-inline:16px;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    -webkit-overflow-scrolling:touch;
+  }
+  .rail-h{display:none}
+  .rail a{
+    white-space:nowrap;border:1px solid var(--line);border-left-width:1px;
+    border-radius:999px;padding:7px 12px;background:var(--surface);font-size:12.6px;
+  }
+  .rail a.on{border-color:var(--accent)}
+  .filter{top:calc(env(safe-area-inset-top, 0px) + 104px)}
+  .sec{scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 116px)}
+  .dd{grid-template-columns:minmax(0,1fr)}
+  .msg{max-width:88%}
+  .bar div{font-size:8.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+html{scroll-behavior:smooth}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <b>Inbox&nbsp;to&nbsp;Client</b>
+      <span>Closing inbound DM ad leads</span>
+    </div>
+    <div class="spacer"></div>
+    <button class="tbtn" id="theme-toggle" type="button">Theme</button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="rail" aria-label="Sections">
+    <div class="rail-h">Contents</div>
+    <a href="#different"><i>01</i>Paid leads are different</a>
+    <a href="#window"><i>02</i>The messaging window</a>
+    <a href="#pipeline"><i>03</i>The six stages</a>
+    <a href="#openers"><i>04</i>Openers by ad type</a>
+    <a href="#qualify"><i>05</i>Qualifying (GAPT)</a>
+    <a href="#transition"><i>06</i>The transition</a>
+    <a href="#booking"><i>07</i>Booking &amp; show-up</a>
+    <a href="#matrix"><i>08</i>When this → do this</a>
+    <a href="#ladder"><i>09</i>Follow-up ladder</a>
+    <a href="#automation"><i>10</i>Bot vs human</a>
+    <a href="#never"><i>11</i>Never do this</a>
+    <a href="#day"><i>12</i>The daily rhythm</a>
+    <a href="#economics"><i>13</i>Unit economics</a>
+    <a href="#feedback"><i>14</i>Feeding the ad account</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="hero">
+      <span class="kicker">Paid inbound · DM ads · v2</span>
+      <h1>They clicked forty seconds ago.</h1>
+      <p class="sub">This is the system for converting <strong>inbound DM ad leads</strong> — people who clicked a paid ad, triggered a keyword, or hit "Send message" and landed in your inbox cold. They behave nothing like a story reply: they arrive in bursts, at all hours, with no relationship and a countdown running. <strong>Work them accordingly.</strong></p>
+      <div class="facts">
+        <span class="fact"><b>6</b> pipeline stages</span>
+        <span class="fact"><b>42</b> situation plays</span>
+        <span class="fact">First reply in <b>&lt;5 min</b></span>
+        <span class="fact">Read time <b>~35 min</b></span>
+      </div>
+    </div>
+
+    <div class="callout key" style="margin-top:34px">
+      <b>Core</b>
+      <p><strong>The ad buys attention. The DM buys the call. The call sells the coaching.</strong> Three separate jobs — do not collapse them. The most expensive mistake in paid DM is pitching coaching to someone who clicked an ad forty seconds ago, because you burn a lead you paid for at the exact moment they were least ready.</p>
+      <p>The second most expensive is being slow.</p>
+    </div>
+
+    <!-- ================= 01 DIFFERENT ================= -->
+    <section class="sec" id="different">
+      <div class="sec-h"><em>01</em><h2>How paid leads differ — and the ten rules</h2></div>
+      <p class="lede">If you have set DMs before off organic traffic, most of your instincts are about to work against you. Read this section carefully before anything else.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th></th><th>Organic lead</th><th>Inbound ad lead</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Relationship</strong></td><td>Follows you, has seen your content</td><td>None. May not know your name.</td></tr>
+            <tr><td><strong>Intent</strong></td><td>Mixed, often high</td><td>Impulse. Two-second decision on a scroll.</td></tr>
+            <tr><td><strong>First message</strong></td><td>Something they wrote</td><td>A keyword or canned icebreaker. Carries no information.</td></tr>
+            <tr><td><strong>Arrival</strong></td><td>Trickle, whenever</td><td>Bursts, tied to ad delivery. Often overnight.</td></tr>
+            <tr><td><strong>Expectation</strong></td><td>Might reply tomorrow</td><td>Expects a reply in minutes, forgets you in hours.</td></tr>
+            <tr><td><strong>Follow-up</strong></td><td>Open-ended</td><td>Capped by a platform messaging window. See section 02.</td></tr>
+            <tr><td><strong>Cost of losing one</strong></td><td>Time</td><td>Time <em>and</em> cash. You already paid for it.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="num">RULE 01</span>
+          <b>Five minutes, not five hours.</b>
+          <span>A paid lead's intent decays faster than anything in this business — they were mid-scroll and have already moved on. Reply inside five minutes during ad hours and the same conversation is a different conversation. This single variable moves more revenue than any script on this page.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 02</span>
+          <b>Deliver what the ad promised, first, with no strings.</b>
+          <span>If the ad offered a guide, a meal plan, a free week — send it immediately, before any question. They came for that thing. Holding it hostage behind a qualifying question is the fastest way to be reported, blocked, and to tank the ad account's engagement quality.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 03</span>
+          <b>Know which ad they came from before you type.</b>
+          <span>The hook they responded to tells you their goal, their language and their frame. Someone who clicked a postpartum ad and someone who clicked a strength ad need entirely different first messages. If your setup doesn't tag the source, fix that before you scale spend.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 04</span>
+          <b>They don't know who you are. Say who you are.</b>
+          <span>Organic leads arrive knowing you. Ad leads genuinely do not. One short line of identification in the first human message prevents half the "who is this?" and "is this a bot?" confusion that kills paid threads.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 05</span>
+          <b>One question per message.</b>
+          <span>Two questions means they answer the easy one. On a cold paid lead who owes you nothing, it often means they answer neither.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 06</span>
+          <b>Never pitch in the first human message.</b>
+          <span>Not even softly. They clicked an ad, not a sales page. Pitching immediately confirms the fear they had when they clicked — that this was bait — and it is the number one driver of "reported as spam", which quietly raises your costs across the whole account.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 07</span>
+          <b>Get permission before you offer.</b>
+          <span>"Can I ask you something?" · "Want my honest take?" A yes before the offer turns a push into a pull. On cold paid traffic this beat matters more, not less.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 08</span>
+          <b>Get off the platform early.</b>
+          <span>Once there's a real conversation, get an email or a phone number with their consent. The messaging window closes; your email list doesn't. A lead you can only reach inside a 24-hour window is a lead you will lose on day three.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 09</span>
+          <b>Only say what the ad can back up.</b>
+          <span>No guaranteed results, no medical claims, no promises the ad didn't make and you can't keep. Advertising standards apply to what you say in the DM too, and a mismatch between ad and DM is both a compliance problem and a refund waiting to happen.</span>
+        </div>
+        <div class="rule">
+          <span class="num">RULE 10</span>
+          <b>Every dead lead is data. Log why.</b>
+          <span>Wrong country, price shock, only wanted the freebie, under 18, wrong goal — these are not just lost deals, they're an ad targeting brief. Section 14 covers how to feed it back.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 02 WINDOW ================= -->
+    <section class="sec" id="window">
+      <div class="sec-h"><em>02</em><h2>The messaging window</h2></div>
+      <p class="lede">The single biggest structural difference between paid DM and organic DM, and the thing most coaches discover only after they've lost a month of leads. Understand it before you build any follow-up habit.</p>
+
+      <p class="body-p">Messaging platforms limit how long a business can keep messaging someone after that person's last message. On Messenger and Instagram this is commonly a <strong>24-hour standard messaging window</strong> that reopens every time <em>they</em> reply. Outside it, business-initiated messages are restricted, and sending through an automation tool may simply fail or put your account at risk.</p>
+
+      <p class="body-p">Two things decide how much this constrains you:</p>
+      <ul class="plain">
+        <li><strong>If you reply manually from the app</strong> — the way most coaches actually work — you have more practical latitude, but the spirit still applies: a cold paid lead who hasn't replied in four days does not want a fifth message.</li>
+        <li><strong>If you use an automation platform</strong> (ManyChat and similar), you are on the API and the window is enforced. Some message tags — a human-agent tag, for instance — extend it, and your platform will tell you which it supports.</li>
+      </ul>
+
+      <div class="callout warn">
+        <b>Verify</b>
+        <p>Platform messaging policies change, and they differ by channel and by country. Confirm the current rules for the exact channel you run ads on before you build your follow-up sequence around them — don't take this page's word for it a year from now.</p>
+      </div>
+
+      <div class="win">
+        <div class="win-h">A paid lead's decay curve — plan around this shape</div>
+        <div class="win-b">
+          <div class="bar">
+            <div class="b1">0–5 MIN</div>
+            <div class="b2">5–60 MIN</div>
+            <div class="b3">1–24 HRS</div>
+            <div class="b4">AFTER 24 HRS</div>
+          </div>
+          <div class="bar-k">
+            <span>Hot · they're still on their phone</span>
+            <span>Cold · window closing</span>
+          </div>
+          <p class="body-p" style="margin-top:16px">Everything that matters happens on the left of this bar. The practical consequence: <strong>your qualifying, your transition and your booking should all happen inside the first conversation wherever possible</strong> — not spread across three days the way an organic lead can be. Aim to get from their first message to a booked call in one sitting.</p>
+        </div>
+      </div>
+
+      <h3>The escape hatch</h3>
+      <p class="body-p">Because the window will close on a chunk of your leads, capture a channel you control while the conversation is live. Ask naturally, at the point it makes sense, and be straight about why.</p>
+      <div class="script">
+        <div class="script-h"><span>Channel capture · mid-conversation</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">What's the best email for you? DMs bury things and I'd rather not lose you in the pile — I'll send <span class="fill">[the guide / the times / the details]</span> there too.</p>
+      </div>
+      <div class="callout warn">
+        <b>Consent</b>
+        <p>An email given so you can send one specific thing is not consent to add them to a marketing list. If you're going to market to them, say so and get proper opt-in — data protection rules where you operate will have a view on this, and the fines are not theoretical.</p>
+      </div>
+    </section>
+
+    <!-- ================= 03 PIPELINE ================= -->
+    <section class="sec" id="pipeline">
+      <div class="sec-h"><em>03</em><h2>The six stages</h2></div>
+      <p class="lede">Numbered because the order is load-bearing. Stage 2 is the one that doesn't exist in organic DM and the one coaches skip — skipping it is why paid leads ghost.</p>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">1</span>
+          <div><h3>Respond</h3><p>Goal: a human reply from you, inside five minutes, that says who you are.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Target:</b> &lt;5 min in ad hours</span>
+            <span class="chip"><b>Messages:</b> 1</span>
+            <span class="chip"><b>Exit when:</b> sent</span>
+          </div>
+          <p class="body-p">Their first message is almost always a keyword or an icebreaker the ad put there — "INFO", "Send me the guide", "I'm interested". It tells you nothing about them except which ad they clicked. Treat it as a doorbell, not a conversation.</p>
+          <p class="body-p">Your reply does three things in about fifteen words: confirms a human is here, names who you are, and sets up the delivery.</p>
+          <div class="dd">
+            <div class="do">
+              <b>Do</b>
+              <ul>
+                <li>Reply fast, even if the full delivery takes another minute</li>
+                <li>Name yourself and the business once</li>
+                <li>Reference the ad's actual offer in their words</li>
+                <li>Keep it to one or two lines</li>
+              </ul>
+            </div>
+            <div class="no">
+              <b>Don't</b>
+              <ul>
+                <li>Open with a qualifying question before delivering</li>
+                <li>Send a wall of text about your programme</li>
+                <li>Make them repeat what they already clicked</li>
+                <li>Let a bot carry the whole thread — see section 10</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">2</span>
+          <div><h3>Deliver</h3><p>Goal: hand over exactly what the ad promised, with nothing attached.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 1</span>
+            <span class="chip"><b>Time:</b> immediately</span>
+            <span class="chip"><b>Exit when:</b> they have the thing</span>
+          </div>
+          <p class="body-p">This stage exists only in paid inbound, and it is non-negotiable. They clicked because of a specific promise. Deliver it in full, for free, without asking for anything — then and only then do you have the standing to ask a question.</p>
+          <p class="body-p">Delivering properly does three jobs at once: it keeps the promise your ad made, it proves you're real, and it creates the small reciprocity that makes the next question feel reasonable rather than intrusive. <strong>Coaches who gate the freebie behind a question lose a meaningful share of paid leads right here</strong>, and those leads are the ones most likely to report the ad.</p>
+          <div class="callout stop">
+            <b>Never</b>
+            <p>"Sure — just answer a couple of questions first and I'll send it over." You advertised a thing. Send the thing. If your offer only works as bait, the offer is the problem, not the lead.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">3</span>
+          <div><h3>Qualify</h3><p>Goal: goal, history, real obstacle, timeline — plus whether they're even in your market.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 4–8</span>
+            <span class="chip"><b>Time:</b> same session ideally</span>
+            <span class="chip"><b>Exit when:</b> you can state their problem back</span>
+          </div>
+          <p class="body-p">Same GAPT framework as organic (section 05) with one addition: paid traffic includes people your targeting reached by accident. Confirm location, age bracket if it's relevant to your offer, and that they're actually looking for coaching rather than a free download. Disqualifying fast is a skill — every minute on a dead paid lead is a minute off a live one.</p>
+          <p class="body-p">Exit test: can you write one sentence describing their situation that would make them say "yeah, exactly"? If not, ask another question.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">4</span>
+          <div><h3>Transition</h3><p>Goal: permission to talk about working together.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 1–2</span>
+            <span class="chip"><b>Time:</b> straight after qualifying</span>
+            <span class="chip"><b>Exit when:</b> they say yes to hearing more</span>
+          </div>
+          <p class="body-p">Two beats — reflect, then ask permission. On cold paid traffic the reflect beat is doing double duty: it's also the first moment they think "this person actually listened", which is rare enough on an ad-driven thread to be a genuine differentiator. Full scripts in section 06.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">5</span>
+          <div><h3>Book</h3><p>Goal: a specific time, ideally within 24–48 hours, with contact details captured.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Messages:</b> 2–3</span>
+            <span class="chip"><b>Book within:</b> 48 hrs</span>
+            <span class="chip"><b>Exit when:</b> invite sent + confirmed</span>
+          </div>
+          <p class="body-p">Book paid leads sooner than organic ones. An organic lead who booked nine days out still knows who you are next week; a paid lead often doesn't. Two concrete times, never "when are you free", and always take the phone number — it's your route back in when the messaging window shuts.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-h">
+          <span class="stage-n">6</span>
+          <div><h3>Confirm &amp; show</h3><p>Goal: they turn up. Paid leads no-show more than organic ones. Plan for it.</p></div>
+        </div>
+        <div class="stage-b">
+          <div class="meta-row">
+            <span class="chip"><b>Touches:</b> 4</span>
+            <span class="chip"><b>Channels:</b> DM + email/SMS</span>
+            <span class="chip"><b>Exit when:</b> the call happens</span>
+          </div>
+          <p class="body-p">A lead who met you forty minutes ago via an advert has far less social obligation to show up than someone who's followed you for a year. That's not a character flaw, it's just the nature of the source — so the confirmation sequence in section 07 is longer and runs on two channels.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 04 OPENERS ================= -->
+    <section class="sec" id="openers">
+      <div class="sec-h"><em>04</em><h2>Openers by ad type</h2></div>
+      <p class="lede">What you say depends entirely on what the ad said and how they arrived. In every case the shape is the same: identify yourself → deliver the promise → one easy question.</p>
+
+      <h3>A. Click-to-message ad with an icebreaker</h3>
+      <p class="body-p">They tapped "Send message" on an ad and the platform pre-filled a prompt. They may not have typed a single word themselves.</p>
+      <div class="thread">
+        <div class="thread-cap">Ad hook: "the 3 mistakes keeping you skinny-fat"</div>
+        <div class="msg ad">The 3 mistakes keeping you skinny-fat — message me "GUIDE" and I'll send it over</div>
+        <div class="msg them">GUIDE</div>
+        <div class="msg you">Hey! It's <span style="opacity:.85">[name]</span> here — I run the coaching side of things. Sending it now 👇</div>
+        <div class="annot r">Under 5 minutes. Names a human. No question yet.</div>
+        <div class="msg you">[the guide]</div>
+        <div class="msg you">That's yours to keep. Out of curiosity — which of the three was the one that made you click?</div>
+        <div class="annot r">Delivered first. The question is about the content, not about them buying.</div>
+        <div class="msg them">honestly the second one, I train hard but my diet is all over the place</div>
+        <div class="annot r">That's stage 3 open, and it took four messages.</div>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>Click-to-message · respond</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey! It's <span class="fill">[your name]</span> here from <span class="fill">[business]</span> — sending that over now 👇</p>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>Click-to-message · deliver + open</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b"><span class="fill">[the thing you promised]</span>
+
+That's yours, no strings. Quick one — what made you click on it? Is <span class="fill">[the ad's topic]</span> the thing you're wrestling with at the minute?</p>
+      </div>
+
+      <h3>B. Comment-to-DM keyword automation</h3>
+      <p class="body-p">They commented a keyword on an ad or post and got auto-DM'd. Highest volume, lowest average intent — a lot of people comment reflexively. Expect a big drop-off between the auto-message and a real reply, and don't read it as failure.</p>
+      <div class="thread">
+        <div class="thread-cap">Keyword: "RESET"</div>
+        <div class="msg auto">Hey! Here's the 7-day reset you asked for 👇 [link]</div>
+        <div class="msg them">thanks!</div>
+        <div class="msg you">No worries — <span style="opacity:.85">[name]</span> here by the way, real person 👋 Did you grab it because you're coming back from a break, or just trying to tighten things up?</div>
+        <div class="annot r">Human takes over immediately after the bot delivers. Binary question — easy to answer one-handed.</div>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>Keyword · human handover</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">No worries — <span class="fill">[your name]</span> here by the way, real person 👋
+
+Did you grab it because you're <span class="fill">[situation A]</span>, or more <span class="fill">[situation B]</span>?</p>
+      </div>
+
+      <h3>C. Lead-form ad, then DM</h3>
+      <p class="body-p">They filled in a form, so you have a name and contact details but no conversation. You're initiating — so reference the form explicitly or it reads as cold outreach.</p>
+      <div class="script">
+        <div class="script-h"><span>Lead form · first DM</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey <span class="fill">[name]</span> — <span class="fill">[your name]</span> from <span class="fill">[business]</span>. You put your details in about <span class="fill">[the offer]</span> earlier, so I thought I'd message here rather than just email you.
+
+Sent it over to <span class="fill">[their email]</span> as well. Did it land alright?</p>
+      </div>
+
+      <h3>D. Retargeting ad — they've seen you before</h3>
+      <p class="body-p">Warmer. They've engaged with something of yours already. Acknowledge it lightly without being creepy about how you know.</p>
+      <div class="script">
+        <div class="script-h"><span>Retargeting · respond</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Hey! <span class="fill">[your name]</span> here. Sending that over now — and good to properly say hello, I think you've been around the page a little while 👋</p>
+      </div>
+
+      <h3>E. Story ad / swipe-up reply</h3>
+      <p class="body-p">They replied directly to a story ad, often with a reaction or a couple of words. Closest thing to an organic story reply in the paid world — treat it as the warmest paid lead you'll get and go slightly more conversational.</p>
+      <div class="script">
+        <div class="script-h"><span>Story ad · respond</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Ha, appreciate that — <span class="fill">[your name]</span> here 👋 Is that something you're dealing with right now, or were you just nodding along?</p>
+      </div>
+
+      <div class="callout key">
+        <b>Always</b>
+        <p>Whatever the ad type: <strong>identify yourself in the first human message.</strong> "It's [name] here" costs four words and removes the single most common friction point on cold paid traffic — the quiet suspicion that they're talking to a bot or a scam.</p>
+      </div>
+    </section>
+
+    <!-- ================= 05 QUALIFY ================= -->
+    <section class="sec" id="qualify">
+      <div class="sec-h"><em>05</em><h2>Qualifying: GAPT, plus the fit check</h2></div>
+      <p class="lede">Four things you need before you offer anything, asked one message at a time with a human reaction in between. Then a fast fit check, because paid targeting is imprecise and some of these people were never in your market.</p>
+
+      <div class="rules">
+        <div class="rule">
+          <span class="num">G — GOAL</span>
+          <b>What are they actually trying to do?</b>
+          <span>"What are you working towards at the minute?" · "If this went perfectly, what's different in six months?" — On ad traffic you often get the ad's language back ("I want to get toned"). Push once for something concrete: a number, an event, a feeling they can describe.</span>
+        </div>
+        <div class="rule">
+          <span class="num">A — ATTEMPTS</span>
+          <b>What have they already tried?</b>
+          <span>"What have you tried so far?" · "What's worked best of everything you've done?" — Separates the never-started from the been-burned, and it's the best single predictor of how to pitch on the call.</span>
+        </div>
+        <div class="rule">
+          <span class="num">P — PAIN</span>
+          <b>Where does it actually break down?</b>
+          <span>"What's the bit that keeps tripping you up?" · "Where does it usually fall apart — training or food?" — People rarely lack information. They lack structure and a plan that survives a bad week.</span>
+        </div>
+        <div class="rule">
+          <span class="num">T — TIMELINE</span>
+          <b>Now, or someday?</b>
+          <span>"Is this a 'starting now' thing or more of a 'thinking about it' thing?" — The most skipped and most valuable question, and on paid traffic it's essential: a large share of ad clickers are in browsing mode and will happily chat for twenty minutes without ever intending to start.</span>
+        </div>
+      </div>
+
+      <h3>The fit check — 30 seconds, saves hours</h3>
+      <p class="body-p">Broad targeting reaches people you can't serve. Confirm these early and naturally, woven into conversation rather than fired off as a checklist.</p>
+      <ul class="plain">
+        <li><strong>Location / timezone</strong> — "Whereabouts are you based?" Catches targeting leak and tells you whether your call times work.</li>
+        <li><strong>Age bracket</strong> — only where your offer requires it. Under-18s do come through ads. See play 35.</li>
+        <li><strong>Are they after coaching, or the free thing?</strong> — the T question usually surfaces this on its own.</li>
+        <li><strong>Anything that puts them outside your scope</strong> — injury, medical condition, pregnancy. Plays 36 and 37.</li>
+      </ul>
+
+      <h3>Reading the answers</h3>
+      <div class="lights">
+        <div class="light g">
+          <span class="dot"></span>
+          <div>
+            <h4>Green — go now, in this session</h4>
+            <p>Specific goal. A deadline or trigger event. Has tried alone and it hasn't worked. Describes the pain unprompted. Asks how you work. In your service area.</p>
+            <p class="act"><b>Action:</b> transition immediately — same conversation, do not "let them read the guide and come back". The window is open now and it will not be open on Thursday.</p>
+          </div>
+        </div>
+        <div class="light a">
+          <span class="dot"></span>
+          <div>
+            <h4>Amber — one more angle, then park</h4>
+            <p>Vague goal, no timeline, friendly but non-committal. Engaged with the freebie but not with the idea of changing anything.</p>
+            <p class="act"><b>Action:</b> one genuine value message and one honest question (play 16). If it doesn't move, capture an email, put them on the ladder in section 09, and get back to live leads. Do not spend an hour here while five new leads sit unanswered.</p>
+          </div>
+        </div>
+        <div class="light r">
+          <span class="dot"></span>
+          <div>
+            <h4>Red — close it kindly and log why</h4>
+            <p>Outside your service area. Only ever wanted the download. Can't afford it under any structure you actually offer. Needs a clinician. Under 18 without a guardian. Signs of disordered eating (play 36). Obvious spam.</p>
+            <p class="act"><b>Action:</b> be warm, be quick, end it. Then <b>log the reason</b> — red leads are the raw material for fixing your targeting, and that's worth more than the lead was. Section 14.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 06 TRANSITION ================= -->
+    <section class="sec" id="transition">
+      <div class="sec-h"><em>06</em><h2>The transition</h2></div>
+      <p class="lede">Two beats, in this order, never skipped. On paid traffic this is where a conversation either becomes a pipeline or becomes a polite goodbye.</p>
+
+      <ol class="steps">
+        <li><strong>Reflect.</strong> Say their problem back in your own words, accurately. You're proving you listened — which, to someone who arrived via an advert and half-expected a bot, lands harder than you'd think.</li>
+        <li><strong>Ask permission.</strong> A small, easy yes that opens the door. Never offer without it.</li>
+      </ol>
+
+      <div class="thread">
+        <div class="thread-cap">The transition, in full</div>
+        <div class="msg them">yeah I'll be good for 3 weeks then one bad week and I've completely fallen off again</div>
+        <div class="msg you">So it's not that you don't know what to do — it's that nothing's holding it together when life gets in the way. Sound about right?</div>
+        <div class="annot r">Beat 1: reflect.</div>
+        <div class="msg them">yes that's exactly it</div>
+        <div class="msg you">That's honestly the main thing I fix for people. Can I ask — are you open to having someone coach you through it, or are you set on figuring it out solo?</div>
+        <div class="annot r">Beat 2: permission. The "or solo" option is real — let them take it.</div>
+        <div class="msg them">no I'm open to it, been thinking about it for a while</div>
+        <div class="msg you">Cool. Easiest thing is a quick 15 min call so I can get the full picture and tell you straight whether I can help. No pitch, and if I'm not the right fit I'll say so. Want me to send a couple of times?</div>
+      </div>
+
+      <div class="script">
+        <div class="script-h"><span>Beat 1 · reflect</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">So if I've got this right — it's not that you <span class="fill">[the thing they clearly can do]</span>, it's that <span class="fill">[the actual breakdown point]</span>. Is that fair?</p>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>Beat 2 · permission</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">That's pretty much exactly what I help people with. Can I ask — are you open to having someone coach you through it, or are you set on doing it solo?</p>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>The ask</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Easiest thing is a quick 15 minute call so I can hear the full picture and tell you straight whether I can help. No pitch, and if I'm not the right fit I'll tell you. Want me to send over a couple of times?</p>
+      </div>
+
+      <div class="callout key">
+        <b>Why</b>
+        <p>"If I'm not the right fit I'll tell you" is the most important line in the script — and it only works if you actually do it. Say it, mean it, and turn people away on calls when it's true. On paid traffic especially, prospects arrive braced for a pitch; being the one person who isn't pitching is the whole edge.</p>
+      </div>
+    </section>
+
+    <!-- ================= 07 BOOKING ================= -->
+    <section class="sec" id="booking">
+      <div class="sec-h"><em>07</em><h2>Booking and getting them to show</h2></div>
+      <p class="lede">Paid leads book later and show less than organic ones. Both are fixable, mechanically, and this is the cheapest revenue in the whole system — a no-show is a lead you fully paid for and got nothing from.</p>
+
+      <h3>Two times, close in, and take the number</h3>
+      <p class="body-p">A booking link is a hurdle and "when are you free?" is homework. Two specific times is a three-second decision. Make them oddly specific — 7:10, 12:40 — it reads as a real calendar rather than a sales grid. And book <strong>close in</strong>: inside 48 hours wherever you can.</p>
+      <div class="script">
+        <div class="script-h"><span>Booking · two-option close</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">I've got <span class="fill">[tomorrow 7:10pm]</span> or <span class="fill">[Thursday 12:40pm]</span> — which suits you better?</p>
+      </div>
+      <div class="script">
+        <div class="script-h"><span>Booking · capture the channel</span><button class="copy" type="button">Copy</button></div>
+        <p class="script-b">Perfect. Best number to reach you on, and an email for the invite? DMs bury things and I don't want this getting lost.</p>
+      </div>
+
+      <div class="callout warn">
+        <b>Do not skip</b>
+        <p>Taking the phone number and email is what lets you confirm and re-book after the messaging window closes. On paid traffic it is the difference between a bookings calendar and a wish list. Get it every time, before you send the invite.</p>
+      </div>
+
+      <h3>Four show-up touches, across two channels</h3>
+      <div class="ladder">
+        <div class="rung">
+          <span class="when">Touch 1 · immediately · DM + email</span>
+          <h4>Invite, expectations, one prep question</h4>
+          <p>Makes it real, makes it short, and gets a small commitment that makes skipping it feel rude. The prep question is doing the heavy lifting — a lead who answers it shows up far more often.</p>
+          <div class="say">Sent the invite over 👍 It'll take about 15 minutes — I'll ask about your training and where it's getting stuck, then tell you honestly whether I can help.<br><br>One thing before we talk: what would need to come out of the call for it to be worth your time?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Touch 2 · night before · DM</span>
+          <h4>The soft confirm</h4>
+          <p>Short, one question, gives them a graceful way to move it rather than ghost it. Their reply also reopens the messaging window.</p>
+          <div class="say">Hey [name] — still good for 7:10 tomorrow?</div>
+        </div>
+        <div class="rung">
+          <span class="when">Touch 3 · 1 hour before · SMS</span>
+          <h4>The practical reminder</h4>
+          <p>Sent by text, not DM — it cuts through, and it works regardless of what the messaging window is doing.</p>
+          <div class="say">Calling you in an hour on this number. Somewhere you can talk properly? — [name]</div>
+        </div>
+        <div class="rung">
+          <span class="when">Touch 4 · at the time · call</span>
+          <h4>Ring them anyway</h4>
+          <p>Silence on touches 2 and 3 is not a cancellation. A meaningful number of paid leads simply don't check DMs and will answer the phone. Not answering is a no-show — handle it with play 41.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 08 MATRIX ================= -->
+    <section class="sec" id="matrix">
+      <div class="sec-h"><em>08</em><h2>When this happens → do this</h2></div>
+      <p class="lede">The reference section — 42 situations, what each usually means, what to do, the words to use, and what never to do. The first twelve are specific to paid ad traffic and won't appear in an organic playbook. Search or filter to find yours mid-conversation. Rewrite every script in your own voice before you send it; a script you can't say out loud naturally sounds exactly like a script.</p>
+
+      <div class="filter">
+        <div class="filter-row">
+          <label for="play-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Search situations</label>
+          <input id="play-search" type="search" placeholder="Search — e.g. “bot”, “expensive”, “ghost”, “country”" autocomplete="off">
+        </div>
+        <div class="cats" id="play-cats">
+          <button class="cat" type="button" data-cat="all" aria-pressed="true">All</button>
+          <button class="cat" type="button" data-cat="ad" aria-pressed="false">Ad leads</button>
+          <button class="cat" type="button" data-cat="quiet" aria-pressed="false">Gone quiet</button>
+          <button class="cat" type="button" data-cat="money" aria-pressed="false">Money</button>
+          <button class="cat" type="button" data-cat="timing" aria-pressed="false">Timing</button>
+          <button class="cat" type="button" data-cat="trust" aria-pressed="false">Trust</button>
+          <button class="cat" type="button" data-cat="logistics" aria-pressed="false">Logistics</button>
+          <button class="cat" type="button" data-cat="sensitive" aria-pressed="false">Sensitive</button>
+          <button class="cat" type="button" data-cat="after" aria-pressed="false">After the call</button>
+        </div>
+        <span class="count mono" id="play-count" aria-live="polite">Showing all 42</span>
+      </div>
+
+      <div class="plays" id="plays">
+
+        <!-- ========== AD LEADS ========== -->
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 01 · Ad leads</span>
+            <h4>They trigger the keyword, get the freebie, and never reply again</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They wanted the free thing. This is the single highest-volume outcome in keyword-automation campaigns and it is <strong>normal</strong> — a large share of any keyword campaign never has a real conversation. It is not a failure of your scripts.</p>
+            <span class="lbl">Do this</span>
+            <p>One human follow-up inside a few hours, framed around the content rather than around them buying. If nothing, one more the next day, then park them.</p>
+            <div class="script">
+              <div class="script-h"><span>Freebie follow-up · same day</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Did that make sense? There's one bit in there people always get stuck on — happy to explain it properly if you got that far.</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>Log it as <em>freebie-only</em>. If a given ad produces mostly these, the ad is attracting downloaders not buyers — that's a creative and targeting problem, not a setter problem. Tell whoever runs the ads (section 14).</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 02 · Ad leads</span>
+            <h4>Who is this? / I didn't message you / What ad?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Genuine confusion. They tapped something on a scroll, or commented a word, and have no memory of it thirty minutes later. Extremely common and completely harmless if you handle it in one message.</p>
+            <span class="lbl">Do this</span>
+            <p>Explain plainly and without defensiveness, reference the specific ad, and give them an easy exit. The exit is what turns confusion into goodwill instead of a spam report.</p>
+            <div class="script">
+              <div class="script-h"><span>Re-orient them</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ha, no worries — you commented <span class="fill">[keyword]</span> on my post about <span class="fill">[topic]</span> earlier, so this auto-sent you <span class="fill">[the thing]</span>. Genuinely no obligation, keep it and ignore me if it's not useful 👍</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Get defensive, or imply they're lying. Never push into a pitch off the back of confusion — that's exactly the interaction that gets reported, and spam reports raise your costs across the entire ad account.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 03 · Ad leads</span>
+            <h4>Is this a bot? Am I talking to a real person?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Your automation ran too long, or your messages read as templated. It's a fair question and it's a test — the answer decides whether they engage at all.</p>
+            <span class="lbl">Do this</span>
+            <p>Break the pattern immediately. Answer as a human, in human language, with something a template couldn't produce — reference the time of day, something specific they said, or offer a voice note.</p>
+            <div class="script">
+              <div class="script-h"><span>Prove you're real</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ha, real person — <span class="fill">[your name]</span>, sat here with a coffee. The first message was automated, everything since has been me. Want me to send a voice note so you can hear I'm not a robot? 😅</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>If this question comes up often, your handover is too late. Move the human takeover earlier — see section 10.</p>
+            <span class="lbl never">Never</span>
+            <p>Claim to be a person while a bot is still running the thread. It always gets caught, and it converts a curious lead into someone who tells other people you're a scam.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 04 · Ad leads</span>
+            <h4>Thanks, I've got what I need</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Polite close. They took the freebie and they're ending the conversation. Sometimes true, sometimes they just don't know coaching is on the table.</p>
+            <span class="lbl">Do this</span>
+            <p>Accept it gracefully, then make one — <strong>one</strong> — honest, low-pressure offer of the door. Accepting well is what makes them come back in three months, which a surprising number do.</p>
+            <div class="script">
+              <div class="script-h"><span>One open door</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No worries at all, hope it helps 👍
+
+Only thing I'd say — if you get three weeks in and it starts slipping, that's usually where people need a hand rather than more information. Door's open if so.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Follow a polite close with three more messages. You paid for the lead, but the lead doesn't owe you a conversation — and pushing here is what generates blocks and reports.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h nq">
+            <span class="play-tag">Play 05 · Ad leads</span>
+            <h4>They're outside your service area or country</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Targeting leak, or your ad got organic reach beyond its audience. On broad campaigns this is routine.</p>
+            <span class="lbl">Do this</span>
+            <p>Decide fast whether you can genuinely serve them. If your offer is fully online and you can cover their timezone, brilliant — carry on. If not, say so quickly and warmly, and <strong>log it</strong>: a cluster of out-of-area leads is a targeting fix worth real money.</p>
+            <div class="script">
+              <div class="script-h"><span>Out of area</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ah — I'm <span class="fill">[your base]</span> based and the way I coach means I need to be in a similar timezone to you, so I'd be doing you a disservice taking you on. Keep the <span class="fill">[freebie]</span> though, all of it still applies 👍</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h nq">
+            <span class="play-tag">Play 06 · Ad leads</span>
+            <h4>The lead arrives at 2am while you're asleep</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Your ads are delivering outside your working hours. Normal, and it's the main structural reason paid leads go cold — five-minute response is impossible at 3am.</p>
+            <span class="lbl">Do this</span>
+            <p>Two fixes, and you want both. <strong>First:</strong> an automation that instantly delivers the promised thing and sets an honest expectation. <strong>Second:</strong> work overnight leads first thing, before anything else in your day, and open by acknowledging the gap rather than pretending it didn't happen.</p>
+            <div class="script">
+              <div class="script-h"><span>Overnight auto-reply</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Here's <span class="fill">[the thing]</span> 👇 <span class="fill">[deliver it]</span>
+
+It's <span class="fill">[late]</span> here so I'll come back to you properly in the morning — <span class="fill">[your name]</span></p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>Morning pick-up</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Morning! Sorry, that came through while I was asleep. Did <span class="fill">[the thing]</span> come through alright?</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>If a large share of leads land outside your hours, either narrow ad scheduling to hours you can cover or add cover. Paying for leads you cannot answer for eight hours is the most avoidable waste in the account.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 07 · Ad leads</span>
+            <h4>But the ad said [something you don't actually offer]</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>A gap between the ad's promise and your real offer. Either the creative overpromised, or they read into it. Either way they are right to raise it.</p>
+            <span class="lbl">Do this</span>
+            <p>Honour whatever the ad actually said, to the letter, even if it costs you. Then be straight about what you do offer. <strong>Flag the mismatch to whoever writes the ads the same day</strong> — if one person surfaced it, dozens felt it and said nothing.</p>
+            <div class="script">
+              <div class="script-h"><span>Own the gap</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">You're right, and that's on us — that wording isn't clear enough. <span class="fill">[Honour exactly what was promised.]</span>
+
+What I actually do is <span class="fill">[the real offer, plainly]</span>. If that's not what you were after, genuinely no hard feelings.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Argue that the ad technically said something else. You will lose, publicly, in a screenshot — and misleading advertising is a regulatory problem, not just an awkward conversation.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 08 · Ad leads</span>
+            <h4>Can you guarantee I'll get [the ad's result]?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>The ad created an expectation and they're checking whether it's real. Often the last question before they'd commit — which makes it tempting to fudge. Don't.</p>
+            <span class="lbl">Do this</span>
+            <p>Never guarantee an outcome. Replace the guarantee with two things that are true: what you commit to on your side, and any actual guarantee you genuinely offer (a refund term, a trial period) stated exactly as it is written.</p>
+            <div class="script">
+              <div class="script-h"><span>Honest on outcomes</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Honestly, no — anyone who guarantees you a specific result is lying to you, because it depends as much on you as on me.
+
+What I can guarantee is <span class="fill">[what you actually deliver — the plan, the check-ins, the responsiveness]</span>, and <span class="fill">[your actual refund/trial terms]</span>. That's the bit that's in my control.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Promise a weight, a timeline or a body composition. It's an unlawful claim in many places, it's grounds for a refund everywhere, and it attracts exactly the clients who will be furious when biology doesn't cooperate.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h">
+            <span class="play-tag">Play 09 · Ad leads</span>
+            <h4>Why do I keep seeing your ads everywhere?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Mild irritation at retargeting, sometimes a genuine privacy question. Rarely hostile.</p>
+            <span class="lbl">Do this</span>
+            <p>Be straightforward and slightly self-aware about it. Defensiveness or pretending not to know how it works both read badly.</p>
+            <div class="script">
+              <div class="script-h"><span>Own the retargeting</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ha, sorry — you looked at something of mine at some point so the algorithm decided we're best friends now 😅 You can hide them from the three dots on the ad if they're doing your head in. Either way, here's the <span class="fill">[thing]</span>, no strings.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h nq">
+            <span class="play-tag">Play 10 · Ad leads</span>
+            <h4>The same person comes in twice from two different ads</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They're interested enough to click twice. That's a buying signal, not an admin problem — though it does mean you paid twice.</p>
+            <span class="lbl">Do this</span>
+            <p>Merge the conversation, don't restart it. Reference the earlier thread so they don't feel processed, and note the duplicate for your ad reporting — duplicate leads inflate your apparent volume and quietly distort your cost per lead.</p>
+            <div class="script">
+              <div class="script-h"><span>Merge, don't restart</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Think we've already got one going from the <span class="fill">[other ad]</span> one 😄 Picking up where we left off — you said <span class="fill">[their thing]</span>, right?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h nq">
+            <span class="play-tag">Play 11 · Ad leads</span>
+            <h4>They reply days later, after the messaging window has closed</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They came back on their own. Their message <strong>reopens the window</strong> — so this is a live lead again, and a warmer one than when they arrived.</p>
+            <span class="lbl">Do this</span>
+            <p>Respond fast and treat it as a fresh, warm conversation. No guilt, no reference to the delay. Re-ask the timeline question, because their situation has probably changed — that's usually why they're back.</p>
+            <div class="script">
+              <div class="script-h"><span>Warm restart</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Good to hear from you! Did you get anywhere with <span class="fill">[their goal]</span>, or is it still sat on the to-do list?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>"Oh, you're alive!" Even as a joke. They came back — don't make it awkward.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="ad">
+          <div class="play-h nq">
+            <span class="play-tag">Play 12 · Ad leads</span>
+            <h4>Obvious spam, a bot, or a scam approach</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Signs</span>
+            <p>Instant generic replies, links to crypto or "growth services", requests to move to another app immediately, an account with no history, messages that don't respond to what you said.</p>
+            <span class="lbl">Do this</span>
+            <p>Don't engage, don't click anything, report and block. Log it as spam so it doesn't pollute your lead numbers — if a specific ad or placement produces a lot of it, that's worth knowing and worth excluding.</p>
+            <span class="lbl never">Never</span>
+            <p>Click a link, move to another app, or send anything. And never let a spam lead sit in your pipeline counted as a real one — it makes your cost per lead look better than it is, which leads you to scale the wrong ad.</p>
+          </div>
+        </article>
+
+        <!-- ========== GONE QUIET ========== -->
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 13 · Gone quiet</span>
+            <h4>Left on read for under an hour</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Nothing. They're driving, working, or scrolled past. On paid traffic the gap between messages is usually just life.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Nothing.</strong> Do not double-text inside the hour. Move to the next lead — with paid flow there is always a next lead.</p>
+            <span class="lbl never">Never</span>
+            <p>"You still there?" · "??" · "Hello?" — the three most expensive characters in DM setting, and on ad traffic they generate blocks.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 14 · Gone quiet</span>
+            <h4>Quiet for 4–12 hours mid-conversation</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Forgot, or your last message was too much work. Check it — if it was long, asked two questions, or asked something requiring thought, that's your answer.</p>
+            <span class="lbl">Do this</span>
+            <p>One short bump that's easy to answer and doesn't mention the silence. If your last question was heavy, re-ask it in a lighter form. Remember the clock: on a paid lead this bump is more urgent than it would be organically.</p>
+            <div class="script">
+              <div class="script-h"><span>Soft bump</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No rush at all — just didn't want this to get buried. Where did you land on <span class="fill">[the thing]</span>?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Guilt them, or apologise for messaging ("sorry to bother you!"). Both lower your standing in the conversation.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 15 · Gone quiet</span>
+            <h4>They reply with just 👍 or "haha" or "true"</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Polite closing. Not rejection — just no reason to keep typing. You have to supply one.</p>
+            <span class="lbl">Do this</span>
+            <p>One open, low-cost, slightly personal question. Never a statement — a statement lets them thumbs-up you again.</p>
+            <div class="script">
+              <div class="script-h"><span>Re-open</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ha — genuinely though, how's training going at the minute? Good patch or a messy one?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 16 · Gone quiet</span>
+            <h4>Three one-word answers in a row</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Wrong lead or wrong moment. You're pulling the conversation uphill. With paid volume, continuing costs you the leads you're not talking to.</p>
+            <span class="lbl">Do this</span>
+            <p>One calibrated question that lets them off the hook honestly, then park based on the answer.</p>
+            <div class="script">
+              <div class="script-h"><span>The honest out</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Can I ask you straight — is this something you actually want to sort right now, or have I caught you at a bad time? Either's completely fine.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="quiet">
+          <div class="play-h nq">
+            <span class="play-tag">Play 17 · Gone quiet</span>
+            <h4>They block you, or report the ad</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>A no, delivered without words. Occasionally it means your approach in that thread was too pushy — worth an honest look.</p>
+            <span class="lbl">Do this</span>
+            <p>Stop. Log it. <strong>Watch the rate</strong>: isolated blocks are noise, but a rising block-and-report rate degrades ad delivery and raises costs across the account. If it's climbing, the problem is upstream — the ad's promise, the speed of the pitch, or an over-long bot sequence.</p>
+            <span class="lbl never">Never</span>
+            <p>Message from a second account or through a mutual. Fastest route to a screenshot and to losing the ad account entirely.</p>
+          </div>
+        </article>
+
+        <!-- ========== MONEY ========== -->
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 18 · Money</span>
+            <h4>How much is it?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Asked early — which on ad traffic is most of the time — it's a filtering question, not a buying signal. They want to know whether to keep reading. It's completely reasonable, and paid leads ask it sooner and blunter than organic ones because they have no relationship to lose.</p>
+            <span class="lbl">Do this</span>
+            <p>Give a real range, then earn two questions. Dodging entirely reads as "it's expensive and I'm hiding it" — worse than any number.</p>
+            <div class="script">
+              <div class="script-h"><span>Early price question</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Fair question — it runs from <span class="fill">[£X]</span> to <span class="fill">[£Y]</span> a month depending on how much support you need. I'd rather not throw a number at you before I know if I can even help though. Can I ask two quick things first?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Answer "it depends" and stop. Answer only with "let's get on a call". Both feel evasive, and an ad lead who feels handled simply leaves — they have no reason not to.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 19 · Money</span>
+            <h4>No seriously, just tell me the price</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They asked twice. They've decided you're being slippery, and they're right. Trust is draining in real time.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Answer straight, immediately, with a number.</strong> Then offer the context as a separate, optional thing.</p>
+            <div class="script">
+              <div class="script-h"><span>Straight answer</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Course — <span class="fill">[£X]</span> a month, minimum <span class="fill">[3]</span> months. That's <span class="fill">[what's included]</span>. Want me to break down what that looks like week to week?</p>
+            </div>
+            <div class="callout key" style="margin-top:14px">
+              <b>Rule</b>
+              <p>Never dodge price twice. One deferral with a range is professional. Two is evasive — and on a lead who cost you money, evasive is expensive.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 20 · Money</span>
+            <h4>That's too expensive</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Two completely different things, and you can't respond well until you know which. Either the money genuinely isn't there, or they're not convinced it's worth it yet. The first is a budget fact; the second is a value conversation. On paid traffic the first is more common than organic, because ads reach people who never chose to be in your world.</p>
+            <span class="lbl">Do this</span>
+            <p>Separate them with one question, asked without a hint of defensiveness.</p>
+            <div class="script">
+              <div class="script-h"><span>The split</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Totally fair. Just so I know which it is — is it more that the number's out of reach at the minute, or that you're not convinced it's worth it yet? Genuinely no wrong answer.</p>
+            </div>
+            <span class="lbl">If it's out of reach</span>
+            <p>Be honest and kind. Offer the lower tier <em>only if you genuinely run one</em>. Otherwise: <em>"Honestly then, now's not the time and that's completely fine. Can I check back in [month]? Here's [useful free thing] in the meantime."</em> Then log it as a price-fit issue — a run of these means your ads are reaching the wrong income bracket.</p>
+            <span class="lbl">If it's a value question</span>
+            <p>Belongs on the call. <em>"Fair thing to want to test. That's exactly what the call's for — I'll walk you through what month one actually looks like and you decide."</em></p>
+            <span class="lbl never">Never</span>
+            <p>Suggest credit cards, buy-now-pay-later, or borrowing. Never use "you're worth the investment" as pressure. Pushing someone into a payment they can't afford produces a refund, a chargeback and a public review — and on paid traffic those reviews sit right under your ads.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 21 · Money</span>
+            <h4>Can you do me a discount?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Often reflex rather than a real barrier. Sometimes play 20 in a different hat.</p>
+            <span class="lbl">Do this</span>
+            <p>Hold the price, offer <strong>less scope</strong> instead. Discounting the same service teaches everyone the price was never real — including current clients, who talk to each other.</p>
+            <div class="script">
+              <div class="script-h"><span>Hold the line, warmly</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I keep the price the same for everyone — wouldn't be fair on the people already paying it. What I can do is <span class="fill">[smaller option]</span> at <span class="fill">[£Y]</span>. Want me to explain how that one works?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="money">
+          <div class="play-h">
+            <span class="play-tag">Play 22 · Money</span>
+            <h4>Can I pay in instalments / start next month?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually genuine cash-flow timing, not a value objection. Often very close to a yes.</p>
+            <span class="lbl">Do this</span>
+            <p>Offer only what you actually operate. If you have a split option, name it with the real total. If not, offer a start date on their payday — and honour it.</p>
+            <div class="script">
+              <div class="script-h"><span>Payday start</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I don't run instalments, but no reason we can't start <span class="fill">[date after payday]</span>. I'll hold you a spot and send everything the day before. Work for you?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a payment plan your systems can't take, or quote a split that hides the total. Always state the full amount.</p>
+          </div>
+        </article>
+
+        <!-- ========== TIMING ========== -->
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 23 · Timing</span>
+            <h4>I'll have a think about it</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>One specific unresolved thing they don't want to say out loud — nearly always money, time, or "will this work for someone like me". Your job is to find which, not to overcome it.</p>
+            <span class="lbl">Do this</span>
+            <p>Give three named doors. People pick a door far more readily than they volunteer an objection.</p>
+            <div class="script">
+              <div class="script-h"><span>Three doors</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Course — what's the bit you want to think over? The money, the time it takes, or whether it'll actually work for you? Whichever it is I'd rather just talk about it straight.</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>Address that one thing, then agree a specific day to speak. "Let me know!" is where paid leads die — replace it with <em>"Shall I check in Thursday?"</em>, and get an email while you're at it, because Thursday may be outside the window.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 24 · Timing</span>
+            <h4>I'm too busy at the minute</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Either genuinely swamped this fortnight, or "not a priority" said politely. Different responses — don't assume.</p>
+            <span class="lbl">Do this</span>
+            <p>Acknowledge honestly, then separate short-term chaos from a seasonal no.</p>
+            <div class="script">
+              <div class="script-h"><span>Busy, split</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Makes sense — and honestly being busy is why most people bring me in, the whole point is that it fits round everything else. But genuinely: is this a "not this fortnight" or a "not this year"? I'd rather know so I stop bugging you.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Argue with their schedule or imply they'd find time if they cared. Telling someone their priorities are wrong has never once produced a sale.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 25 · Timing</span>
+            <h4>Ask me after my holiday / in January</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Sometimes a real date, sometimes a soft no. Treating it as real costs nothing and wins the ones who meant it.</p>
+            <span class="lbl">Do this</span>
+            <p>Pin the exact date, say you'll message, diarise it, and actually do it. <strong>Get an email</strong> — on paid traffic a six-week gap guarantees the DM window is shut.</p>
+            <div class="script">
+              <div class="script-h"><span>Pin the date</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No problem. When are you back — <span class="fill">[date]</span>? I'll put a note in my diary for the week after. What's your email so it doesn't get lost in here? Enjoy it 👍</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>The promised follow-up</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Hey <span class="fill">[name]</span> — said I'd message when you were back. How was <span class="fill">[the holiday]</span>? Still fancy getting stuck into <span class="fill">[goal]</span>?</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="timing">
+          <div class="play-h">
+            <span class="play-tag">Play 26 · Timing</span>
+            <h4>I need to speak to my partner first</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually genuine — shared expense, shared time. Occasionally a polite exit. Respect it either way; a partner who feels bypassed vetoes on principle.</p>
+            <span class="lbl">Do this</span>
+            <p>Support the conversation rather than route around it. Arm them with the three things their partner will ask: cost, time, and what changes at home.</p>
+            <div class="script">
+              <div class="script-h"><span>Arm them</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Completely get it. So you've got the actual numbers: <span class="fill">[£X]</span> a month, about <span class="fill">[X]</span> hours a week, and the main change at home is <span class="fill">[the realistic one]</span>. Happy to jump on a quick call with both of you if easier. When are you speaking to them?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>"It's your body, it's your decision." Anything that nudges them around their partner is manipulative and loses the deal roughly every time.</p>
+          </div>
+        </article>
+
+        <!-- ========== TRUST ========== -->
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 27 · Trust</span>
+            <h4>I've had a coach before and it didn't work</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Gold, not an objection. They've already proven they'll pay for coaching — which on cold paid traffic is the hardest thing to establish.</p>
+            <span class="lbl">Do this</span>
+            <p>Get curious and let them talk. Best qualifying question you'll ever ask.</p>
+            <div class="script">
+              <div class="script-h"><span>Dig in</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">That's really useful to know — what went wrong? Was it the plan itself, or more that you didn't get the support you needed around it?</p>
+            </div>
+            <span class="lbl">Then</span>
+            <p>Name specifically how you work differently on <em>that exact thing</em>. If you don't actually work differently, say so — you lose one sale and gain a reputation.</p>
+            <span class="lbl never">Never</span>
+            <p>Slag off the other coach. Reads as insecure, and the client often still likes them.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 28 · Trust</span>
+            <h4>Have you worked with anyone like me?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>"I'm worried I'm a special case." Usually about age, body type, shift work, an injury, or having a lot to lose.</p>
+            <span class="lbl">Do this</span>
+            <p>One specific, relevant, true example with the detail that makes it land. One real story beats ten vague claims.</p>
+            <div class="script">
+              <div class="script-h"><span>One real example</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Yeah — <span class="fill">[first name or "a client"]</span>, <span class="fill">[similar situation]</span>. <span class="fill">[What changed and roughly how long it took.]</span> Everyone's different, but the pattern's usually the same.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a client. Share a photo, name or result without written permission. Use someone else's transformation images. All three are sackable, potentially legal, and on a paid account they're also an ad-policy violation waiting to happen.</p>
+            <span class="lbl">If the honest answer is no</span>
+            <p><em>"Not with that exact thing, no. What I'd do is [specific plan], and if I thought you needed someone more specialist I'd tell you."</em></p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h">
+            <span class="play-tag">Play 29 · Trust</span>
+            <h4>How do I know this isn't a scam?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Reasonable caution, and more common on paid traffic than organic — they met you through an advert, which is exactly how scams arrive too. Don't take it personally; defensiveness is what they're testing for.</p>
+            <span class="lbl">Do this</span>
+            <p>Be boringly transparent. Real name, real business, real terms, nothing paid before a conversation.</p>
+            <div class="script">
+              <div class="script-h"><span>Transparency</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Completely fair thing to ask — you met me through an ad, you should be checking. I'm <span class="fill">[full name]</span>, I coach under <span class="fill">[business]</span> — <span class="fill">[website]</span>. Nothing gets paid before we've spoken, you get terms in writing, and <span class="fill">[refund policy in one line]</span>. Have a look and ask me anything.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="trust">
+          <div class="play-h nq">
+            <span class="play-tag">Play 30 · Trust</span>
+            <h4>They keep asking for free advice and never engage with anything else</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Either they don't know coaching is an option, or they've decided your inbox is a free service. Test the first before you conclude the second.</p>
+            <span class="lbl">Do this</span>
+            <p>One genuinely good answer, then transition once, cleanly. If they take it and ask another, cap it warmly.</p>
+            <div class="script">
+              <div class="script-h"><span>Answer, then transition</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b"><span class="fill">[Genuinely useful answer, 2–3 lines.]</span>
+
+That'll get you moving. Out of interest — are you piecing this together yourself, or would you rather someone just built it round you?</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>The kind cap</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Happy to answer the odd thing, but this is properly the stuff I get paid for so I can't build you a plan over DM 😅 If you ever want it done properly, say the word.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========== LOGISTICS ========== -->
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 31 · Logistics</span>
+            <h4>Do you do in-person? I'd prefer face to face</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Rarely about location at heart — it's worry about accountability and technique.</p>
+            <span class="lbl">Do this</span>
+            <p>Answer the factual question, then speak to the concern underneath. Never oversell online as identical to in-person; name what it does better and what it doesn't.</p>
+            <div class="script">
+              <div class="script-h"><span>Online, honestly</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b"><span class="fill">[Straight answer on in-person.]</span> What most people are actually worried about is form and accountability — I handle that with <span class="fill">[video form checks / weekly calls / daily check-ins]</span>. What online does better is you get me every week rather than one hour. What it can't do is physically move your elbow, so I'm fussy about video.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 32 · Logistics</span>
+            <h4>Can you just send me a programme?</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They believe the missing piece is information. Based on what they've told you it usually isn't — but "you don't know what you need" is not the move.</p>
+            <span class="lbl">Do this</span>
+            <p>Sell what you actually sell. If you have a programme-only product, offer it honestly. If not, explain the gap without being sniffy.</p>
+            <div class="script">
+              <div class="script-h"><span>Programme vs coaching</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I can — but going off what you said, the plan isn't the bit that's broken. You said you're fine for three weeks then one bad week knocks you off. A PDF doesn't fix that, a person does. <span class="fill">["Happy to sell you the plan on its own at £X if you'd rather start there."]</span></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h">
+            <span class="play-tag">Play 33 · Logistics</span>
+            <h4>I'm in a completely different timezone</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Practical question about whether you'll actually be available. Common on broad paid targeting — see also play 05.</p>
+            <span class="lbl">Do this</span>
+            <p>Confirm only what you can genuinely commit to. Offer times in <strong>their</strong> local time and always write the timezone out.</p>
+            <div class="script">
+              <div class="script-h"><span>Timezone booking</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No problem — whereabouts are you? I'll send times in your local time. Day to day, check-ins are <span class="fill">[async/voice note]</span> so the gap doesn't matter; calls I'd do <span class="fill">[your realistic window]</span>.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="logistics">
+          <div class="play-h nq">
+            <span class="play-tag">Play 34 · Logistics</span>
+            <h4>They ask something you genuinely don't know</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Nothing bad. It happens constantly and is not a test.</p>
+            <span class="lbl">Do this</span>
+            <p>Say you don't know, say when you'll come back, then come back. Bluffing loses far more deals than admitting a gap — and a confident wrong answer about training or nutrition can genuinely hurt someone.</p>
+            <div class="script">
+              <div class="script-h"><span>Honest gap</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Honest answer — not sure off the top of my head and I don't want to guess at something that matters. Let me check properly and come back to you tonight.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========== SENSITIVE ========== -->
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 35 · Sensitive</span>
+            <h4>They turn out to be under 18</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Why it matters</span>
+            <p>Safeguarding, insurance and in many places law. Ad targeting has age settings but they leak — minors reach paid fitness content constantly, so expect this and know the answer in advance.</p>
+            <span class="lbl">Do this</span>
+            <p>Stop the sales conversation. Don't coach a minor without a parent or guardian involved and consenting, and follow your insurer's and your jurisdiction's requirements. Be warm — they're a kid who wants to get fitter, which is a good thing.</p>
+            <div class="script">
+              <div class="script-h"><span>Under 18</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ah — I can't take anyone under 18 on without a parent or guardian involved, that's just how it has to work. Genuinely though, fair play for taking it seriously. If a parent wants to chat, they're very welcome to message me.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Continue a one-to-one sales conversation with a minor, take payment from a minor, or discuss weight loss, calorie targets or body composition with them. Also check your ad's age targeting the same day.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 36 · Sensitive</span>
+            <h4>You see possible signs of disordered eating</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Signs to watch for</span>
+            <p>Requests for extreme deficits or very rapid loss. Mentions of purging, laxatives, multi-day fasting, or "earning" food. Intense body-hate language. Already very lean and wanting to lose more. Fixation on a number that doesn't match what they describe.</p>
+            <span class="lbl">Do this</span>
+            <p><strong>Leave sales mode entirely and do not return to it in this conversation.</strong> Respond as a person, don't diagnose, don't lecture, signpost to appropriate support. Right human decision and right business decision are identical here: do not take this sale.</p>
+            <div class="script">
+              <div class="script-h"><span>Step out of sales</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I'm going to be straight with you because I'd rather be honest than get a client. What you're describing isn't something I'd coach — taking it on would risk making things worse for you, and I'm not the right person for it.
+
+Talking to your GP or a specialist about it would be a genuinely good move. There's real support out there and it does help.
+
+I'm not disappearing on you, I'm just not the right fit for this.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Sell them a fat-loss package. Give a calorie target. Say they "just need discipline". Diagnose anything. Flag it to your lead coach — and if a particular ad angle keeps surfacing this, that creative needs rethinking, not just this conversation.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 37 · Sensitive</span>
+            <h4>They disclose an injury, medical condition, medication or pregnancy</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">Why it matters</span>
+            <p>Scope of practice. A training or nutrition qualification doesn't make you a physiotherapist, doctor or registered dietitian, and acting like one is how coaches get sued and clients get hurt.</p>
+            <span class="lbl">Do this</span>
+            <p>Thank them, don't speculate, be clear where your lane ends. Then either work alongside their clinician with clearance, or refer out.</p>
+            <div class="script">
+              <div class="script-h"><span>Scope of practice</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Thanks for flagging that — good that you did. I'm not going to guess at anything medical, that's not my lane. What I'd normally do is work around it with clearance from <span class="fill">[your GP / physio / consultant]</span>, and stay in touch with them if they're happy to. Have you spoken to them about training?</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>"That's fine, we'll train around it" without clearance. Comment on their medication. Suggest changing a prescription. Claim training will treat, cure or manage a diagnosed condition — in an ad or in a DM.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 38 · Sensitive</span>
+            <h4>The conversation turns flirty or inappropriate</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Doesn't matter — the response is the same regardless of intent. Expect this more often on paid traffic, where strangers arrive with no social context at all.</p>
+            <span class="lbl">Do this</span>
+            <p>One clear, unapologetic boundary. No joke to soften it, no laughing emoji — ambiguity gets read as an invitation. If it continues at all: screenshot, block, report, tell your lead coach.</p>
+            <div class="script">
+              <div class="script-h"><span>The boundary</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">I'm going to keep this professional — that's not what this is. If you want to talk training I'm happy to, otherwise I'll leave it here.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Play along to keep a sale alive. Reply "haha 😂" and change the subject. Keep going out of politeness. No lead is worth this, whatever it cost.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 39 · Sensitive</span>
+            <h4>They're rude, sarcastic or aggressive</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually about their day, not you — and on ad traffic, sometimes just irritation at being advertised to. Occasionally someone fishing for a reaction to screenshot.</p>
+            <span class="lbl">Do this</span>
+            <p>Never match it. One neutral, gracious line, then leave. Write every message assuming it'll be screenshotted, because the hostile ones usually are — and yours is a business with its name on an advert.</p>
+            <div class="script">
+              <div class="script-h"><span>Exit gracefully</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">All good — I'll leave you to it. If you ever do want a hand with it, you know where I am 👍</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="play" data-cat="sensitive">
+          <div class="play-h nq">
+            <span class="play-tag">Play 40 · Sensitive</span>
+            <h4>They disclose something heavy — grief, a breakup, mental health</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>They're telling you the real reason training fell apart. It's trust, and it deserves to be treated as trust rather than as an opening.</p>
+            <span class="lbl">Do this</span>
+            <p>Be a person. Acknowledge it properly and <strong>make no offer in that message</strong> — not even a soft one. If it's right to pick it back up, do it days later and let them lead.</p>
+            <div class="script">
+              <div class="script-h"><span>Human first</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Ah mate, I'm really sorry. That's a lot to be carrying and training is rightly the last thing on the list right now. No agenda from me at all — if you fancy picking it up down the line, just shout.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Use it as leverage ("training would really help with that right now"). Even when true, saying it in that moment is transparently self-serving and people remember it.</p>
+          </div>
+        </article>
+
+        <!-- ========== AFTER THE CALL ========== -->
+        <article class="play" data-cat="after">
+          <div class="play-h nq">
+            <span class="play-tag">Play 41 · After the call</span>
+            <h4>They no-show the booked call</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>About half are genuine — work overran, kid kicked off, phone on silent. The rest got cold feet. Paid leads no-show more than organic ones, because the relationship is thinner. Assume the best out loud, plan for the rest.</p>
+            <span class="lbl">Do this</span>
+            <p>Message within ten minutes, assume the best, offer <strong>one</strong> reschedule with two specific times. Send it by text as well as DM — the window may have closed.</p>
+            <div class="script">
+              <div class="script-h"><span>No-show · +10 min</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No worries if something's come up — I know how it goes. Want to grab <span class="fill">[tomorrow 6:40pm]</span> or <span class="fill">[Thursday 1:10pm]</span> instead?</p>
+            </div>
+            <span class="lbl">If they no-show twice</span>
+            <p>Stop booking. Move them to the ladder in section 09 and log it. A rising no-show rate on a specific ad usually means that ad's promise is attracting curiosity rather than intent.</p>
+          </div>
+        </article>
+
+        <article class="play" data-cat="after">
+          <div class="play-h nq">
+            <span class="play-tag">Play 42 · After the call</span>
+            <h4>They said yes, then went silent on payment</h4>
+          </div>
+          <div class="play-b">
+            <span class="lbl read">What it usually means</span>
+            <p>Usually friction or second thoughts, not dishonesty. The link didn't work, the card declined, they wanted to check the account, or the excitement faded on the drive home.</p>
+            <span class="lbl">Do this</span>
+            <p>Remove friction before you apply any pressure. Two messages maximum, then let it breathe.</p>
+            <div class="script">
+              <div class="script-h"><span>Message 1 · same day</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">Hey <span class="fill">[name]</span> — did the link come through alright? Shout if anything's playing up and I'll sort it another way.</p>
+            </div>
+            <div class="script">
+              <div class="script-h"><span>Message 2 · +48h</span><button class="copy" type="button">Copy</button></div>
+              <p class="script-b">No stress either way — has anything changed since we spoke? Completely fine if you've had second thoughts, I'd just rather know than keep the spot held.</p>
+            </div>
+            <span class="lbl never">Never</span>
+            <p>Invent a deadline or claim the price is going up when it isn't. Fake urgency is the most common reason people feel scammed by fitness coaches — and when you're running ads, that feeling ends up in public comments under them.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================= 09 LADDER ================= -->
+    <section class="sec" id="ladder">
+      <div class="sec-h"><em>09</em><h2>The follow-up ladder</h2></div>
+      <p class="lede">For a qualified lead who's gone quiet. Compressed hard compared with an organic ladder, because the messaging window and the decay curve both work against you. Everything that can happen on day one should happen on day one.</p>
+
+      <div class="callout warn">
+        <b>Window</b>
+        <p>Rungs 1–3 are designed to land inside a 24-hour window. Everything after depends on either a reply from them (which reopens it), a channel you captured, or whatever your platform permits — check section 02 before you automate any of this.</p>
+        <p>Never send two rungs in the same day, and never send one immediately after an unanswered one. If they reply at any point you leave the ladder and go back to the conversation.</p>
+      </div>
+
+      <div class="ladder">
+        <div class="rung">
+          <span class="when">+2–4 hours · same day</span>
+          <h4>The easy bump</h4>
+          <p>Light, and re-asks your question in a form that takes five seconds. Tighter than you'd use organically — you're racing the clock.</p>
+          <div class="say">Quick one so I don't leave you hanging — was it more [option A] or [option B]?</div>
+        </div>
+        <div class="rung">
+          <span class="when">+8–12 hours · still day one</span>
+          <h4>Value, with no ask attached</h4>
+          <p>One genuinely useful thing for the exact problem they described. No question, no pitch. Resets you from "someone selling me" to "someone helping me", and it's your best shot at a reply that reopens the window.</p>
+          <div class="say">Not chasing you — this just made me think of what you said about [their problem]: [tip / short voice note]. Might be useful.</div>
+        </div>
+        <div class="rung">
+          <span class="when">Day 2 · the last in-window touch</span>
+          <h4>The direct one</h4>
+          <p>Light but unambiguous, and it explicitly offers the channel swap. This is your last reliable chance to get an email before the window shuts.</p>
+          <div class="say">Did you want to park this or pick it back up? Either's fine — and if DMs are a nightmare for you, give me your email and I'll send it there instead.</div>
+        </div>
+        <div class="rung edge">
+          <span class="when">Day 4 · window-dependent</span>
+          <h4>The reframe</h4>
+          <p>A new angle on the problem, or a relevant (real, permitted) client outcome that maps onto their situation. Send by email if you captured one — deliverability is better and you're not fighting a policy.</p>
+          <div class="say">Random — just had a client hit [specific thing] and she started almost exactly where you described. Made me think of you. How's it going?</div>
+        </div>
+        <div class="rung edge">
+          <span class="when">Day 7 · window-dependent</span>
+          <h4>The permission close</h4>
+          <p>The most effective message in the ladder. Asking permission to stop gets replies, because it's easy to answer and disarmingly honest. Mean it.</p>
+          <div class="say">Totally fine if the timing's off — want me to stop bringing it up? Genuinely no hard feelings either way.</div>
+        </div>
+        <div class="rung end">
+          <span class="when">Day 14+ · owned channels only</span>
+          <h4>Hand them to email. Stop DMing.</h4>
+          <p>Move them out of active DM follow-up and into your email nurture, if they consented to it. No more direct messages unless they message you — at this distance you're almost certainly outside the window anyway, and continuing is what generates the reports that raise your ad costs.</p>
+        </div>
+        <div class="rung end">
+          <span class="when">Day 60–90 · retargeting</span>
+          <h4>Let the ads do the follow-up</h4>
+          <p>This is the real advantage of paid: a lead who went cold in the DMs can be re-reached by a retargeting audience without you messaging them at all. Add unconverted leads to a custom audience where your platform and local data rules allow it, and let a different creative do the asking.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 10 AUTOMATION ================= -->
+    <section class="sec" id="automation">
+      <div class="sec-h"><em>10</em><h2>Bot vs human: where the handover goes</h2></div>
+      <p class="lede">Most paid DM setups run some automation. The question is never whether to use it but exactly where it stops — and almost everyone leaves it running too long.</p>
+
+      <div class="dd">
+        <div class="do">
+          <b>Let the bot do</b>
+          <ul>
+            <li>Instant acknowledgement, day or night</li>
+            <li>Delivering the exact thing the ad promised</li>
+            <li>Capturing the keyword and tagging the ad source</li>
+            <li>One qualifying question, maximum</li>
+            <li>Telling them a human is coming and roughly when</li>
+          </ul>
+        </div>
+        <div class="no">
+          <b>Never let the bot do</b>
+          <ul>
+            <li>Qualifying past one question</li>
+            <li>Anything involving price</li>
+            <li>The transition or the booking ask</li>
+            <li>Objection handling of any kind</li>
+            <li>Pretending to be a named person</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>The handover rule</h3>
+      <p class="body-p"><strong>A human takes over on the lead's first real reply.</strong> Not their third, not after a qualifying sequence — the first time they type an actual sentence, a person is answering. Every extra automated message after that point increases the chance of play 03 ("is this a bot?"), and a lead who decides they're talking to software stops telling you anything true.</p>
+
+      <p class="body-p">Two practical settings that matter more than the scripts: make sure the bot <strong>stops</strong> the moment a human replies (nothing is worse than an automation talking over you mid-conversation), and make sure the ad source, creative and keyword are written onto the conversation record automatically. You cannot do section 14 without that tagging, and adding it retroactively is miserable.</p>
+
+      <div class="callout stop">
+        <b>Never</b>
+        <p>Give a bot a human name and let it run a conversation. When it's discovered — and it is discovered — you haven't just lost that lead, you've handed them a story about your business that they will tell other people.</p>
+      </div>
+    </section>
+
+    <!-- ================= 11 NEVER ================= -->
+    <section class="sec" id="never">
+      <div class="sec-h"><em>11</em><h2>Never do this</h2></div>
+      <p class="lede">Not style preferences. Each one either breaks trust permanently, breaks platform or advertising rules, or exposes the business to real liability. On a paid account the stakes are higher: these behaviours generate the reports and negative feedback that raise your costs and can cost you ad access entirely.</p>
+
+      <div class="nevers">
+        <div class="never"><span class="x">✕</span><div><b>Promise in the DM what the ad can't back up</b><span>Your DM is part of the advert. Claims made in it are subject to the same advertising standards as the creative.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Gate the advertised freebie behind questions</b><span>You promised it publicly. Withholding it is bait-and-switch and it's the top driver of spam reports.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Fake scarcity</b><span>"Only 2 spots left" when untrue. On paid, people see your ads for months and notice the same "last chance" every week.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Guaranteed results</b><span>No promising a weight, a timeline or an outcome. Unlawful in many jurisdictions and a refund waiting to happen.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Medical or clinical claims</b><span>Coaching does not treat, cure or manage a diagnosed condition. Stay in scope, refer out, say so plainly.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Unconsented photos or testimonials</b><span>Never use a client's images, name or results without explicit written permission — and never anyone else's, ever.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Invented clients or results</b><span>One fabricated success story, discovered, ends the business. It always gets discovered.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Body-shaming as a hook</b><span>No commenting on appearance uninvited, no framing their body as a problem you're here to fix. Most platforms also restrict ads implying knowledge of personal attributes like weight or health.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>A bot with a human name</b><span>Deceptive, and increasingly a platform-policy problem as well as a trust one.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Messaging after a no</b><span>A clear no ends the pipeline. Continuing is harassment and generates exactly the reports that degrade ad delivery.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Using a captured email as list consent</b><span>An email given for one purpose isn't marketing permission. Get proper opt-in or expect a data-protection problem.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Pressuring someone into debt</b><span>No credit cards, no BNPL suggestions, no "can you borrow it". If they can't afford it, they can't afford it.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Hidden terms</b><span>Minimum term, cancellation policy and total cost stated plainly before payment, in writing, every time.</span></div></div>
+        <div class="never"><span class="x">✕</span><div><b>Selling to someone who needs a clinician</b><span>Disordered eating, an undiagnosed injury, a medical red flag. Refer out. Every time. No exceptions.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= 12 DAY ================= -->
+    <section class="sec" id="day">
+      <div class="sec-h"><em>12</em><h2>The daily rhythm</h2></div>
+      <p class="lede">Built around ad delivery rather than around your preferences. Leads arrive when the ads spend, so the working day is structured in response windows, not tasks. Tick these off as you go — they save in this browser.</p>
+
+      <div class="check" id="daily">
+        <label for="d1"><input type="checkbox" id="d1"><span class="t">20 min · first thing</span><span class="d"><b>Clear the overnight queue</b>Every lead that came in while you slept, worked oldest-first, opening with the acknowledgement from play 06. These are your most decayed leads and they're already paid for.</span></label>
+        <label for="d2"><input type="checkbox" id="d2"><span class="t">15 min</span><span class="d"><b>Today's confirmations</b>Touches 2 and 3 for every call in the next 24 hours, DM and SMS. Non-negotiable — this is the cheapest revenue in the system.</span></label>
+        <label for="d3"><input type="checkbox" id="d3"><span class="t">Live · all day</span><span class="d"><b>Five-minute response on new leads</b>Notifications on during ad hours. Everything below this line gets interrupted by a new lead, every time — a live lead beats any scheduled task.</span></label>
+        <label for="d4"><input type="checkbox" id="d4"><span class="t">20 min</span><span class="d"><b>Work the ladder</b>Today's due rungs from section 09, prioritising anyone still inside their window. Window-critical leads first, always.</span></label>
+        <label for="d5"><input type="checkbox" id="d5"><span class="t">15 min</span><span class="d"><b>Update the pipeline</b>Every stage change, every next action with a date, every dead lead with a reason. A conversation with no next action is a lost conversation.</span></label>
+        <label for="d6"><input type="checkbox" id="d6"><span class="t">10 min · end of day</span><span class="d"><b>Log the numbers and the patterns</b>Leads in, by ad. Replies, booked, showed. Plus anything you noticed — a hook pulling the wrong crowd, a question three people asked. Section 14.</span></label>
+      </div>
+
+      <div class="callout warn">
+        <b>Watch</b>
+        <p>The most common failure mode in paid DM is batching. Checking the inbox three times a day feels efficient and quietly destroys the economics — a lead answered at 4pm that arrived at 9am converts a fraction as well as one answered at 9:05. If you cannot cover the hours your ads run, narrow the ad schedule rather than accept the decay.</p>
+      </div>
+    </section>
+
+    <!-- ================= 13 ECONOMICS ================= -->
+    <section class="sec" id="economics">
+      <div class="sec-h"><em>13</em><h2>Unit economics</h2></div>
+      <p class="lede">The difference between organic and paid setting is that here, every ratio has a currency attached. Know these four numbers for your own account and you can tell instantly whether a bad week is a traffic problem or a setting problem.</p>
+
+      <div class="formula">
+        <div class="fnode">
+          <b>CPL</b>
+          <span>Cost per lead in the inbox</span>
+          <span class="eq">ad spend ÷ leads</span>
+        </div>
+        <div class="fnode">
+          <b>CPQL</b>
+          <span>Cost per qualified lead</span>
+          <span class="eq">spend ÷ qualified</span>
+        </div>
+        <div class="fnode">
+          <b>CPBC</b>
+          <span>Cost per booked call</span>
+          <span class="eq">spend ÷ bookings</span>
+        </div>
+        <div class="fnode">
+          <b>CAC</b>
+          <span>Cost to acquire a client</span>
+          <span class="eq">spend ÷ clients</span>
+        </div>
+      </div>
+
+      <p class="body-p">The number that governs whether you can scale is <strong>CAC against the lifetime value of a client</strong>. If a client is worth £900 over their average stay and costs £300 to acquire, you can spend more and grow. If they're worth £400 and cost £380, you have a business that gets more fragile the more you spend on it — and no DM script fixes that.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>What you count</th><th>Starting benchmark</th><th>If it's low, the problem is</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Lead → reply</strong></td><td>Leads who send a real sentence after the auto-message</td><td class="n">25–45%</td><td>Response speed, or the ad attracting freebie-hunters. Check response time first.</td></tr>
+            <tr><td><strong>Reply → qualified</strong></td><td>All four GAPT answers</td><td class="n">30–50%</td><td>Pitching too early, or gating the freebie. Sometimes bad targeting.</td></tr>
+            <tr><td><strong>Qualified → booked</strong></td><td>Time in the calendar</td><td class="n">35–55%</td><td>The transition. You skipped the permission beat or sent a link instead of two times.</td></tr>
+            <tr><td><strong>Booked → showed</strong></td><td>Call happened</td><td class="n">60–80%</td><td>Confirmation sequence, or booking too far out. Paid shows lower than organic — plan for it.</td></tr>
+            <tr><td><strong>Showed → closed</strong></td><td>Paid and started</td><td class="n">Track your own</td><td>A call problem — unless you're booking unqualified leads to hit a booking target.</td></tr>
+            <tr><td><strong>Response time</strong></td><td>Median minutes to first human reply</td><td class="n">&lt; 5 min</td><td>Coverage. This is the highest-leverage number on the page.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn">
+        <b>Benchmarks</b>
+        <p>These are wide starting ranges for inbound DM ad traffic, not targets and not promises. They swing enormously with offer, price point, country and ad creative. After four weeks, your own numbers are the only ones that matter — replace these and never look at them again.</p>
+      </div>
+
+      <div class="callout key">
+        <b>Weekly</b>
+        <p>Pick the single worst conversion step and work only on that for a week. Taking reply rate from 20% to 40% halves your cost per booked call on its own. Improving six things slightly improves nothing you can measure.</p>
+      </div>
+    </section>
+
+    <!-- ================= 14 FEEDBACK ================= -->
+    <section class="sec" id="feedback">
+      <div class="sec-h"><em>14</em><h2>Feeding the ad account</h2></div>
+      <p class="lede">The part that doesn't exist in organic setting, and the part that compounds. You are the only person in the business who talks to the traffic. What you notice in the inbox is worth more to the ad account than any dashboard.</p>
+
+      <h3>Tag every lead at the source</h3>
+      <p class="body-p">If nothing else in this section happens, make this happen. Every conversation should carry the <strong>ad, the creative and the keyword</strong> it came from, written on automatically at the point of arrival. Without it you're averaging good ads and bad ads together, which means you can't scale either.</p>
+
+      <h3>Log why every dead lead died</h3>
+      <p class="body-p">One field, a short list of reasons, filled in every time. These aren't lost deals, they're a targeting brief:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Reason logged</th><th>What it tells the ad account</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Freebie only</strong></td><td>The hook attracts downloaders, not buyers. Change the offer or qualify harder in the creative.</td></tr>
+            <tr><td><strong>Price shock</strong></td><td>Wrong income bracket, or the ad implies something cheaper than you sell. Consider naming a price range in the creative.</td></tr>
+            <tr><td><strong>Out of area</strong></td><td>Targeting leak. A geography fix, worth real money and fixable in an afternoon.</td></tr>
+            <tr><td><strong>Under 18</strong></td><td>Age targeting or creative that appeals young. Fix same day.</td></tr>
+            <tr><td><strong>Wrong goal</strong></td><td>The hook promises something adjacent to what you sell. The most common cause of a good CPL and a terrible CAC.</td></tr>
+            <tr><td><strong>Needs a clinician</strong></td><td>If one angle keeps surfacing this, that creative is attracting vulnerability. Rethink it.</td></tr>
+            <tr><td><strong>Never replied</strong></td><td>Check your own response time before blaming the ad.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>The weekly handover</h3>
+      <p class="body-p">Whoever runs the ads — you, a media buyer, an agency — gets this every week, in five lines. It takes ten minutes and it's the highest-leverage ten minutes in the operation.</p>
+      <ol class="steps">
+        <li><strong>Best ad this week</strong> — by cost per booked call, not by cost per lead. The cheapest leads are frequently the worst ones.</li>
+        <li><strong>Worst ad this week</strong> — and the reason from your dead-lead log, not a guess.</li>
+        <li><strong>The phrase they keep using</strong> — the exact words leads use to describe their problem. This is free ad copy and it beats anything written from imagination.</li>
+        <li><strong>The question three or more people asked</strong> — an objection appearing repeatedly in DMs belongs in the ad creative, where it gets handled before the click.</li>
+        <li><strong>Anything that felt off</strong> — a spike in "is this a bot", a rise in blocks, confusion about what was promised. You'll feel these a week before they show up in the numbers.</li>
+      </ol>
+
+      <div class="callout key">
+        <b>The loop</b>
+        <p>Better ads produce better leads. Better leads make the setter look brilliant and drop CAC. Lower CAC means more spend is affordable, which means more leads. <strong>This loop is the actual business</strong> — the scripts just determine how fast it spins.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p><b>How to use this document.</b> Read it once end to end before you answer another ad lead. Then keep section 08 open while you work — it's built to be searched mid-conversation. Rewrite every script in your own voice first; a script you can't say out loud naturally will sound exactly like a script, and on paid traffic people are already braced for one.</p>
+      <p>Benchmarks are wide starting ranges for inbound DM ad traffic, not promises — replace them with your own after four weeks. Platform messaging windows, ad policies and data-protection rules change regularly and differ by country and channel: verify the current rules for the channels you actually run before building automation around anything described here. Nothing on this page is legal, medical or financial advice.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- theme toggle ---------- */
+  var root = document.documentElement;
+  var tbtn = document.getElementById("theme-toggle");
+  function prefersDark(){
+    try { return window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){ return false; }
+  }
+  try {
+    var saved = localStorage.getItem("dmplaybook-theme");
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+  } catch(e){}
+  if (tbtn) {
+    tbtn.addEventListener("click", function(){
+      var cur = root.getAttribute("data-theme");
+      if (!cur) cur = prefersDark() ? "dark" : "light";
+      var next = cur === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("dmplaybook-theme", next); } catch(e){}
+    });
+  }
+
+  /* ---------- copy buttons ---------- */
+  function legacyCopy(text){
+    return new Promise(function(resolve, reject){
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok ? resolve() : reject();
+      } catch(e){ reject(e); }
+    });
+  }
+  function copyText(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function(){ return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function(btn){
+    btn.addEventListener("click", function(){
+      var block = btn.closest(".script");
+      if (!block) return;
+      var body = block.querySelector(".script-b");
+      if (!body) return;
+      var text = body.innerText.replace(/ /g, " ");
+      copyText(text).then(function(){
+        btn.textContent = "Copied";
+        btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("done"); }, 1600);
+      }).catch(function(){
+        btn.textContent = "Select it";
+        setTimeout(function(){ btn.textContent = "Copy"; }, 1600);
+        try {
+          var r = document.createRange();
+          r.selectNodeContents(body);
+          var s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(r);
+        } catch(e){}
+      });
+    });
+  });
+
+  /* ---------- play filter ---------- */
+  var plays = Array.prototype.slice.call(document.querySelectorAll("#plays .play"));
+  var search = document.getElementById("play-search");
+  var cats = document.getElementById("play-cats");
+  var count = document.getElementById("play-count");
+  var activeCat = "all";
+
+  plays.forEach(function(p){ p.dataset.text = p.innerText.toLowerCase(); });
+
+  function applyFilter(){
+    var q = (search && search.value ? search.value : "").trim().toLowerCase();
+    var shown = 0;
+    plays.forEach(function(p){
+      var catOk = activeCat === "all" || p.getAttribute("data-cat") === activeCat;
+      var textOk = !q || p.dataset.text.indexOf(q) !== -1;
+      var show = catOk && textOk;
+      p.hidden = !show;
+      if (show) shown++;
+    });
+    if (count) {
+      if (shown === plays.length) count.textContent = "Showing all " + plays.length;
+      else if (shown === 0) count.textContent = "No situations match — try a different word";
+      else count.textContent = "Showing " + shown + " of " + plays.length;
+    }
+  }
+
+  if (search) search.addEventListener("input", applyFilter);
+  if (cats) {
+    cats.addEventListener("click", function(e){
+      var btn = e.target.closest(".cat");
+      if (!btn) return;
+      activeCat = btn.getAttribute("data-cat");
+      Array.prototype.forEach.call(cats.querySelectorAll(".cat"), function(b){
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      applyFilter();
+    });
+  }
+  applyFilter();
+
+  /* ---------- daily checklist persistence ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#daily input[type=checkbox]"));
+  var KEY = "dmplaybook-daily";
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var state = JSON.parse(raw);
+      if (state && state.day === new Date().toDateString() && Array.isArray(state.done)) {
+        boxes.forEach(function(b){ if (state.done.indexOf(b.id) !== -1) b.checked = true; });
+      }
+    }
+  } catch(e){}
+  function saveDaily(){
+    try {
+      var done = boxes.filter(function(b){ return b.checked; }).map(function(b){ return b.id; });
+      localStorage.setItem(KEY, JSON.stringify({ day: new Date().toDateString(), done: done }));
+    } catch(e){}
+  }
+  boxes.forEach(function(b){ b.addEventListener("change", saveDaily); });
+
+  /* ---------- scroll spy ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll(".rail a"));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
+  function spy(){
+    var y = window.scrollY + 140;
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].offsetTop <= y) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle("on", i === idx); });
+  }
+  var ticking = false;
+  window.addEventListener("scroll", function(){
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function(){ spy(); ticking = false; });
+  }, { passive: true });
+  spy();
+})();
+</script>
