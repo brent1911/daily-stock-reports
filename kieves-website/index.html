@@ -1,288 +1,369 @@
 <title>Still Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Karla:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
 
 <style>
 :root{
-  --ground:#F0EFEA;
-  --paper:#FAFAF7;
-  --paper-2:#E7E6DF;
-  --ink:#1D211C;
-  --ink-2:#464B43;
-  --muted:#71766C;
-  --line:#CDCCC2;
-  --line-soft:#DEDDD5;
-  --accent:#43604B;
-  --accent-ink:#F4F6F1;
-  --accent-soft:#E3E8E0;
-  --brass:#8C7539;
-  --art-bright:1;
-  --shadow:0 1px 2px rgba(29,33,28,.05), 0 12px 32px -20px rgba(29,33,28,.4);
-  --step--1:clamp(.74rem,.72rem + .1vw,.8rem);
-  --step-0:clamp(.95rem,.92rem + .16vw,1.05rem);
-  --step-1:clamp(1.12rem,1.05rem + .35vw,1.3rem);
-  --step-2:clamp(1.5rem,1.3rem + .9vw,2rem);
-  --step-3:clamp(2rem,1.6rem + 1.9vw,3.1rem);
-  --step-4:clamp(2.6rem,1.8rem + 3.8vw,5.1rem);
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --ground:#131612;
-    --paper:#1B1F1A;
-    --paper-2:#232821;
-    --ink:#E9EBE3;
-    --ink-2:#BCC1B6;
-    --muted:#8E958A;
-    --line:#333A31;
-    --line-soft:#272D25;
-    --accent:#9CBCA0;
-    --accent-ink:#11160F;
-    --accent-soft:#222A21;
-    --brass:#C4A868;
-    --art-bright:.78;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -24px rgba(0,0,0,.9);
-  }
-}
-:root[data-theme="dark"]{
-  --ground:#131612;
-  --paper:#1B1F1A;
-  --paper-2:#232821;
-  --ink:#E9EBE3;
-  --ink-2:#BCC1B6;
-  --muted:#8E958A;
-  --line:#333A31;
-  --line-soft:#272D25;
-  --accent:#9CBCA0;
-  --accent-ink:#11160F;
-  --accent-soft:#222A21;
-  --brass:#C4A868;
-  --art-bright:.78;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -24px rgba(0,0,0,.9);
+  color-scheme:light;
+  --sand:#E7E0D4;
+  --bone:#F3EFE7;
+  --shell:#DCD3C4;
+  --clay:#C6B8A3;
+  --clay-deep:#A9997F;
+  --umber:#2C2621;
+  --umber-2:#5C5147;
+  --umber-3:#8A7E70;
+  --line:#CDC2B0;
+  --line-soft:#DCD3C4;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  --t-xs:.66rem;
+  --t-sm:.8rem;
+  --t-base:clamp(.93rem,.9rem + .14vw,1rem);
+  --t-lg:clamp(1.15rem,1.05rem + .4vw,1.4rem);
+  --t-xl:clamp(1.7rem,1.4rem + 1.2vw,2.5rem);
+  --t-2xl:clamp(2.1rem,1.6rem + 2.2vw,3.6rem);
+  --t-3xl:clamp(2.7rem,1.7rem + 4.6vw,6rem);
 }
 
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:var(--ground);
-  color:var(--ink);
-  font-family:"Karla","Helvetica Neue",Arial,sans-serif;
-  font-size:var(--step-0);
-  line-height:1.6;
+  background:var(--sand);
+  color:var(--umber);
+  font-family:"Jost","Helvetica Neue",Arial,sans-serif;
+  font-weight:300;
+  font-size:var(--t-base);
+  line-height:1.72;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3,h4{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:300;text-wrap:balance;margin:0;letter-spacing:-.015em;line-height:1.08}
+body::after{
+  content:"";position:fixed;inset:0;z-index:80;pointer-events:none;
+  background-image:var(--grain);opacity:.045;mix-blend-mode:multiply;
+}
+h1,h2,h3,h4{
+  font-family:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+  font-weight:300;line-height:1.06;letter-spacing:-.005em;margin:0;text-wrap:balance;
+}
 p{margin:0}
-a{color:inherit}
+a{color:inherit;text-decoration:none}
 img{max-width:100%}
-::selection{background:var(--accent);color:var(--accent-ink)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+::selection{background:var(--clay);color:var(--umber)}
+:focus-visible{outline:1px solid var(--umber);outline-offset:4px}
 
-.wrap{max-width:1160px;margin-inline:auto;padding-inline:clamp(16px,4.5vw,44px)}
-.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:var(--step--1);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:clamp(18px,5vw,60px)}
+.label{
+  font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;
+  font-weight:400;color:var(--umber-3);
+}
 .rule{height:1px;background:var(--line);border:0;margin:0}
+.link{
+  display:inline-block;font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;
+  padding-bottom:5px;border-bottom:1px solid var(--umber);transition:border-color .4s ease,color .4s ease;
+}
+.link:hover{border-color:var(--clay-deep);color:var(--umber-2)}
 
-/* ---------- header ---------- */
+/* ============ scenes (art-directed placeholders) ============ */
+.scene{position:relative;overflow:hidden;background:var(--shell);isolation:isolate}
+.scene>i{position:absolute;display:block}
+.scene::after{
+  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background-image:var(--grain);opacity:.4;mix-blend-mode:multiply;
+}
+.scene::before{
+  content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 40%,transparent 44%,rgba(86,68,49,.16) 100%);
+}
+
+.sc-window{background:linear-gradient(168deg,#E9E2D5 0%,#DED4C4 52%,#CDC1AE 100%)}
+.sc-window .p1{left:6%;top:-16%;width:34%;height:96%;transform:skewY(15deg);filter:blur(14px);
+  background:linear-gradient(205deg,rgba(255,252,243,.95),rgba(255,248,233,.18))}
+.sc-window .p2{left:43%;top:-4%;width:26%;height:88%;transform:skewY(15deg);filter:blur(16px);
+  background:linear-gradient(205deg,rgba(255,251,240,.7),rgba(255,247,231,.1))}
+.sc-window .p3{left:72%;top:8%;width:15%;height:74%;transform:skewY(15deg);filter:blur(18px);
+  background:linear-gradient(205deg,rgba(255,250,238,.45),transparent)}
+.sc-window .sh{left:-10%;bottom:-24%;width:60%;height:46%;filter:blur(30px);
+  background:radial-gradient(60% 60% at 50% 50%,rgba(92,72,50,.24),transparent 70%)}
+
+.sc-arch{background:linear-gradient(180deg,#E4DCCD 0%,#D9CFBE 62%,#C8BBA6 100%)}
+.sc-arch .arch{left:22%;top:12%;width:56%;height:80%;border-radius:50% 50% 0 0/38% 38% 0 0;
+  background:linear-gradient(196deg,#EDE7DA,#D5CAB7);box-shadow:inset 0 22px 44px rgba(96,74,52,.14)}
+.sc-arch .vase{left:41%;bottom:16%;width:17%;height:34%;
+  border-radius:44% 44% 36% 36%/56% 56% 22% 22%;
+  background:linear-gradient(100deg,#C3B49C,#9E8E76 62%,#8B7B64)}
+.sc-arch .stem{left:48.4%;bottom:46%;width:2px;height:22%;transform-origin:bottom;transform:rotate(9deg);
+  background:linear-gradient(#8B7B64,rgba(139,123,100,0))}
+.sc-arch .sh{left:30%;bottom:12%;width:40%;height:7%;filter:blur(11px);
+  background:radial-gradient(50% 50% at 50% 50%,rgba(88,68,47,.4),transparent 72%)}
+
+.sc-curtain{background:linear-gradient(176deg,#EDE6D9 0%,#E0D7C6 46%,#C9BDA7 100%)}
+.sc-curtain .folds{inset:-4%;
+  background:repeating-linear-gradient(90.6deg,
+    rgba(255,253,247,.6) 0 2.4%,
+    rgba(150,128,98,.13) 4.8%,
+    rgba(255,252,243,.46) 7.6%,
+    rgba(126,106,80,.09) 10.2%,
+    rgba(255,253,247,.6) 13.4%);
+  filter:blur(10px)}
+.sc-curtain .glow{left:6%;top:-34%;width:84%;height:104%;filter:blur(40px);
+  background:radial-gradient(52% 48% at 50% 48%,rgba(255,250,235,.9),transparent 70%)}
+.sc-curtain .floor{left:0;right:0;bottom:0;height:24%;filter:blur(9px);
+  background:linear-gradient(rgba(190,176,152,0) 0%,#B6A78E 48%,#9B8B72 100%)}
+
+.sc-still{background:linear-gradient(174deg,#EAE3D6 0%,#DCD2C1 58%)}
+.sc-still .plane{left:0;right:0;bottom:0;height:34%;
+  background:linear-gradient(#CFC2AC 0 2px,#C4B69F 2px,#AE9F86 100%)}
+.sc-still .wash{left:-6%;top:-14%;width:72%;height:82%;filter:blur(26px);
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,252,243,.9),transparent 70%)}
+.sc-still .vase{left:26%;bottom:34%;width:13%;height:36%;
+  border-radius:40% 40% 28% 28%/50% 50% 16% 16%;
+  background:linear-gradient(98deg,#CDBFA7,#A29279 70%)}
+.sc-still .bowl{left:52%;bottom:34%;width:22%;height:11%;border-radius:4% 4% 46% 46%/8% 8% 92% 92%;
+  background:linear-gradient(180deg,#D8CCB6,#B0A188)}
+.sc-still .book{left:46%;bottom:34%;width:8%;height:3.5%;background:#B7A88F}
+.sc-still .sh{left:20%;bottom:30%;width:60%;height:7%;filter:blur(9px);
+  background:radial-gradient(50% 50% at 50% 50%,rgba(80,62,42,.42),transparent 74%)}
+
+.sc-corner{background:linear-gradient(90deg,#E6DFD1 0 54%,#D2C7B4 54% 100%)}
+.sc-corner .lwall{left:0;top:0;width:54%;height:100%;
+  background:linear-gradient(196deg,rgba(255,253,246,.7),rgba(255,250,236,0) 72%)}
+.sc-corner .beam{left:8%;top:-10%;width:22%;height:92%;transform:skewY(19deg);filter:blur(13px);
+  background:linear-gradient(200deg,rgba(255,252,242,.92),transparent)}
+.sc-corner .floor{left:0;right:0;bottom:0;height:22%;
+  background:linear-gradient(#C2B49C,#A6977E)}
+.sc-corner .sh{right:-8%;top:0;width:44%;height:100%;
+  background:linear-gradient(270deg,rgba(84,66,46,.22),transparent 70%)}
+
+.sc-soft{background:linear-gradient(200deg,#EDE7DB 0%,#DCD2C1 54%,#C7BAA4 100%)}
+.sc-soft .glow{left:14%;top:8%;width:62%;height:64%;filter:blur(30px);
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,252,244,.92),transparent 70%)}
+.sc-soft .band{left:0;right:0;bottom:0;height:28%;filter:blur(16px);
+  background:linear-gradient(rgba(120,98,72,0),rgba(104,82,58,.3))}
+
+/* ============ header ============ */
 .site-head{
-  position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
-  background:color-mix(in srgb,var(--ground) 86%,transparent);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line-soft);
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:60;
+  background:color-mix(in srgb,var(--sand) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line-soft);
 }
-.head-in{display:flex;align-items:center;gap:20px;min-height:66px;padding-block:10px}
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
-.brand svg{width:26px;height:34px;color:var(--ink);flex:none}
-.brand b{font-family:"Fraunces",Georgia,serif;font-weight:400;font-size:1.02rem;letter-spacing:.14em;text-transform:uppercase}
-.nav{display:flex;align-items:center;gap:26px}
-.nav a{text-decoration:none;color:var(--ink-2);font-size:.92rem;letter-spacing:.01em;padding-block:4px;border-bottom:1px solid transparent;transition:color .18s,border-color .18s}
-.nav a:hover{color:var(--ink);border-color:var(--accent)}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  font-family:"Karla",sans-serif;font-size:.9rem;font-weight:500;letter-spacing:.02em;
-  padding:11px 19px;border-radius:999px;border:1px solid var(--ink);
-  background:var(--ink);color:var(--ground);text-decoration:none;cursor:pointer;
-  transition:transform .18s ease,opacity .18s ease;
+.head-in{display:flex;align-items:center;gap:26px;min-height:72px}
+.mark{display:flex;align-items:center;gap:12px;margin-right:auto}
+.mark svg{width:23px;height:31px;color:var(--umber);flex:none}
+.mark b{
+  font-family:"Cormorant Garamond",Garamond,serif;font-weight:400;font-size:1.02rem;
+  letter-spacing:.34em;text-transform:uppercase;padding-left:2px;
 }
-.btn:hover{transform:translateY(-1px);opacity:.9}
-.btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.btn--ghost:hover{border-color:var(--ink)}
-.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:999px;color:var(--ink);padding:9px 14px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
-#mobileNav{border-top:1px solid var(--line-soft);padding:8px 0 18px;display:grid;gap:2px}
-#mobileNav a{text-decoration:none;padding:11px 2px;border-bottom:1px solid var(--line-soft);color:var(--ink-2)}
+.nav{display:flex;align-items:center;gap:34px}
+.nav a{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--umber-2);
+  padding-block:6px;border-bottom:1px solid transparent;transition:color .4s,border-color .4s}
+.nav a:hover{color:var(--umber);border-color:var(--clay-deep)}
+.menu-btn{display:none;background:none;border:0;padding:8px 0;color:var(--umber);cursor:pointer;
+  font-family:"Jost",sans-serif;font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase}
+#mobileNav{display:grid;padding-bottom:16px}
+#mobileNav[hidden]{display:none}
+#mobileNav a{padding:13px 0;border-top:1px solid var(--line-soft);font-size:var(--t-xs);
+  letter-spacing:.2em;text-transform:uppercase;color:var(--umber-2)}
 
-/* ---------- hero ---------- */
-.hero{padding-block:clamp(48px,7vw,92px) clamp(36px,5vw,64px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(28px,5vw,64px);align-items:start}
-.eyebrow{color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:22px}
-.eyebrow::before{content:"";width:34px;height:1px;background:var(--accent);flex:none}
-.hero h1{font-size:var(--step-4);letter-spacing:-.03em}
-.hero h1 em{font-style:italic;font-weight:400;color:var(--accent)}
-.lede{margin-top:24px;font-size:var(--step-1);color:var(--ink-2);max-width:34ch;font-weight:300;line-height:1.5}
-.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.hero-meta{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:38px;color:var(--muted)}
+/* ============ opening ============ */
+.open{padding-block:clamp(56px,10vw,132px) clamp(34px,4.6vw,60px)}
+.open-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(26px,5vw,72px);align-items:end}
+.open h1{font-size:var(--t-3xl);letter-spacing:-.02em}
+.open h1 em{font-style:italic;color:var(--umber-2)}
+.open .label{margin-bottom:clamp(22px,3vw,40px);display:block}
+.open-aside{padding-bottom:10px}
+.open-aside p{color:var(--umber-2);max-width:34ch;font-size:var(--t-base)}
+.open-aside .link{margin-top:24px}
 
-/* specimen card */
-.specimen{
-  background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);
-  padding:22px;display:grid;gap:18px;position:relative;
+.bleed{width:100%}
+.hero-scene{height:clamp(340px,58vh,600px)}
+.bleed-cap{display:flex;justify-content:space-between;gap:16px;padding-block:12px;color:var(--umber-3);
+  font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase}
+
+/* ============ statement ============ */
+.statement{padding-block:clamp(60px,9vw,120px)}
+.statement-grid{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,1fr);gap:clamp(24px,5vw,64px)}
+.statement q{
+  font-family:"Cormorant Garamond",Garamond,serif;font-size:var(--t-xl);font-weight:300;
+  line-height:1.34;quotes:none;display:block;max-width:26ch;
 }
-.specimen::after{content:"";position:absolute;inset:7px;border:1px solid var(--line-soft);pointer-events:none}
-.spec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;color:var(--muted)}
-.spec-title{font-family:"Fraunces",Georgia,serif;font-size:var(--step-1);color:var(--ink);letter-spacing:-.01em}
-.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.chip{position:relative;aspect-ratio:3/4;border:1px solid rgba(0,0,0,.07);display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px}
-.chip span{font-family:"IBM Plex Mono",monospace;font-size:.56rem;letter-spacing:.04em;color:rgba(20,24,19,.62);opacity:0;transition:opacity .2s}
-.chip:hover span,.chip:focus-visible span{opacity:1}
-.spec-rows{display:grid;gap:0;border-top:1px solid var(--line-soft)}
-.spec-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line-soft)}
-.spec-row dt{color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
-.spec-row dd{margin:0;font-size:.9rem;color:var(--ink-2);text-align:right}
+.statement q em{font-style:italic}
+.statement .sub{margin-top:26px;color:var(--umber-2);max-width:52ch}
 
-/* ---------- ticker strip ---------- */
-.strip{border-block:1px solid var(--line);background:var(--paper-2)}
-.strip-in{display:flex;flex-wrap:wrap;gap:10px 34px;padding-block:14px;color:var(--muted);justify-content:space-between}
-.strip-in span{display:flex;align-items:center;gap:9px}
-.strip-in span::before{content:"";width:5px;height:5px;background:var(--accent);flex:none}
+/* ============ work ============ */
+.work{padding-block:clamp(40px,6vw,80px) clamp(60px,9vw,120px)}
+.work-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+  padding-bottom:18px;border-bottom:1px solid var(--line)}
+.work-head h2{font-size:var(--t-2xl)}
+.projects{display:grid;gap:clamp(46px,8vw,124px);margin-top:clamp(40px,6vw,84px)}
+.project{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(18px,3vw,36px);align-items:end;
+  background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit;cursor:pointer;width:100%}
+.project .frame{position:relative;overflow:hidden;grid-column:1/9}
+.project:nth-child(even) .frame{grid-column:5/13;order:2}
+.project:nth-child(even) .meta{order:1}
+.project .scene{height:clamp(300px,50vw,620px);transition:transform 1.3s cubic-bezier(.2,.7,.2,1)}
+.project:hover .scene,.project:focus-visible .scene{transform:scale(1.035)}
+.project .meta{grid-column:span 4;padding-bottom:clamp(6px,2vw,28px)}
+.project:nth-child(even) .meta{grid-column:1/5}
+.project .idx{display:block;font-size:var(--t-xs);letter-spacing:.24em;color:var(--umber-3);margin-bottom:14px}
+.project h3{font-size:var(--t-xl);margin-bottom:12px}
+.project .meta p{color:var(--umber-2);font-size:var(--t-sm);letter-spacing:.02em}
+.project .more{margin-top:20px;display:inline-block;font-size:var(--t-xs);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--umber-3);border-bottom:1px solid var(--line);padding-bottom:4px;
+  transition:color .4s,border-color .4s}
+.project:hover .more{color:var(--umber);border-color:var(--umber)}
 
-/* ---------- section scaffolding ---------- */
-.section{padding-block:clamp(56px,8vw,104px)}
-.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:clamp(28px,4vw,48px)}
-.sec-head h2{font-size:var(--step-3);max-width:20ch}
-.sec-head p{color:var(--muted);max-width:40ch;font-size:.95rem}
-.count{color:var(--muted)}
+/* ============ services ============ */
+.services{background:var(--bone);border-block:1px solid var(--line-soft)}
+.services-in{padding-block:clamp(58px,9vw,118px)}
+.services h2{font-size:var(--t-2xl);max-width:16ch}
+.services .intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);
+  align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.services .intro p{color:var(--umber-2);max-width:44ch}
+.svc{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,1fr) minmax(0,.24fr);
+  gap:clamp(16px,3vw,44px);padding-block:clamp(26px,3.4vw,42px);border-top:1px solid var(--line);align-items:start}
+.svc:last-of-type{border-bottom:1px solid var(--line)}
+.svc h3{font-size:var(--t-lg);font-weight:400}
+.svc .idx{display:block;font-size:var(--t-xs);letter-spacing:.24em;color:var(--umber-3);margin-bottom:10px}
+.svc ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;color:var(--umber-2);font-size:var(--t-sm)}
+.svc li{display:flex;gap:12px}
+.svc li::before{content:"";width:14px;height:1px;background:var(--clay-deep);margin-top:13px;flex:none}
+.svc .fee{text-align:right;font-family:"Cormorant Garamond",Garamond,serif;font-size:var(--t-lg);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap}
+.svc .fee span{display:block;font-family:"Jost",sans-serif;font-size:var(--t-xs);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--umber-3);margin-top:8px}
+.services .foot-note{margin-top:clamp(30px,4vw,48px);display:flex;flex-wrap:wrap;gap:18px 40px;
+  justify-content:space-between;align-items:center}
+.services .foot-note p{color:var(--umber-2);font-size:var(--t-sm);max-width:46ch}
 
-/* ---------- work ---------- */
-.work-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3.4vw,42px)}
-.project{display:block;text-decoration:none;color:inherit}
-.art{position:relative;aspect-ratio:4/5;max-width:100%;overflow:hidden;border:1px solid var(--line);filter:brightness(var(--art-bright))}
-.art::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(112deg,transparent 38%,rgba(255,255,255,.34) 39%,rgba(255,255,255,.12) 52%,transparent 53%);
-  transition:transform .8s cubic-bezier(.2,.7,.2,1);
-}
-.project:hover .art::after{transform:translateX(6%)}
-.art-tag{
-  position:absolute;left:12px;bottom:12px;z-index:2;
-  background:color-mix(in srgb,var(--paper) 88%,transparent);
-  border:1px solid var(--line);padding:5px 10px;color:var(--ink-2);
-  font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
-}
-.a-linen{background:
-  radial-gradient(120% 90% at 18% 6%,rgba(255,255,255,.6),transparent 58%),
-  repeating-linear-gradient(90deg,rgba(60,55,45,.05) 0 1px,transparent 1px 4px),
-  repeating-linear-gradient(0deg,rgba(60,55,45,.045) 0 1px,transparent 1px 4px),
-  linear-gradient(158deg,#DFDACD 0%,#CFC8B8 46%,#B8B2A2 100%);}
-.a-stone{background:
-  radial-gradient(90% 60% at 70% 14%,rgba(255,255,255,.55),transparent 60%),
-  repeating-linear-gradient(174deg,rgba(120,105,85,.10) 0 2px,transparent 2px 13px),
-  linear-gradient(190deg,#E6DFD2 0%,#D6CCBA 55%,#C0B6A3 100%);}
-.a-oak{background:
-  radial-gradient(110% 70% at 24% 88%,rgba(255,255,255,.42),transparent 62%),
-  repeating-linear-gradient(89deg,rgba(84,58,32,.14) 0 1px,transparent 1px 7px),
-  repeating-linear-gradient(89deg,rgba(84,58,32,.07) 0 3px,transparent 3px 19px),
-  linear-gradient(170deg,#CBAE86 0%,#B2946C 60%,#8F7550 100%);}
-.a-plaster{background:
-  radial-gradient(75% 55% at 28% 22%,rgba(255,255,255,.7),transparent 64%),
-  radial-gradient(60% 50% at 82% 78%,rgba(67,96,75,.18),transparent 62%),
-  linear-gradient(200deg,#E4E3DB 0%,#D2D3C7 52%,#B9BCAE 100%);}
-.p-meta{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-top:16px}
-.p-meta h3{font-size:var(--step-2);font-weight:300}
-.p-meta .mono{color:var(--muted);flex:none}
-.p-specs{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.05em}
+/* ============ process ============ */
+.process{padding-block:clamp(58px,9vw,118px)}
+.process h2{font-size:var(--t-2xl);max-width:14ch;margin-bottom:clamp(34px,5vw,60px)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,3vw,40px)}
+.step{border-top:1px solid var(--umber);padding-top:18px}
+.step .label{display:block;margin-bottom:12px}
+.step h3{font-size:var(--t-lg);font-weight:400;margin-bottom:10px}
+.step p{color:var(--umber-2);font-size:var(--t-sm)}
 
-/* ---------- services ---------- */
-#services{background:var(--paper-2);border-block:1px solid var(--line)}
-.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,28px);align-items:stretch}
-.svc{background:var(--paper);border:1px solid var(--line);padding:26px 24px 24px;display:flex;flex-direction:column;gap:16px}
-.svc--lead{border-color:var(--accent);box-shadow:var(--shadow)}
-.svc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.svc h3{font-size:var(--step-2)}
-.badge{background:var(--accent);color:var(--accent-ink);padding:4px 9px;font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;flex:none}
-.price{font-family:"Fraunces",Georgia,serif;font-size:var(--step-2);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.price small{font-family:"Karla",sans-serif;font-size:.74rem;color:var(--muted);letter-spacing:.04em;display:block;margin-top:2px;text-transform:uppercase}
-.svc ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:.9rem;color:var(--ink-2)}
-.svc li{display:flex;gap:10px;align-items:flex-start}
-.svc li::before{content:"";width:6px;height:6px;margin-top:8px;flex:none;border:1px solid var(--accent)}
-.svc .btn{margin-top:auto;align-self:flex-start}
+/* ============ materials ============ */
+.materials{background:var(--shell);border-block:1px solid var(--line)}
+.materials-in{padding-block:clamp(58px,9vw,118px)}
+.materials .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;
+  gap:16px;margin-bottom:clamp(30px,4vw,52px)}
+.materials h2{font-size:var(--t-2xl)}
+.mats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(12px,2vw,24px)}
+.mat i{display:block;aspect-ratio:1;max-width:100%;position:relative;overflow:hidden}
+.mat i::after{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.32;mix-blend-mode:multiply}
+.mat b{display:block;font-weight:400;font-size:var(--t-sm);margin-top:14px;letter-spacing:.02em}
+.mat span{display:block;font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--umber-3);margin-top:4px}
 
-/* ---------- process ---------- */
-.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.6vw,30px)}
-.step{border-top:1px solid var(--ink);padding-top:16px;display:grid;gap:9px;align-content:start}
-.step .mono{color:var(--accent)}
-.step h3{font-size:var(--step-1);font-weight:400}
-.step p{color:var(--muted);font-size:.9rem}
+/* ============ studio ============ */
+.studio{padding-block:clamp(58px,9vw,124px)}
+.studio-grid{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(28px,6vw,86px);align-items:center}
+.portrait{aspect-ratio:4/5;max-width:100%}
+.studio h2{font-size:var(--t-2xl);margin:16px 0 26px}
+.studio p{color:var(--umber-2);max-width:56ch}
+.studio p+p{margin-top:16px}
+.sig{font-family:"Cormorant Garamond",Garamond,serif;font-style:italic;font-size:var(--t-lg);
+  color:var(--umber);margin-top:30px}
+.facts{display:flex;flex-wrap:wrap;gap:12px 44px;margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
+.facts div{display:grid;gap:2px}
+.facts b{font-family:"Cormorant Garamond",Garamond,serif;font-weight:400;font-size:var(--t-lg);
+  font-variant-numeric:tabular-nums}
 
-/* ---------- materials ---------- */
-#materials{background:var(--paper-2);border-block:1px solid var(--line)}
-.mat-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(10px,1.6vw,18px)}
-.mat{display:grid;gap:9px}
-.mat i{display:block;aspect-ratio:1;max-width:100%;border:1px solid rgba(0,0,0,.08);filter:brightness(var(--art-bright))}
-.mat b{font-weight:500;font-size:.84rem;line-height:1.3}
-.mat span{color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.05em}
+/* ============ instagram ============ */
+.feed{padding-bottom:clamp(50px,8vw,100px)}
+.feed .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:14px;
+  padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:clamp(20px,3vw,32px)}
+.feed h2{font-size:var(--t-lg);font-weight:400}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(10px,1.6vw,18px)}
+.tiles .scene{aspect-ratio:1;transition:opacity .5s ease}
+.tiles a:hover .scene{opacity:.82}
 
-/* ---------- about ---------- */
-.about-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:center}
-.portrait{aspect-ratio:4/5;max-width:100%;border:1px solid var(--line);position:relative;filter:brightness(var(--art-bright));
-  background:
-   radial-gradient(70% 50% at 34% 26%,rgba(255,255,255,.66),transparent 62%),
-   linear-gradient(200deg,#DDDCD2 0%,#C7C9BC 48%,#A9AC9D 100%);}
-.portrait span{position:absolute;left:12px;bottom:12px;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(25,30,24,.55)}
-.about-grid h2{font-size:var(--step-3);margin-bottom:20px}
-.about-grid p+p{margin-top:14px}
-.about-grid p{color:var(--ink-2);max-width:60ch}
-.sig{font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:var(--step-2);margin-top:26px;color:var(--ink)}
-.creds{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:22px;color:var(--muted)}
-
-/* ---------- inquiry ---------- */
-#inquiry{background:var(--ink);color:var(--ground);border-top:1px solid var(--line)}
-#inquiry h2{font-size:var(--step-3);color:var(--ground)}
-#inquiry .eyebrow{color:color-mix(in srgb,var(--ground) 62%,transparent)}
-.inq-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,60px);align-items:start}
-.inq-copy p{color:color-mix(in srgb,var(--ground) 72%,transparent);max-width:38ch;margin-top:18px}
-.inq-list{display:grid;gap:12px;margin-top:28px}
-.inq-list div{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid color-mix(in srgb,var(--ground) 18%,transparent);padding-bottom:11px}
-.inq-list .mono{color:color-mix(in srgb,var(--ground) 55%,transparent);flex:none;width:52px}
-.inq-list p{margin:0;color:color-mix(in srgb,var(--ground) 82%,transparent);font-size:.9rem}
-form{display:grid;gap:14px}
-.field{display:grid;gap:7px}
-.field label{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--ground) 60%,transparent)}
+/* ============ contact ============ */
+.contact{background:var(--bone);border-top:1px solid var(--line-soft)}
+.contact-in{padding-block:clamp(58px,9vw,118px)}
+.contact-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(30px,6vw,82px);align-items:start}
+.contact h2{font-size:var(--t-2xl);max-width:13ch;margin-bottom:24px}
+.contact-copy p{color:var(--umber-2);max-width:36ch}
+.contact-copy dl{margin:34px 0 0;display:grid;gap:14px}
+.contact-copy dt{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--umber-3)}
+.contact-copy dd{margin:4px 0 0;font-family:"Cormorant Garamond",Garamond,serif;font-size:var(--t-lg)}
+form{display:grid;gap:22px}
+.field{display:grid;gap:8px}
+.field label{font-size:var(--t-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--umber-3)}
 .field input,.field select,.field textarea{
-  font-family:"Karla",sans-serif;font-size:.95rem;color:var(--ground);
-  background:transparent;border:0;border-bottom:1px solid color-mix(in srgb,var(--ground) 30%,transparent);
-  padding:9px 2px;border-radius:0;
+  font-family:"Jost",sans-serif;font-weight:300;font-size:var(--t-base);color:var(--umber);
+  background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:8px 0;
 }
-.field textarea{resize:vertical;min-height:74px}
-.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-bottom-color:var(--ground)}
-.field select option{color:#1D211C;background:#FAFAF7}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.submit{background:var(--ground);color:var(--ink);border-color:var(--ground);margin-top:6px;justify-self:start}
-.fineprint{color:color-mix(in srgb,var(--ground) 52%,transparent);font-size:.78rem;margin-top:2px}
-.sent{border:1px solid color-mix(in srgb,var(--ground) 30%,transparent);padding:26px;display:grid;gap:12px}
-.sent h3{font-size:var(--step-2);color:var(--ground)}
-.sent p{color:color-mix(in srgb,var(--ground) 74%,transparent);font-size:.92rem}
-
-/* ---------- footer ---------- */
-.foot{padding-block:44px 34px}
-.foot-in{display:flex;flex-wrap:wrap;gap:22px 40px;justify-content:space-between;align-items:flex-start}
-.foot a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
-.foot a:hover{color:var(--ink);border-color:var(--accent)}
-.foot-cols{display:flex;flex-wrap:wrap;gap:40px}
-.foot-col{display:grid;gap:9px;font-size:.88rem}
-.foot-col .mono{color:var(--muted);margin-bottom:2px}
-.legal{margin-top:34px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;color:var(--muted)}
-
-@media (max-width:980px){
-  .hero-grid,.about-grid,.inq-grid{grid-template-columns:minmax(0,1fr)}
-  .steps,.svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .mat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .nav{display:none}
-  .head-in .btn{display:none}
-  .menu-btn{display:inline-block}
+.field input::placeholder,.field textarea::placeholder{color:var(--umber-3);opacity:.7}
+.field textarea{resize:vertical;min-height:80px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-bottom-color:var(--umber)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.send{
+  justify-self:start;background:var(--umber);color:var(--bone);border:1px solid var(--umber);
+  font-family:"Jost",sans-serif;font-size:var(--t-xs);letter-spacing:.24em;text-transform:uppercase;
+  padding:15px 34px;cursor:pointer;transition:background .4s ease,color .4s ease;
 }
-@media (max-width:620px){
-  .work-grid,.svc-grid,.steps,.two{grid-template-columns:minmax(0,1fr)}
-  .strip-in{gap:8px 20px}
-  .p-meta{flex-wrap:wrap}
+.send:hover{background:transparent;color:var(--umber)}
+.note{font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--umber-3)}
+.sent{border:1px solid var(--line);padding:32px;display:grid;gap:14px}
+.sent h3{font-size:var(--t-xl)}
+.sent p{color:var(--umber-2);font-size:var(--t-sm)}
+
+/* ============ footer ============ */
+.site-foot{padding-block:clamp(44px,6vw,70px) 34px}
+.foot-grid{display:flex;flex-wrap:wrap;gap:28px 48px;justify-content:space-between}
+.foot-grid .mark{margin-right:0}
+.foot-col{display:grid;gap:10px;align-content:start}
+.foot-col a{font-size:var(--t-sm);color:var(--umber-2);transition:color .4s}
+.foot-col a:hover{color:var(--umber)}
+.foot-col .label{margin-bottom:4px}
+.legal{margin-top:clamp(36px,5vw,58px);padding-top:20px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:10px 30px;justify-content:space-between;color:var(--umber-3);
+  font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase}
+
+/* ============ case study overlay ============ */
+.modal[hidden]{display:none!important}
+.modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:clamp(12px,4vw,44px)}
+.scrim{position:absolute;inset:0;background:rgba(44,38,33,.5);backdrop-filter:blur(3px);border:0;padding:0;cursor:pointer}
+.panel{position:relative;background:var(--sand);width:min(1000px,100%);max-height:88vh;overflow:auto;
+  display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);border:1px solid var(--line)}
+.panel .scene{height:100%;min-height:300px}
+.panel-body{padding:clamp(24px,3.4vw,46px);display:grid;gap:18px;align-content:start}
+.panel-body h3{font-size:var(--t-2xl)}
+.panel-body .label{display:block}
+.panel-body p{color:var(--umber-2);font-size:var(--t-sm)}
+.panel-specs{display:grid;gap:0;margin-top:4px}
+.panel-specs div{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid var(--line-soft);font-size:var(--t-sm)}
+.panel-specs dt{color:var(--umber-3);font-size:var(--t-xs);letter-spacing:.18em;text-transform:uppercase}
+.panel-specs dd{margin:0;text-align:right;color:var(--umber-2)}
+.panel-swatches{display:flex;gap:8px;margin-top:6px}
+.panel-swatches i{width:38px;height:48px;display:block;border:1px solid rgba(60,48,36,.12)}
+.close{position:absolute;top:12px;right:12px;z-index:9;background:var(--sand);border:1px solid var(--line);
+  color:var(--umber);font-family:"Jost",sans-serif;font-size:var(--t-xs);letter-spacing:.2em;
+  text-transform:uppercase;padding:9px 16px;cursor:pointer}
+.close:hover{background:var(--umber);color:var(--sand);border-color:var(--umber)}
+
+@media (max-width:1000px){
+  .nav,.head-in>.link{display:none}
+  .menu-btn{display:block}
+  .open-grid,.statement-grid,.studio-grid,.contact-grid,.services .intro{grid-template-columns:minmax(0,1fr)}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .panel{grid-template-columns:minmax(0,1fr)}
+  .panel .scene{min-height:230px;height:42vw}
+  .project,.project:nth-child(even) .frame,.project .frame{grid-column:1/-1}
+  .project .meta,.project:nth-child(even) .meta{grid-column:1/-1;order:2;padding-bottom:0}
+  .project:nth-child(even) .frame{order:1}
+  .project .scene{height:clamp(280px,70vw,520px)}
+}
+@media (max-width:640px){
+  .svc{grid-template-columns:minmax(0,1fr);gap:14px}
+  .svc .fee{text-align:left}
+  .steps,.two{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tiles a:nth-child(n+4){display:none}
+  .statement q{max-width:none}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;transition-duration:.01ms!important}
@@ -291,11 +372,11 @@ form{display:grid;gap:14px}
 
 <header class="site-head">
   <div class="wrap head-in">
-    <a class="brand" href="#top" aria-label="Still Studio, home">
+    <a class="mark" href="#top" aria-label="Still Studio, home">
       <svg viewBox="0 0 40 52" aria-hidden="true">
-        <ellipse cx="20" cy="26" rx="16.4" ry="24" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <ellipse cx="20" cy="26" rx="16.4" ry="24" fill="none" stroke="currentColor" stroke-width="1"/>
         <path d="M26 16.5c-1.7-2.6-5.4-3.6-8.1-2.2-2.9 1.5-3.3 5.3-.9 7.4 2.7 2.4 7.9 2.5 10.1 5.5 2.2 2.9.6 7.3-2.9 8.7-3.3 1.3-7.5-.1-9.2-3.1"
-          fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+          fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
       </svg>
       <b>Still Studio</b>
     </a>
@@ -304,9 +385,9 @@ form{display:grid;gap:14px}
       <a href="#services">Services</a>
       <a href="#process">Process</a>
       <a href="#materials">Materials</a>
-      <a href="#about">About</a>
+      <a href="#studio">Studio</a>
     </nav>
-    <a class="btn" href="#inquiry">Start a moodboard</a>
+    <a class="link" href="#contact">Inquire</a>
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav">Menu</button>
   </div>
   <div class="wrap"><div id="mobileNav" hidden>
@@ -314,309 +395,446 @@ form{display:grid;gap:14px}
     <a href="#services">Services</a>
     <a href="#process">Process</a>
     <a href="#materials">Materials</a>
-    <a href="#about">About</a>
-    <a href="#inquiry">Start a moodboard</a>
+    <a href="#studio">Studio</a>
+    <a href="#contact">Inquire</a>
   </div></div>
 </header>
 
 <main id="top">
 
-  <section class="wrap hero">
-    <div class="hero-grid">
+  <section class="wrap open">
+    <span class="label">Interior styling &amp; moodboards</span>
+    <div class="open-grid">
+      <h1>Rooms held together by <em>light, linen</em> and a little restraint.</h1>
+      <div class="open-aside">
+        <p>Still Studio is the styling practice of Kieve Bourgeois — moodboards, sourcing, and the last ten percent that makes a room read as finished.</p>
+        <a class="link" href="#work">Selected work</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="bleed">
+    <div class="scene sc-window hero-scene" role="img" aria-label="Afternoon light falling across a plaster wall">
+      <i class="p1"></i><i class="p2"></i><i class="p3"></i><i class="sh"></i>
+    </div>
+  </div>
+  <div class="wrap bleed-cap">
+    <span>The Linen House — west light, 4pm</span>
+    <span>Styling &amp; sourcing, 2026</span>
+  </div>
+
+  <section class="wrap statement">
+    <div class="statement-grid">
+      <span class="label">The studio</span>
       <div>
-        <p class="eyebrow mono">Moodboards · Styling · Sourcing</p>
-        <h1>Every room begins as a <em>moodboard.</em></h1>
-        <p class="lede">Still Studio is Kieve Bourgeois's styling practice. We set the palette, source every piece, and hand back a room that finally feels like home.</p>
-        <div class="hero-cta">
-          <a class="btn" href="#inquiry">Start a moodboard</a>
-          <a class="btn btn--ghost" href="#work">See the work</a>
-        </div>
-        <div class="hero-meta mono">
-          <span>Est. 2026</span>
-          <span>Remote &amp; in-home</span>
-          <span>Booking Q4 — 3 slots</span>
-        </div>
+        <q>Most homes don't need a renovation. They need a <em>point of view</em> — a palette that holds, three pieces moved, and one light changed from cold to warm.</q>
+        <p class="sub">We work room by room, in a narrow range of materials chosen to age well: lime plaster, unbleached linen, rift-sawn oak, honed stone, brass left to darken on its own.</p>
       </div>
-
-      <aside class="specimen" aria-label="Sample moodboard specimen">
-        <div class="spec-head">
-          <span class="spec-title">The Linen House</span>
-          <span class="mono">No. 07</span>
-        </div>
-        <div class="chips">
-          <span class="chip" tabindex="0" style="background:#EDEAE1" title="Benjamin Moore OC-17 White Dove"><span>OC-17</span></span>
-          <span class="chip" tabindex="0" style="background:#CFC6B4" title="Raw oat linen"><span>OAT</span></span>
-          <span class="chip" tabindex="0" style="background:#9AA396" title="Dried sage plaster"><span>SAGE</span></span>
-          <span class="chip" tabindex="0" style="background:#B08A5C" title="Rift-sawn white oak"><span>OAK</span></span>
-          <span class="chip" tabindex="0" style="background:#3D4139" title="Iron-gate accent"><span style="color:rgba(255,255,255,.75)">IRON</span></span>
-        </div>
-        <dl class="spec-rows">
-          <div class="spec-row"><dt>Walls</dt><dd>Limewash, two coats, matte</dd></div>
-          <div class="spec-row"><dt>Textile</dt><dd>Belgian linen, 240 GSM</dd></div>
-          <div class="spec-row"><dt>Light</dt><dd>North-facing · 2700K evenings</dd></div>
-          <div class="spec-row"><dt>Metal</dt><dd>Unlacquered brass, left to age</dd></div>
-          <div class="spec-row"><dt>Delivered</dt><dd>Board + sourcing list, 10 days</dd></div>
-        </dl>
-      </aside>
     </div>
   </section>
 
-  <div class="strip"><div class="wrap strip-in mono">
-    <span>Moodboards</span><span>Room styling</span><span>Sourcing &amp; trade pricing</span><span>Install day</span><span>Brand partnerships</span>
-  </div></div>
-
-  <section class="wrap section" id="work">
-    <div class="sec-head">
-      <h2>Selected rooms</h2>
-      <p class="mono count">Four of eleven · 2025–2026</p>
+  <section class="wrap work" id="work">
+    <div class="work-head">
+      <h2>Selected work</h2>
+      <span class="label">Four of eleven — 2025 / 2026</span>
     </div>
-    <div class="work-grid">
-      <a class="project" href="#inquiry">
-        <div class="art a-linen"><span class="art-tag">Living room</span></div>
-        <div class="p-meta"><h3>The Linen House</h3><span class="mono">No. 07</span></div>
-        <div class="p-specs"><span>420 SQ FT</span><span>OC-17 / OAT / SAGE</span><span>6 WEEKS</span></div>
-      </a>
-      <a class="project" href="#inquiry">
-        <div class="art a-stone"><span class="art-tag">Kitchen</span></div>
-        <div class="p-meta"><h3>Travertine Reset</h3><span class="mono">No. 09</span></div>
-        <div class="p-specs"><span>210 SQ FT</span><span>STONE / BRASS</span><span>4 WEEKS</span></div>
-      </a>
-      <a class="project" href="#inquiry">
-        <div class="art a-plaster"><span class="art-tag">Bedroom</span></div>
-        <div class="p-meta"><h3>A Quiet Bedroom</h3><span class="mono">No. 10</span></div>
-        <div class="p-specs"><span>180 SQ FT</span><span>PLASTER / SAGE</span><span>3 WEEKS</span></div>
-      </a>
-      <a class="project" href="#inquiry">
-        <div class="art a-oak"><span class="art-tag">Entry</span></div>
-        <div class="p-meta"><h3>Entry, Reworked</h3><span class="mono">No. 11</span></div>
-        <div class="p-specs"><span>60 SQ FT</span><span>OAK / IRON</span><span>2 WEEKS</span></div>
-      </a>
+
+    <div class="projects">
+      <button class="project" type="button" data-project="linen">
+        <div class="frame">
+          <div class="scene sc-curtain" role="img" aria-label="Linen curtain drawn across a bright window">
+            <i class="folds"></i><i class="glow"></i><i class="floor"></i>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="idx">01</span>
+          <h3>The Linen House</h3>
+          <p>Living room &amp; dining — 420 sq ft<br>Styling, sourcing, install</p>
+          <span class="more">Case study</span>
+        </div>
+      </button>
+
+      <button class="project" type="button" data-project="travertine">
+        <div class="frame">
+          <div class="scene sc-still" role="img" aria-label="Still life on a stone counter in morning light">
+            <i class="wash"></i><i class="plane"></i><i class="sh"></i><i class="book"></i><i class="vase"></i><i class="bowl"></i>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="idx">02</span>
+          <h3>Travertine Kitchen</h3>
+          <p>Kitchen &amp; pantry — 210 sq ft<br>Full room styling</p>
+          <span class="more">Case study</span>
+        </div>
+      </button>
+
+      <button class="project" type="button" data-project="quiet">
+        <div class="frame">
+          <div class="scene sc-corner" role="img" aria-label="Two plaster walls meeting in soft morning light">
+            <i class="lwall"></i><i class="beam"></i><i class="sh"></i>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="idx">03</span>
+          <h3>A Quiet Bedroom</h3>
+          <p>Primary bedroom — 180 sq ft<br>Moodboard &amp; styling</p>
+          <span class="more">Case study</span>
+        </div>
+      </button>
+
+      <button class="project" type="button" data-project="entry">
+        <div class="frame">
+          <div class="scene sc-arch" role="img" aria-label="Arched niche holding a single vessel">
+            <i class="arch"></i><i class="sh"></i><i class="vase"></i><i class="stem"></i>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="idx">04</span>
+          <h3>Entry, Reworked</h3>
+          <p>Entry &amp; hall — 60 sq ft<br>Moodboard</p>
+          <span class="more">Case study</span>
+        </div>
+      </button>
     </div>
   </section>
 
-  <section class="section" id="services">
-    <div class="wrap">
-      <div class="sec-head">
+  <section class="services" id="services">
+    <div class="wrap services-in">
+      <div class="intro">
         <h2>Three ways to work together</h2>
-        <p>Every engagement starts with the board. You can stop there, or let us carry it through to install day.</p>
+        <p>Every engagement begins with the board. You can stop there and shop it yourself, or let the studio carry it through to install day.</p>
       </div>
-      <div class="svc-grid">
-        <article class="svc">
-          <div class="svc-top"><h3>The Moodboard</h3></div>
-          <p class="price">$450<small>One room · 10 days</small></p>
-          <ul>
-            <li>Palette with paint codes and finishes</li>
-            <li>Material direction — textile, wood, metal, stone</li>
-            <li>Layout sketch to scale</li>
-            <li>Shoppable list at every price tier</li>
-          </ul>
-          <a class="btn btn--ghost" href="#inquiry">Book the board</a>
-        </article>
-        <article class="svc svc--lead">
-          <div class="svc-top"><h3>Full Room Styling</h3><span class="badge">Most booked</span></div>
-          <p class="price">$1,600<small>One room · 4–6 weeks</small></p>
-          <ul>
-            <li>Everything in The Moodboard</li>
-            <li>Two concept directions, one refined</li>
-            <li>Sourcing at trade pricing, ordering managed</li>
-            <li>Styling guide — shelf by shelf, wall by wall</li>
-            <li>One install day, in person or on video</li>
-          </ul>
-          <a class="btn" href="#inquiry">Start a room</a>
-        </article>
-        <article class="svc">
-          <div class="svc-top"><h3>Whole Home Direction</h3></div>
-          <p class="price">From $4,800<small>Phased · 3–6 months</small></p>
-          <ul>
-            <li>A single palette that carries room to room</li>
-            <li>Phased sourcing on your budget calendar</li>
-            <li>Contractor and trade coordination</li>
-            <li>Seasonal restyle at the six-month mark</li>
-          </ul>
-          <a class="btn btn--ghost" href="#inquiry">Request a call</a>
-        </article>
+
+      <article class="svc">
+        <div>
+          <span class="idx">I</span>
+          <h3>The Moodboard</h3>
+        </div>
+        <ul>
+          <li>Palette with paint codes and finishes</li>
+          <li>Material direction — textile, wood, metal, stone</li>
+          <li>Layout drawn to scale</li>
+          <li>Shoppable list at three price tiers</li>
+        </ul>
+        <p class="fee">$450<span>One room · 10 days</span></p>
+      </article>
+
+      <article class="svc">
+        <div>
+          <span class="idx">II</span>
+          <h3>Full Room Styling</h3>
+        </div>
+        <ul>
+          <li>Everything in the moodboard</li>
+          <li>Two directions presented, one refined</li>
+          <li>Sourcing at trade pricing, ordering managed</li>
+          <li>Styling guide — shelf by shelf, wall by wall</li>
+          <li>One install day, in person or on video</li>
+        </ul>
+        <p class="fee">$1,600<span>One room · 4–6 weeks</span></p>
+      </article>
+
+      <article class="svc">
+        <div>
+          <span class="idx">III</span>
+          <h3>Whole Home Direction</h3>
+        </div>
+        <ul>
+          <li>One palette carried room to room</li>
+          <li>Phased sourcing on your budget calendar</li>
+          <li>Contractor and trade coordination</li>
+          <li>Seasonal restyle at the six-month mark</li>
+        </ul>
+        <p class="fee">From $4,800<span>Phased · 3–6 months</span></p>
+      </article>
+
+      <div class="foot-note">
+        <p>Brand partnerships and editorial styling are taken on a limited basis. Rates on request.</p>
+        <a class="link" href="#contact">Begin an inquiry</a>
       </div>
     </div>
   </section>
 
-  <section class="wrap section" id="process">
-    <div class="sec-head">
-      <h2>How a room gets made</h2>
-      <p>Four stages, in order. You approve each one before we move.</p>
-    </div>
+  <section class="wrap process" id="process">
+    <h2>How a room gets made</h2>
     <div class="steps">
       <article class="step">
-        <p class="mono">Stage 01</p>
+        <span class="label">Stage one</span>
         <h3>Intake</h3>
-        <p>Photos, measurements, light direction, and the honest list of what you already own and want to keep.</p>
+        <p>Photographs, measurements, the direction the light comes from, and an honest list of what stays.</p>
       </article>
       <article class="step">
-        <p class="mono">Stage 02</p>
+        <span class="label">Stage two</span>
         <h3>Direction</h3>
-        <p>The board lands: palette, materials, layout. You mark what stays and what we push further.</p>
+        <p>The board arrives — palette, materials, layout. You mark what holds and what we push further.</p>
       </article>
       <article class="step">
-        <p class="mono">Stage 03</p>
+        <span class="label">Stage three</span>
         <h3>Sourcing</h3>
-        <p>Every piece specified, priced at trade where we have it, and tracked to your door on one sheet.</p>
+        <p>Every piece specified and priced at trade where the studio holds an account, tracked on one sheet.</p>
       </article>
       <article class="step">
-        <p class="mono">Stage 04</p>
+        <span class="label">Stage four</span>
         <h3>Install</h3>
-        <p>Placement, styling, and the last ten percent — the part that makes the room read as finished.</p>
+        <p>Placement, styling, and the last ten percent — the part that makes a room read as finished.</p>
       </article>
     </div>
   </section>
 
-  <section class="section" id="materials">
-    <div class="wrap">
-      <div class="sec-head">
+  <section class="materials" id="materials">
+    <div class="wrap materials-in">
+      <div class="head">
         <h2>The material library</h2>
-        <p class="mono count">Standing palette · Autumn 2026</p>
+        <span class="label">Standing palette — autumn 2026</span>
       </div>
-      <div class="mat-grid">
-        <div class="mat"><i style="background:linear-gradient(150deg,#F2EFE6,#DCD8CB)"></i><b>White Dove</b><span>BM OC-17 · Matte</span></div>
-        <div class="mat"><i style="background:repeating-linear-gradient(90deg,rgba(90,80,62,.09) 0 1px,transparent 1px 4px),linear-gradient(150deg,#D8D0BD,#C2B9A3)"></i><b>Oat Linen</b><span>240 GSM · Belgian</span></div>
-        <div class="mat"><i style="background:radial-gradient(70% 60% at 30% 25%,rgba(255,255,255,.5),transparent 60%),linear-gradient(160deg,#A3AC9C,#7E8878)"></i><b>Dried Sage</b><span>Limewash · 2 coats</span></div>
-        <div class="mat"><i style="background:repeating-linear-gradient(88deg,rgba(84,58,32,.16) 0 1px,transparent 1px 6px),linear-gradient(160deg,#C9AC84,#A2855E)"></i><b>Rift Oak</b><span>Hardwax oil</span></div>
-        <div class="mat"><i style="background:repeating-linear-gradient(172deg,rgba(120,105,85,.12) 0 2px,transparent 2px 11px),linear-gradient(170deg,#E4DCCD,#CCC1AC)"></i><b>Travertine</b><span>Honed · Vein cut</span></div>
-        <div class="mat"><i style="background:linear-gradient(140deg,#C9A961,#8C7539 60%,#6E5B2B)"></i><b>Unlacquered Brass</b><span>Left to patina</span></div>
+      <div class="mats">
+        <div class="mat"><i style="background:linear-gradient(150deg,#F4F0E6,#E2DCCE)"></i><b>White Dove</b><span>Matte · BM OC-17</span></div>
+        <div class="mat"><i style="background:repeating-linear-gradient(90deg,rgba(96,82,60,.07) 0 1px,transparent 1px 4px),linear-gradient(150deg,#DFD6C2,#C8BDA5)"></i><b>Oat Linen</b><span>240 gsm · Belgian</span></div>
+        <div class="mat"><i style="background:radial-gradient(70% 60% at 32% 26%,rgba(255,252,244,.6),transparent 62%),linear-gradient(160deg,#CFC6B0,#AEA38B)"></i><b>Lime Plaster</b><span>Two coats · Burnished</span></div>
+        <div class="mat"><i style="background:repeating-linear-gradient(88deg,rgba(92,64,36,.14) 0 1px,transparent 1px 6px),linear-gradient(160deg,#D4B992,#A98C64)"></i><b>Rift Oak</b><span>Hardwax oil</span></div>
+        <div class="mat"><i style="background:repeating-linear-gradient(172deg,rgba(118,98,72,.1) 0 2px,transparent 2px 11px),linear-gradient(170deg,#E8E0CF,#CFC3AB)"></i><b>Travertine</b><span>Honed · Vein cut</span></div>
+        <div class="mat"><i style="background:linear-gradient(140deg,#CDAE73,#947C41 62%,#6F5C2E)"></i><b>Brass</b><span>Unlacquered · Left to age</span></div>
       </div>
     </div>
   </section>
 
-  <section class="wrap section" id="about">
-    <div class="about-grid">
-      <div class="portrait"><span>Portrait — studio shoot</span></div>
+  <section class="wrap studio" id="studio">
+    <div class="studio-grid">
+      <div class="scene sc-soft portrait" role="img" aria-label="Soft window light in the studio">
+        <i class="glow"></i><i class="band"></i>
+      </div>
       <div>
-        <p class="eyebrow mono">Founder &amp; stylist</p>
+        <span class="label">Founder &amp; stylist</span>
         <h2>Kieve Bourgeois</h2>
-        <p>I started Still Studio because most homes don't need a renovation — they need a point of view. A palette that holds together. Three pieces moved. One light changed from cold to warm.</p>
-        <p>My work sits between a moodboard and a finished room: I build the direction, source it honestly at every price tier, and stay through install day. Nothing in your house has to be expensive to look considered. It has to be chosen.</p>
+        <p>I started Still Studio for the houses that are almost there — good bones, good intentions, and a living room nobody can quite settle in. The fix is rarely a renovation. It's a palette that agrees with itself and a few decisions made properly.</p>
+        <p>My work sits between a moodboard and a finished room: I set the direction, source it honestly at every price tier, and stay through install day. Nothing here has to be expensive to look considered. It has to be chosen.</p>
         <p class="sig">— Kieve</p>
-        <div class="creds mono">
-          <span>11 rooms completed</span>
-          <span>Trade accounts, 40+ makers</span>
-          <span>@stillstudio.curated</span>
+        <div class="facts">
+          <div><b>11</b><span class="label">Rooms completed</span></div>
+          <div><b>40+</b><span class="label">Trade accounts</span></div>
+          <div><b>2–6 wks</b><span class="label">Typical room</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="inquiry">
-    <div class="wrap inq-grid">
-      <div class="inq-copy">
-        <p class="eyebrow mono">Inquiries</p>
-        <h2>Tell me about the room.</h2>
-        <p>Send the space, the budget you're working with, and what's bothering you about it. I reply to every inquiry within two business days.</p>
-        <div class="inq-list">
-          <div><span class="mono">01</span><p>You send photos and rough measurements.</p></div>
-          <div><span class="mono">02</span><p>We talk for 20 minutes, free, about direction and budget.</p></div>
-          <div><span class="mono">03</span><p>You get a written scope and a start date.</p></div>
+  <section class="wrap feed">
+    <div class="head">
+      <h2>From the studio</h2>
+      <a class="label" href="#contact">@stillstudio.curated</a>
+    </div>
+    <div class="tiles">
+      <a href="#contact" aria-label="Studio post: light study"><div class="scene sc-window"><i class="p1"></i><i class="p2"></i><i class="sh"></i></div></a>
+      <a href="#contact" aria-label="Studio post: arched niche"><div class="scene sc-arch"><i class="arch"></i><i class="sh"></i><i class="vase"></i></div></a>
+      <a href="#contact" aria-label="Studio post: counter still life"><div class="scene sc-still"><i class="wash"></i><i class="plane"></i><i class="sh"></i><i class="vase"></i><i class="bowl"></i></div></a>
+      <a href="#contact" aria-label="Studio post: linen at the window"><div class="scene sc-curtain"><i class="folds"></i><i class="glow"></i><i class="floor"></i></div></a>
+      <a href="#contact" aria-label="Studio post: wall corner"><div class="scene sc-corner"><i class="lwall"></i><i class="beam"></i><i class="sh"></i></div></a>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap contact-in">
+      <div class="contact-grid">
+        <div class="contact-copy">
+          <span class="label">Inquiries</span>
+          <h2>Tell me about the room.</h2>
+          <p>Send the space, the budget you're working with, and what isn't sitting right. Every inquiry gets a reply within two business days.</p>
+          <dl>
+            <div><dt>Email</dt><dd>hello@stillstudio.co</dd></div>
+            <div><dt>Instagram</dt><dd>@stillstudio.curated</dd></div>
+            <div><dt>Availability</dt><dd>Booking Q4 — three rooms</dd></div>
+          </dl>
         </div>
-      </div>
 
-      <div>
-        <form id="inquiryForm" novalidate>
-          <div class="two">
-            <div class="field">
-              <label for="nameField">Name</label>
-              <input id="nameField" name="name" type="text" autocomplete="name" required placeholder="Your name">
+        <div>
+          <form id="inquiryForm" novalidate>
+            <div class="two">
+              <div class="field">
+                <label for="nameField">Name</label>
+                <input id="nameField" name="name" type="text" autocomplete="name" placeholder="Your name">
+              </div>
+              <div class="field">
+                <label for="emailField">Email</label>
+                <input id="emailField" name="email" type="email" autocomplete="email" placeholder="you@email.com">
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="serviceField">Service</label>
+                <select id="serviceField" name="service">
+                  <option>The Moodboard — $450</option>
+                  <option selected>Full Room Styling — $1,600</option>
+                  <option>Whole Home Direction — from $4,800</option>
+                  <option>Brand partnership</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="roomField">Room &amp; size</label>
+                <input id="roomField" name="room" type="text" placeholder="Living room, 14 × 18">
+              </div>
             </div>
             <div class="field">
-              <label for="emailField">Email</label>
-              <input id="emailField" name="email" type="email" autocomplete="email" required placeholder="you@email.com">
+              <label for="notesField">What isn't working?</label>
+              <textarea id="notesField" name="notes" placeholder="The sofa is wrong, the light is cold, and nothing agrees with the floors."></textarea>
             </div>
-          </div>
-          <div class="two">
-            <div class="field">
-              <label for="serviceField">Service</label>
-              <select id="serviceField" name="service">
-                <option>The Moodboard — $450</option>
-                <option selected>Full Room Styling — $1,600</option>
-                <option>Whole Home Direction — from $4,800</option>
-                <option>Brand partnership</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="roomField">Room</label>
-              <input id="roomField" name="room" type="text" placeholder="Living room, 14 × 18">
-            </div>
-          </div>
-          <div class="field">
-            <label for="notesField">What's not working?</label>
-            <textarea id="notesField" name="notes" placeholder="The sofa is wrong, the light is cold, and nothing matches the floors."></textarea>
-          </div>
-          <button class="btn submit" type="submit">Send inquiry</button>
-          <p class="fineprint">Mockup form — no message is sent yet.</p>
-        </form>
+            <button class="send" type="submit">Send inquiry</button>
+            <p class="note">Mockup form — nothing is sent yet</p>
+          </form>
 
-        <div class="sent" id="inquirySent" hidden>
-          <h3>Inquiry received.</h3>
-          <p id="sentLine">Thank you — I'll reply within two business days.</p>
-          <p class="fineprint">This is a mockup. Connect the form to your inbox or CRM to go live.</p>
+          <div class="sent" id="inquirySent" hidden>
+            <h3>Inquiry received.</h3>
+            <p id="sentLine">Thank you — I'll reply within two business days.</p>
+            <p class="note">Mockup only — connect this form to an inbox or CRM to go live</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="wrap foot">
-  <div class="foot-in">
+<footer class="wrap site-foot">
+  <div class="foot-grid">
     <div style="max-width:30ch">
-      <a class="brand" href="#top" style="margin-bottom:12px" aria-label="Still Studio">
+      <a class="mark" href="#top" aria-label="Still Studio">
         <svg viewBox="0 0 40 52" aria-hidden="true">
-          <ellipse cx="20" cy="26" rx="16.4" ry="24" fill="none" stroke="currentColor" stroke-width="1.1"/>
+          <ellipse cx="20" cy="26" rx="16.4" ry="24" fill="none" stroke="currentColor" stroke-width="1"/>
           <path d="M26 16.5c-1.7-2.6-5.4-3.6-8.1-2.2-2.9 1.5-3.3 5.3-.9 7.4 2.7 2.4 7.9 2.5 10.1 5.5 2.2 2.9.6 7.3-2.9 8.7-3.3 1.3-7.5-.1-9.2-3.1"
-            fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+            fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
         </svg>
         <b>Still Studio</b>
       </a>
-      <p style="color:var(--muted);font-size:.88rem">Curated spaces &amp; thoughtful details. Creating spaces that feel like home.</p>
+      <p style="margin-top:16px;color:var(--umber-2);font-size:var(--t-sm)">Curated spaces and thoughtful details. Creating spaces that feel like home.</p>
     </div>
-    <div class="foot-cols">
-      <div class="foot-col">
-        <p class="mono">Studio</p>
-        <a href="#work">Work</a>
-        <a href="#services">Services</a>
-        <a href="#process">Process</a>
-      </div>
-      <div class="foot-col">
-        <p class="mono">Connect</p>
-        <a href="#inquiry">Start a moodboard</a>
-        <a href="#inquiry">hello@stillstudio.co</a>
-        <a href="#inquiry">@stillstudio.curated</a>
-      </div>
+    <div class="foot-col">
+      <span class="label">Studio</span>
+      <a href="#work">Selected work</a>
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#materials">Materials</a>
+    </div>
+    <div class="foot-col">
+      <span class="label">Connect</span>
+      <a href="#contact">hello@stillstudio.co</a>
+      <a href="#contact">@stillstudio.curated</a>
+      <a href="#contact">Begin an inquiry</a>
     </div>
   </div>
-  <div class="legal mono">
+  <div class="legal">
     <span>© 2026 Still Studio — Kieve Bourgeois</span>
-    <span>By appointment · Remote worldwide</span>
+    <span>Imagery shown is art-directed placeholder</span>
   </div>
 </footer>
 
+<div class="modal" id="modal" hidden>
+  <button class="scrim" id="scrim" aria-label="Close case study"></button>
+  <article class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <button class="close" id="closeBtn">Close</button>
+    <div class="scene" id="panelScene"></div>
+    <div class="panel-body">
+      <span class="label" id="panelIdx">01</span>
+      <h3 id="panelTitle">The Linen House</h3>
+      <p id="panelStory"></p>
+      <div class="panel-swatches" id="panelSwatches"></div>
+      <dl class="panel-specs" id="panelSpecs"></dl>
+    </div>
+  </article>
+</div>
+
 <script>
 (function(){
-  var btn=document.getElementById('menuBtn');
-  var panel=document.getElementById('mobileNav');
-  btn.addEventListener('click',function(){
-    var open=panel.hidden;
-    panel.hidden=!open;
-    btn.setAttribute('aria-expanded',String(open));
-    btn.textContent=open?'Close':'Menu';
+  var menuBtn=document.getElementById('menuBtn');
+  var mobileNav=document.getElementById('mobileNav');
+  menuBtn.addEventListener('click',function(){
+    var opening=mobileNav.hidden;
+    mobileNav.hidden=!opening;
+    menuBtn.setAttribute('aria-expanded',String(opening));
+    menuBtn.textContent=opening?'Close':'Menu';
   });
-  panel.addEventListener('click',function(e){
-    if(e.target.tagName==='A'){panel.hidden=true;btn.setAttribute('aria-expanded','false');btn.textContent='Menu';}
+  mobileNav.addEventListener('click',function(e){
+    if(e.target.tagName==='A'){mobileNav.hidden=true;menuBtn.setAttribute('aria-expanded','false');menuBtn.textContent='Menu';}
   });
+
+  var PROJECTS={
+    linen:{
+      idx:'01 — Living room & dining',
+      title:'The Linen House',
+      scene:'scene sc-curtain',
+      parts:['folds','glow','floor'],
+      story:'A west-facing room that went cold every afternoon. We kept the sofa, replaced everything around it, and let unbleached linen do the softening — sheers to the floor, a wool rug with no pattern to argue with, and one low lamp warm enough to sit under.',
+      swatches:['#EDE8DC','#D6CBB4','#A9A08A','#B08A5C','#3D3A33'],
+      specs:[['Area','420 sq ft'],['Walls','Lime plaster, two coats'],['Textile','Belgian linen, 240 gsm'],['Light','West · 2700K after dark'],['Timeline','Six weeks, install day included']]
+    },
+    travertine:{
+      idx:'02 — Kitchen & pantry',
+      title:'Travertine Kitchen',
+      scene:'scene sc-still',
+      parts:['wash','plane','sh','book','vase','bowl'],
+      story:'The cabinetry stayed. We changed the counter to honed travertine, swapped every bit of chrome for unlacquered brass, and cleared the surfaces down to four things worth looking at — a bowl, a board, a vessel, and the fruit.',
+      swatches:['#F0EADD','#DDD2BC','#C2B69E','#94804F','#6E6257'],
+      specs:[['Area','210 sq ft'],['Surface','Travertine, honed, vein cut'],['Metal','Unlacquered brass, left to age'],['Light','North · under-cabinet 2700K'],['Timeline','Four weeks']]
+    },
+    quiet:{
+      idx:'03 — Primary bedroom',
+      title:'A Quiet Bedroom',
+      scene:'scene sc-corner',
+      parts:['lwall','beam','sh'],
+      story:'Nothing in this room was wrong, exactly — it was just loud. We pulled the palette down to three tones, took the art off the wall behind the bed, and put the money into the one thing you touch every night: the bedding.',
+      swatches:['#F1ECE1','#DCD4C3','#BDB5A2','#8E8877','#4A453D'],
+      specs:[['Area','180 sq ft'],['Walls','White Dove, matte'],['Textile','Washed linen, stonewashed cotton'],['Light','East · dimmable bedside'],['Timeline','Three weeks']]
+    },
+    entry:{
+      idx:'04 — Entry & hall',
+      title:'Entry, Reworked',
+      scene:'scene sc-arch',
+      parts:['arch','sh','vase','stem'],
+      story:'Sixty square feet doing the most work in the house. One oak bench, one aged mirror, a plaster niche for keys and a vessel, and hooks set low enough that the children actually use them.',
+      swatches:['#E9E2D4','#CFC3AC','#A89876','#8A7250','#2F2A24'],
+      specs:[['Area','60 sq ft'],['Millwork','Rift-sawn oak, hardwax oil'],['Walls','Plaster niche, burnished'],['Light','Sconce · 2700K, dimmed'],['Timeline','Two weeks, board only']]
+    }
+  };
+
+  var modal=document.getElementById('modal');
+  var panelScene=document.getElementById('panelScene');
+  var lastTrigger=null;
+
+  function openProject(key,trigger){
+    var d=PROJECTS[key];
+    if(!d)return;
+    panelScene.className=d.scene;
+    panelScene.innerHTML=d.parts.map(function(c){return '<i class="'+c+'"></i>';}).join('');
+    document.getElementById('panelIdx').textContent=d.idx;
+    document.getElementById('panelTitle').textContent=d.title;
+    document.getElementById('panelStory').textContent=d.story;
+    document.getElementById('panelSwatches').innerHTML=d.swatches.map(function(c){
+      return '<i style="background:'+c+'"></i>';}).join('');
+    document.getElementById('panelSpecs').innerHTML=d.specs.map(function(r){
+      return '<div><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>';}).join('');
+    modal.hidden=false;
+    document.body.style.overflow='hidden';
+    lastTrigger=trigger||null;
+    document.getElementById('closeBtn').focus();
+  }
+  function closeProject(){
+    modal.hidden=true;
+    document.body.style.overflow='';
+    if(lastTrigger)lastTrigger.focus();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.project'),function(btn){
+    btn.addEventListener('click',function(){openProject(btn.getAttribute('data-project'),btn);});
+  });
+  document.getElementById('closeBtn').addEventListener('click',closeProject);
+  document.getElementById('scrim').addEventListener('click',closeProject);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)closeProject();});
 
   var form=document.getElementById('inquiryForm');
   var sent=document.getElementById('inquirySent');
-  var line=document.getElementById('sentLine');
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var name=(document.getElementById('nameField').value||'').trim();
     var service=document.getElementById('serviceField').value.split(' — ')[0];
-    line.textContent=(name?name+', thank you':'Thank you')+' — your '+service+' inquiry is in. I reply within two business days.';
+    document.getElementById('sentLine').textContent=
+      (name?name+', thank you':'Thank you')+' — your '+service.toLowerCase()+
+      ' inquiry is in. I reply within two business days.';
     form.hidden=true;
     sent.hidden=false;
     sent.scrollIntoView({behavior:'smooth',block:'center'});
