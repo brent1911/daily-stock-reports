@@ -97,6 +97,15 @@
   .bcell.bad{background:var(--bad-bg);border-color:var(--bad);}   .bcell.bad  .bc-p,.bcell.bad  .bc-s{color:var(--bad);}
   .band-cap{font-size:12px;color:var(--muted);margin-top:11px !important;max-width:54ch;}
 
+  /* monthly profit / loss */
+  .pl{border-radius:12px;border:1px solid;padding:19px 20px;margin-top:14px;}
+  .pl.good{background:var(--good-bg);border-color:var(--good);}
+  .pl.bad{background:var(--bad-bg);border-color:var(--bad);}
+  .pl-n{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(32px,9vw,44px);font-weight:800;letter-spacing:-.038em;line-height:1;font-variant-numeric:tabular-nums;margin:8px 0 7px;}
+  .pl.good .pl-n{color:var(--good);} .pl.bad .pl-n{color:var(--bad);}
+  .pl > p{font-size:13.5px;color:var(--ink-2);margin:0;max-width:52ch;}
+  .pl > p b{color:var(--ink);font-weight:600;}
+
   /* verdict */
   .verdict{border-radius:12px;padding:22px 20px;border:1px solid;margin-top:18px;}
   .verdict.good{background:var(--good-bg);border-color:var(--good);}
@@ -224,7 +233,8 @@
           <label for="price">What you charge per month</label>
           <div class="inputwrap"><span class="pre">$</span>
             <input class="has-pre" type="number" id="price" value="150" min="1" max="20000" step="10"></div>
-          <span class="hint">Per client, per month.</span>
+          <span class="hint">Per client, per month. For a paid-in-full offer, divide
+          the total by the term &mdash; $6,000 over 2 months is $3,000.</span>
         </div>
         <div class="f">
           <label for="commit">Minimum commitment</label>
@@ -326,16 +336,23 @@
     <p class="lede" id="goalLede" style="margin-top:4px;">&mdash;</p>
     <div class="panel">
       <table class="math"><tbody>
-        <tr><td>New clients needed every month</td><td id="m1">&mdash;</td></tr>
-        <tr><td>Booked calls to get them</td><td id="m2">&mdash;</td></tr>
-        <tr><td>Cost to acquire one client<div class="sm">at the booked-call cost above</div></td><td id="m3">&mdash;</td></tr>
-        <tr class="tot"><td>Monthly ad spend required</td><td id="m4">&mdash;</td></tr>
+        <tr><td>Clients you need on the books to hold it</td><td id="m1">&mdash;</td></tr>
+        <tr><td>Cost to acquire one client<div class="sm">booked calls needed &times; your cost per call</div></td><td id="m3">&mdash;</td></tr>
+        <tr><td>One-time cost to build that base<div class="sm">spent once, across however long the ramp takes</div></td><td id="m4">&mdash;</td></tr>
+        <tr class="tot"><td>Ongoing spend, every month<div class="sm">replacing the clients who leave</div></td><td id="m8">&mdash;</td></tr>
       </tbody></table>
     </div>
+
+    <div class="pl bad" id="plBox">
+      <span class="lbl">Every month, once you are there</span>
+      <div class="pl-n" id="m9">&mdash;</div>
+      <p id="m9p">&mdash;</p>
+    </div>
+
     <div class="stats">
-      <div class="stat"><span class="num" id="m5">&mdash;</span><span class="cap">Lifetime cash those clients bring</span></div>
-      <div class="stat"><span class="num" id="m6">&mdash;</span><span class="cap">Return per ad dollar over a client's life</span></div>
-      <div class="stat"><span class="num" id="m7">&mdash;</span><span class="cap">Months until that spend pays itself back</span></div>
+      <div class="stat"><span class="num" id="m6">&mdash;</span><span class="cap">Lifetime value against acquisition cost &mdash; needs 3.0</span></div>
+      <div class="stat"><span class="num" id="m7">&mdash;</span><span class="cap">Months of billing to repay one client</span></div>
+      <div class="stat"><span class="num" id="m2">&mdash;</span><span class="cap">Booked calls needed every month</span></div>
     </div>
 
     <details class="assume">
@@ -579,7 +596,7 @@
   var out = {};
   ['verdict','vtagtext','vhead','vbody','affordV','affordBar','marketV','marketBar',
    'ltv','maxcac','calls','lever1','lever1p','lever2','lever2p','goalLede',
-   'ceilN','ceilP','band','m1','m2','m3','m4','m5','m6','m7']
+   'ceilN','ceilP','band','m1','m2','m3','m4','m6','m7','m8']
     .forEach(function (k) { out[k] = document.getElementById(k); });
 
   function money(n) {
@@ -689,22 +706,44 @@
           ? 'Holding a coaching client that long is rare — this lever alone will not get you there.'
           : 'A minimum commitment is the fastest way to buy this.');
 
-    var clients  = goal / price,
-        callsReq = clients * callsPer,
-        spend    = clients * costClient,
-        lifetime = clients * ltv,
-        roas     = spend > 0 ? lifetime / spend : 0,
+    // Clients needed ON THE BOOKS to hold the goal — not acquired per month.
+    var clients = goal / price;
+    // Steady state: holding N clients at M months average retention means
+    // replacing N/M of them every month. That treadmill is the real bill.
+    var replace  = clients / months,
+        build    = clients * costClient,
+        ongoing  = replace * costClient,
+        monthlyPL = goal - ongoing,
+        ltvCac   = costClient > 0 ? ltv / costClient : 0,
         payback  = costClient / price;
 
-    out.goalLede.innerHTML = 'To add <b>' + money(goal) + '</b> a month at <b>' + money(price)
-      + '</b> per client, here is the bill.';
+    out.goalLede.innerHTML = 'To hold <b>' + money(goal) + '</b> a month at <b>' + money(price)
+      + '</b> per client you need ' + r1(clients) + ' clients on the books. Because they stay '
+      + r1(months) + ' months on average, you have to replace <b>' + r1(replace)
+      + ' of them every month</b> just to stand still.';
+
     out.m1.textContent = r1(clients);
-    out.m2.textContent = Math.ceil(callsReq).toLocaleString('en-US');
+    out.m2.textContent = Math.ceil(replace * callsPer).toLocaleString('en-US');
     out.m3.textContent = money(costClient);
-    out.m4.textContent = money(spend);
-    out.m5.textContent = money(lifetime);
-    out.m6.textContent = r1(roas) + '×';
-    out.m7.textContent = r1(payback);
+    out.m4.textContent = money(build);
+    out.m8.textContent = money(ongoing);
+
+    var plBox = document.getElementById('plBox'),
+        m9    = document.getElementById('m9'),
+        m9p   = document.getElementById('m9p');
+    plBox.className = 'pl ' + (monthlyPL >= 0 ? 'good' : 'bad');
+    m9.textContent = (monthlyPL >= 0 ? '+' : '−') + money(Math.abs(monthlyPL)).replace('$', '$');
+    m9p.innerHTML = monthlyPL >= 0
+      ? money(goal) + ' comes in, <b>' + money(ongoing) + '</b> goes back out to replace churn. '
+        + 'What is left is yours, before delivery costs and tax.'
+      : money(goal) + ' comes in and <b>' + money(ongoing) + '</b> goes out to replace churn — '
+        + 'so every month at this size costs you <b>' + money(Math.abs(monthlyPL))
+        + '</b>. Scaling makes the hole deeper, not shallower.';
+
+    out.m6.textContent = r1(ltvCac);
+    out.m7.textContent = payback > months
+      ? r1(payback) + ' — never'
+      : r1(payback);
 
     try {
       var s = {};

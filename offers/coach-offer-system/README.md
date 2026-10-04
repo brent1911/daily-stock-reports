@@ -47,6 +47,35 @@ signed client from 4.8 to 3.6.
 | 03 — Qualifying on money, early | Five-beat call script that surfaces budget inside the first ten minutes. |
 | 04 — Ad-readiness check | Nine-item gate with saved state. Tracking, portfolio hygiene, follow-up, creative, starting budget. |
 
+## The goal model (corrected)
+
+The first version computed `clients needed x cost per client` and labelled the
+result "monthly ad spend required". That is the **one-time cost to build the
+client base**, not a recurring bill, and presenting it as monthly made the
+output absurd — it implied spending six figures every month to hold $10k/mo.
+It also ignored churn, which is the number that actually decides the business.
+
+The model is now steady-state, via Little's law: holding N clients at M months
+average retention requires replacing N/M of them every month. So the page shows
+three separate figures instead of one conflated one:
+
+- **One-time build cost** — `N x CAC`, spent once across the ramp
+- **Ongoing monthly spend** — `(N / M) x CAC`, the churn treadmill
+- **Monthly profit or loss** — `goal - ongoing`, which is the only
+  apples-to-apples comparison on the page and is now the headline
+
+Worked, to add $10,000/month:
+
+| Offer | Build once | Monthly spend | Monthly P/L | LTV:CAC |
+|---|---|---|---|---|
+| Month-to-month $150, 3mo retention | $111,111 | $37,037 | **−$27,037** | 0.27 |
+| $600 x 4mo commitment, 5mo retention | $15,873 | $3,175 | **+$6,825** | 3.15 |
+| $6,000 PIF over 2mo | $4,762 | $2,381 | **+$7,619** | 4.20 |
+
+The page also flags when months-to-repay exceeds retention — at which point the
+client leaves before covering their own acquisition and no volume of spend ever
+turns profitable.
+
 ## Pricing and economics
 
 **$197, one time.** Positioned on the arithmetic: one correct pricing change
