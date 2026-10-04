@@ -1,0 +1,704 @@
+<title>Coach Offer System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --ground:#EFF2F1; --surface:#FBFCFC; --sunk:#E4E8E7;
+    --ink:#0F1316; --ink-2:#454E54; --muted:#727B81;
+    --line:#DCE1E0; --line-2:#C6CDCB;
+    --good:#0E7A55; --good-bg:#E0EFE8;
+    --warn:#B47216; --warn-bg:#F7ECD8;
+    --bad:#A8321F;  --bad-bg:#F7E4E0;
+    --shadow:0 1px 2px rgba(15,19,22,.05), 0 10px 24px -14px rgba(15,19,22,.2);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0E1114; --surface:#171B1F; --sunk:#212629;
+      --ink:#EDF0F0; --ink-2:#AFB8BD; --muted:#828B91;
+      --line:#272D31; --line-2:#394045;
+      --good:#41C79A; --good-bg:#15332A;
+      --warn:#E0A046; --warn-bg:#33280F;
+      --bad:#EC7159;  --bad-bg:#3A1D17;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0E1114; --surface:#171B1F; --sunk:#212629;
+    --ink:#EDF0F0; --ink-2:#AFB8BD; --muted:#828B91;
+    --line:#272D31; --line-2:#394045;
+    --good:#41C79A; --good-bg:#15332A;
+    --warn:#E0A046; --warn-bg:#33280F;
+    --bad:#EC7159;  --bad-bg:#3A1D17;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:Figtree, ui-sans-serif, system-ui, sans-serif;
+    font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:760px; margin:0 auto; padding-inline:16px; padding-block:30px 72px; }
+
+  h1,h2,h3,h4,.num { font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif; margin:0; text-wrap:balance; }
+  .lbl { font-family:"JetBrains Mono", ui-monospace, monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  /* masthead */
+  header.top { border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:8px; }
+  header.top .brand { display:block; margin-bottom:11px; }
+  header.top h1 { font-size:clamp(31px,8.6vw,46px); font-weight:800; letter-spacing:-.038em; line-height:1.02; }
+  header.top .sub { color:var(--ink-2); font-size:15.5px; margin-top:12px; max-width:50ch; }
+
+  /* module scaffolding — numbered because the order is the method */
+  .mod { margin-top:46px; }
+  .mod-head { display:flex; align-items:baseline; gap:11px; margin-bottom:5px; }
+  .mod-num {
+    font-family:"JetBrains Mono", monospace; font-size:11.5px; font-weight:500;
+    color:var(--good); border:1px solid var(--good); border-radius:4px;
+    padding:1px 6px; flex:none;
+  }
+  .mod h2 { font-size:21px; font-weight:800; letter-spacing:-.028em; }
+  .mod > p.lede { color:var(--ink-2); font-size:14px; margin:0 0 16px; max-width:58ch; }
+
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:20px; }
+
+  /* inputs */
+  .fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 18px; }
+  @media (max-width:520px){ .fields{grid-template-columns:1fr;} }
+  .f { display:flex; flex-direction:column; gap:5px; }
+  .f label { font-size:13px; font-weight:500; }
+  .f .hint { font-size:11.5px; color:var(--muted); line-height:1.4; }
+  .inputwrap { position:relative; display:flex; align-items:center; }
+  .inputwrap .pre,.inputwrap .post { position:absolute; font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--muted); pointer-events:none; }
+  .inputwrap .pre{left:11px;} .inputwrap .post{right:11px;}
+  input[type=number]{
+    width:100%; font-family:"JetBrains Mono",monospace; font-size:15px;
+    color:var(--ink); background:var(--sunk); border:1px solid var(--line-2);
+    border-radius:7px; padding:9px 11px; -moz-appearance:textfield;
+  }
+  input.has-pre{padding-left:25px;} input.has-post{padding-right:38px;}
+  input[type=number]:focus{outline:2px solid var(--good); outline-offset:1px; border-color:transparent;}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+
+  /* verdict */
+  .verdict{border-radius:12px;padding:22px 20px;border:1px solid;margin-top:18px;}
+  .verdict.good{background:var(--good-bg);border-color:var(--good);}
+  .verdict.warn{background:var(--warn-bg);border-color:var(--warn);}
+  .verdict.bad{background:var(--bad-bg);border-color:var(--bad);}
+  .verdict .tag{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;border:1px solid currentColor;border-radius:100px;padding:3px 9px;margin-bottom:11px;}
+  .verdict.good .tag,.verdict.good h3{color:var(--good);}
+  .verdict.warn .tag,.verdict.warn h3{color:var(--warn);}
+  .verdict.bad .tag,.verdict.bad h3{color:var(--bad);}
+  .verdict h3{font-size:clamp(19px,5.2vw,25px);font-weight:800;letter-spacing:-.03em;line-height:1.15;}
+  .verdict p{color:var(--ink-2);font-size:14px;margin:9px 0 0;max-width:52ch;}
+  .verdict p b{color:var(--ink);font-weight:600;}
+
+  /* gauge */
+  .gauge{margin-top:18px;display:flex;flex-direction:column;gap:11px;}
+  .grow{display:grid;grid-template-columns:1fr auto;gap:3px 12px;}
+  .grow .k{font-size:13px;}
+  .grow .v{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;text-align:right;}
+  .track{grid-column:1/-1;height:10px;background:var(--sunk);border-radius:5px;overflow:hidden;}
+  .fill{height:100%;border-radius:0 5px 5px 0;transition:width .4s cubic-bezier(.22,.8,.3,1);}
+  .fill.market{background:var(--line-2);}
+  .grow .note{grid-column:1/-1;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);}
+
+  /* stat row */
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:18px;}
+  @media (max-width:520px){ .stats{grid-template-columns:1fr;} }
+  .stat{background:var(--surface);padding:14px 15px;display:flex;flex-direction:column;gap:3px;}
+  .stat .num{font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+  .stat .cap{font-size:12px;color:var(--muted);line-height:1.35;}
+
+  /* levers */
+  .levers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px;}
+  @media (max-width:560px){ .levers{grid-template-columns:1fr;} }
+  .lever{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:17px;}
+  .lever .lv-n{font-family:"Bricolage Grotesque",sans-serif;font-size:27px;font-weight:800;letter-spacing:-.03em;color:var(--good);font-variant-numeric:tabular-nums;line-height:1.1;}
+  .lever h4{font-size:14px;font-weight:700;margin-top:7px;}
+  .lever p{font-size:12.5px;color:var(--ink-2);margin:5px 0 0;}
+
+  table.math{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.math td{padding:11px 0;border-bottom:1px solid var(--line);}
+  table.math tr:last-child td{border-bottom:0;}
+  table.math td:last-child{text-align:right;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:12px;}
+  table.math .tot td{padding-top:14px;font-size:15px;}
+  table.math .tot td:last-child{color:var(--good);font-size:19px;}
+  table.math .sm{color:var(--muted);font-size:12px;}
+
+  /* structures */
+  .struct{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:19px;margin-bottom:13px;}
+  .struct .top-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;}
+  .struct h3{font-size:16.5px;font-weight:800;letter-spacing:-.02em;}
+  .struct .price{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--good);font-weight:500;}
+  .struct .when{font-size:13px;color:var(--ink-2);margin:9px 0 0;}
+  .struct dl{margin:13px 0 0;display:grid;grid-template-columns:auto 1fr;gap:7px 13px;font-size:13px;}
+  .struct dt{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-top:3px;}
+  .struct dd{margin:0;}
+  .struct .why{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-2);}
+  .struct .why b{color:var(--ink);font-weight:600;}
+
+  /* script */
+  .script{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .beat{padding:17px 19px;border-bottom:1px solid var(--line);}
+  .beat:last-child{border-bottom:0;}
+  .beat .lbl{display:block;margin-bottom:7px;}
+  .beat blockquote{
+    margin:0; padding:12px 14px; background:var(--sunk);
+    border-left:2px solid var(--good); border-radius:0 7px 7px 0;
+    font-size:13.5px; line-height:1.6;
+  }
+  .beat .why{font-size:12.5px;color:var(--muted);margin:9px 0 0;}
+
+  /* checklist */
+  .check{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .ci{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .ci:last-child{border-bottom:0;}
+  .ci input[type=checkbox]{margin:2px 0 0;width:17px;height:17px;flex:none;accent-color:var(--good);cursor:pointer;}
+  .ci label{font-size:13.5px;cursor:pointer;}
+  .ci .sub{display:block;font-size:12px;color:var(--muted);margin-top:3px;}
+  .ci input:checked + label { color:var(--muted); }
+  .ci input:checked + label > span:first-child { text-decoration:line-through; }
+  .check-foot{padding:13px 16px;background:var(--sunk);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .check-foot b{font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;}
+
+  /* cta */
+  .cta{margin-top:46px;background:var(--ink);color:var(--ground);border-radius:12px;padding:26px 22px;}
+  .cta h2{font-size:21px;font-weight:800;letter-spacing:-.028em;color:var(--ground);}
+  .cta p{font-size:14px;margin:10px 0 0;opacity:.82;max-width:50ch;}
+  .cta a{display:inline-block;margin-top:17px;background:var(--good);color:#fff;text-decoration:none;font-weight:600;font-size:14.5px;padding:11px 20px;border-radius:8px;}
+  .cta a:hover{opacity:.9;}
+  .cta a:focus-visible{outline:2px solid var(--ground);outline-offset:2px;}
+
+  details.assume{margin-top:24px;font-size:13px;color:var(--ink-2);}
+  details.assume summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:13.5px;}
+  details.assume ul{padding-left:18px;margin:10px 0 0;}
+  details.assume li{margin-top:5px;}
+
+  footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);max-width:60ch;}
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <span class="lbl brand">Chabassol Growth Group</span>
+    <h1>The Coach Offer System</h1>
+    <p class="sub">
+      Four tools for fixing the thing that breaks every coaching business before
+      the ads ever get a chance: the offer underneath them.
+    </p>
+  </header>
+
+  <!-- ============ MODULE 1 ============ -->
+  <div class="mod">
+    <div class="mod-head">
+      <span class="mod-num">01</span>
+      <h2>Price Floor</h2>
+    </div>
+    <p class="lede">
+      Most coaches don&rsquo;t have an ads problem. They have a price problem that
+      only becomes visible once they start spending. Put your real numbers in.
+    </p>
+
+    <div class="panel">
+      <div class="fields">
+        <div class="f">
+          <label for="price">What you charge per month</label>
+          <div class="inputwrap"><span class="pre">$</span>
+            <input class="has-pre" type="number" id="price" value="150" min="1" max="20000" step="10"></div>
+          <span class="hint">Per client, per month.</span>
+        </div>
+        <div class="f">
+          <label for="commit">Minimum commitment</label>
+          <div class="inputwrap">
+            <input class="has-post" type="number" id="commit" value="1" min="1" max="36" step="1">
+            <span class="post">months</span></div>
+          <span class="hint">Put 1 if they can cancel any time.</span>
+        </div>
+        <div class="f">
+          <label for="retain">How long they actually stay</label>
+          <div class="inputwrap">
+            <input class="has-post" type="number" id="retain" value="3" min="1" max="60" step="1">
+            <span class="post">months</span></div>
+          <span class="hint">Average across everyone, including the ones who quit in week three.</span>
+        </div>
+        <div class="f">
+          <label for="show">Booked calls that show up</label>
+          <div class="inputwrap">
+            <input class="has-post" type="number" id="show" value="60" min="5" max="100" step="5">
+            <span class="post">%</span></div>
+          <span class="hint">Of people who book, how many turn up.</span>
+        </div>
+        <div class="f">
+          <label for="close">Close rate on calls you hold</label>
+          <div class="inputwrap">
+            <input class="has-post" type="number" id="close" value="20" min="1" max="100" step="5">
+            <span class="post">%</span></div>
+          <span class="hint">Of calls you actually run, how many buy.</span>
+        </div>
+        <div class="f">
+          <label for="goal">Revenue you want to add per month</label>
+          <div class="inputwrap"><span class="pre">$</span>
+            <input class="has-pre" type="number" id="goal" value="10000" min="500" max="500000" step="500"></div>
+          <span class="hint">New recurring revenue on top of what you have now.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict bad" id="verdict">
+      <span class="tag"><span aria-hidden="true">&#9679;</span> <span id="vtagtext">Checking</span></span>
+      <h3 id="vhead">&mdash;</h3>
+      <p id="vbody">&mdash;</p>
+    </div>
+
+    <div class="gauge">
+      <div class="grow">
+        <span class="k">What you can afford to pay for a booked call</span>
+        <span class="v" id="affordV">&mdash;</span>
+        <div class="track"><div class="fill" id="affordBar" style="width:0"></div></div>
+      </div>
+      <div class="grow">
+        <span class="k">What a booked call actually costs on Meta</span>
+        <span class="v" id="marketV">&mdash;</span>
+        <div class="track"><div class="fill market" id="marketBar" style="width:0"></div></div>
+        <span class="note">assumption &mdash; replace with your own cost per booked call once you have 30 days of data</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="num" id="ltv">&mdash;</span><span class="cap">Total cash one client is worth</span></div>
+      <div class="stat"><span class="num" id="maxcac">&mdash;</span><span class="cap">Most you can spend to get one</span></div>
+      <div class="stat"><span class="num" id="calls">&mdash;</span><span class="cap">Booked calls per client signed</span></div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin-top:26px;">The two ways out</h3>
+    <p class="lede" style="margin-top:4px;">Charge more, or keep them longer. There is no third lever.</p>
+    <div class="levers">
+      <div class="lever">
+        <span class="lbl">Lever 1 &mdash; price</span>
+        <div class="lv-n" id="lever1">&mdash;</div>
+        <h4>per month, retention unchanged</h4>
+        <p id="lever1p">&mdash;</p>
+      </div>
+      <div class="lever">
+        <span class="lbl">Lever 2 &mdash; commitment</span>
+        <div class="lv-n" id="lever2">&mdash;</div>
+        <h4>months retained, price unchanged</h4>
+        <p id="lever2p">&mdash;</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin-top:26px;">What hitting your goal costs</h3>
+    <p class="lede" id="goalLede" style="margin-top:4px;">&mdash;</p>
+    <div class="panel">
+      <table class="math"><tbody>
+        <tr><td>New clients needed every month</td><td id="m1">&mdash;</td></tr>
+        <tr><td>Booked calls to get them</td><td id="m2">&mdash;</td></tr>
+        <tr><td>Cost to acquire one client<div class="sm">at the booked-call cost above</div></td><td id="m3">&mdash;</td></tr>
+        <tr class="tot"><td>Monthly ad spend required</td><td id="m4">&mdash;</td></tr>
+      </tbody></table>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="num" id="m5">&mdash;</span><span class="cap">Lifetime cash those clients bring</span></div>
+      <div class="stat"><span class="num" id="m6">&mdash;</span><span class="cap">Return per ad dollar over a client's life</span></div>
+      <div class="stat"><span class="num" id="m7">&mdash;</span><span class="cap">Months until that spend pays itself back</span></div>
+    </div>
+
+    <details class="assume">
+      <summary>The assumptions behind these numbers</summary>
+      <ul>
+        <li><b>A client must be worth 3&times; what you pay to get them.</b> Below that
+        there is nothing left for delivery, software, your team, or you.</li>
+        <li><b>A booked call costs $75.</b> This is the dial that matters most and it
+        moves with niche, offer and market. One month of your own ad data beats any
+        benchmark, including this one.</li>
+        <li><b>&ldquo;Works&rdquo; means 50% headroom.</b> Break-even on lead cost is a coin
+        flip, not a business.</li>
+      </ul>
+    </details>
+  </div>
+
+  <!-- ============ MODULE 2 ============ -->
+  <div class="mod">
+    <div class="mod-head">
+      <span class="mod-num">02</span>
+      <h2>Five structures that hold</h2>
+    </div>
+    <p class="lede">
+      Every one of these is in the field right now. Pick the row that matches your
+      situation, not the one with the biggest number.
+    </p>
+
+    <div class="struct">
+      <div class="top-row"><h3>The Minimum Commitment</h3><span class="price">$600/mo &middot; 4 months &middot; no exit</span></div>
+      <p class="when">For the coach whose results are real but whose clients quit before the results arrive.</p>
+      <dl>
+        <dt>Term</dt><dd>Four months, mandatory. Not a discount for committing &mdash; the only way to buy.</dd>
+        <dt>Pay in full</dt><dd>10% off. Payment plans get no discount, ever.</dd>
+        <dt>Cash per client</dt><dd>$2,400, or $2,160 paid up front.</dd>
+      </dl>
+      <div class="why"><b>Why it works:</b> body composition takes 12&ndash;16 weeks to show. A month-to-month
+      client quits in week six, blames you, and leaves without a testimonial. The commitment isn&rsquo;t
+      for your cash flow, it&rsquo;s so the programme has long enough to work.</div>
+    </div>
+
+    <div class="struct">
+      <div class="top-row"><h3>The Deposit Hybrid</h3><span class="price">$2,500 up front + $300/mo &middot; 6 months</span></div>
+      <p class="when">For premium positioning, and for funding your own ad spend.</p>
+      <dl>
+        <dt>Structure</dt><dd>Large deposit at signing, then modest monthly for the term.</dd>
+        <dt>Cash per client</dt><dd>$4,300 over six months, $2,500 of it in week one.</dd>
+        <dt>Needs</dt><dd>A buyer with real income. This does not work on a budget audience.</dd>
+      </dl>
+      <div class="why"><b>Why it works:</b> the deposit pays for the next client&rsquo;s acquisition.
+      It is the only structure on this list that lets you scale ad spend without financing it
+      from savings &mdash; which is exactly why it is worth the harder sales conversation.</div>
+    </div>
+
+    <div class="struct">
+      <div class="top-row"><h3>The Recurring Renewal</h3><span class="price">$2,000 every 6 months</span></div>
+      <p class="when">For group programmes currently sold as lifetime access.</p>
+      <dl>
+        <dt>The fix</dt><dd>Delete lifetime access. Sell a six-month term that renews.</dd>
+        <dt>Cash per client</dt><dd>$4,000 per year, continuing, instead of $4,000 once.</dd>
+        <dt>Migration</dt><dd>Grandfather existing buyers. Change it for new ones only.</dd>
+      </dl>
+      <div class="why"><b>Why it works:</b> lifetime access caps your business at the number of
+      humans you can find. It also quietly obliges you to serve people forever on revenue you
+      already spent. Renewal turns one good month into a compounding asset.</div>
+    </div>
+
+    <div class="struct">
+      <div class="top-row"><h3>The Paid-In-Full Intensive</h3><span class="price">$6,000 &middot; 2 months &middot; PIF only</span></div>
+      <p class="when">For a done-with-you build where the outcome is an asset, not a habit.</p>
+      <dl>
+        <dt>Term</dt><dd>Short and dense. Two months, paid in full, no plan offered.</dd>
+        <dt>Deliverable</dt><dd>Something that still exists when you stop &mdash; a funnel, a system, an ad account.</dd>
+        <dt>Cash per client</dt><dd>$6,000 on day one.</dd>
+      </dl>
+      <div class="why"><b>Why it works:</b> a short term with a tangible artefact justifies full
+      payment in a way an open-ended coaching relationship never will. Price on the asset
+      they keep, not the hours you spend.</div>
+    </div>
+
+    <div class="struct">
+      <div class="top-row"><h3>The Recoup Guarantee</h3><span class="price">Any price &middot; 12 weeks &middot; we stay until you break even</span></div>
+      <p class="when">For a prospect who has already been burned by an agency.</p>
+      <dl>
+        <dt>Promise</dt><dd>If they haven&rsquo;t made their investment back by the end of the term, you keep working free.</dd>
+        <dt>Not</dt><dd>A refund. You are selling more work, not giving money back.</dd>
+        <dt>Requires</dt><dd>Delivery you genuinely control, and an honest view of your own close rate.</dd>
+      </dl>
+      <div class="why"><b>Why it works:</b> it transfers the risk without touching the price, and it
+      disqualifies you from selling to people you cannot actually help &mdash; which is the real
+      reason it raises close rates. Only offer it where you would happily do the extra weeks.</div>
+    </div>
+  </div>
+
+  <!-- ============ MODULE 3 ============ -->
+  <div class="mod">
+    <div class="mod-head">
+      <span class="mod-num">03</span>
+      <h2>Qualifying on money, early</h2>
+    </div>
+    <p class="lede">
+      The most expensive call you can run is a brilliant 50-minute pitch to
+      somebody who was never going to be able to pay. Five beats, in order,
+      inside the first ten minutes.
+    </p>
+
+    <div class="script">
+      <div class="beat">
+        <span class="lbl">Beat 1 &mdash; set the frame before anything else</span>
+        <blockquote>&ldquo;Before I ask you anything, let me tell you how this works. I&rsquo;m going to
+        ask what you&rsquo;ve tried and what it cost you. If I don&rsquo;t think I can get you where you
+        want to go, I&rsquo;ll tell you on this call and we&rsquo;ll stop. Fair?&rdquo;</blockquote>
+        <p class="why">Earns permission to ask uncomfortable questions, and signals you are
+        willing to not sell. Both do more for the close than any pitch.</p>
+      </div>
+      <div class="beat">
+        <span class="lbl">Beat 2 &mdash; go past the surface goal</span>
+        <blockquote>&ldquo;You said you want to lose thirty pounds. What happens if you&rsquo;re in the
+        exact same body twelve months from now? Walk me through what that actually costs you.&rdquo;</blockquote>
+        <p class="why">The stated goal is never the reason. People buy from the cost of staying
+        the same, and they cannot tell you that cost until you make them say it out loud.</p>
+      </div>
+      <div class="beat">
+        <span class="lbl">Beat 3 &mdash; price the problem before you price the offer</span>
+        <blockquote>&ldquo;What have you spent trying to fix this so far? Programmes, gyms, apps,
+        coaches &mdash; roughly, all in.&rdquo;</blockquote>
+        <p class="why">Establishes they already spend on this, and gives you their real number.
+        Somebody who has burned $4,000 on failed attempts is not frightened by $2,400.</p>
+      </div>
+      <div class="beat">
+        <span class="lbl">Beat 4 &mdash; qualify the money, out loud</span>
+        <blockquote>&ldquo;Programmes like this run two to three thousand for the full term.
+        If it&rsquo;s genuinely the thing that fixes this &mdash; is that a number you can do, or is
+        that out of reach right now? Either answer is fine, I just don&rsquo;t want to waste
+        your afternoon.&rdquo;</blockquote>
+        <p class="why">This is the beat nearly everyone skips, and skipping it is what produces
+        a calendar full of &ldquo;let me think about it.&rdquo; Ask it by minute ten, every time.</p>
+      </div>
+      <div class="beat">
+        <span class="lbl">Beat 5 &mdash; sell the outcome, never the apparatus</span>
+        <blockquote>&ldquo;You&rsquo;re not buying check-ins and a spreadsheet. You&rsquo;re buying being
+        the person who doesn&rsquo;t think about this any more. The four months is just how long
+        that takes.&rdquo;</blockquote>
+        <p class="why">Features invite comparison shopping; outcomes don&rsquo;t. The term length
+        stops being a cost and becomes the reason it works.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODULE 4 ============ -->
+  <div class="mod">
+    <div class="mod-head">
+      <span class="mod-num">04</span>
+      <h2>Ad-readiness check</h2>
+    </div>
+    <p class="lede">
+      Do not spend a dollar until every one of these is true. Each unchecked box
+      is money the platform takes and cannot optimise with.
+    </p>
+
+    <div class="check" id="check">
+      <div class="ci">
+        <input type="checkbox" id="c1"><label for="c1"><span>Price Floor above says Clear, not Thin or Blocked</span>
+        <span class="sub">Everything below is wasted effort until this one is true.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c2"><label for="c2"><span>Pixel fires a real purchase event, confirmed in Events Manager</span>
+        <span class="sub">Membership platforms frequently swallow the event. Test a live $1 purchase and watch it land.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c3"><label for="c3"><span>Conversions API connected, not pixel alone</span>
+        <span class="sub">Browser-only tracking loses a meaningful share of attributed purchases.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c4"><label for="c4"><span>Business portfolio clean &mdash; no restrictions, two-factor on every admin</span>
+        <span class="sub">Reorganise before you scale. An account ban mid-campaign costs weeks.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c5"><label for="c5"><span>Customer list uploaded and a lookalike built from it</span>
+        <span class="sub">Your buyers are the only first-party signal you own. Export and upload it.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c6"><label for="c6"><span>Booked-call follow-up sequence live before the first ad runs</span>
+        <span class="sub">Text and email, both, fired on booking. Unanswered bookings are the most expensive leak there is.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c7"><label for="c7"><span>Someone is accountable for answering within five minutes</span>
+        <span class="sub">Named person, defined hours. &ldquo;We&rsquo;ll get to them&rdquo; is not a process.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c8"><label for="c8"><span>Two testimonial videos shot and ready as creative</span>
+        <span class="sub">A client saying it outperforms you saying it, at every budget.</span></label>
+      </div>
+      <div class="ci">
+        <input type="checkbox" id="c9"><label for="c9"><span>Daily budget set low enough to learn, not to gamble</span>
+        <span class="sub">Start at $20/day and read the data before scaling. The first month buys information.</span></label>
+      </div>
+      <div class="check-foot">
+        <span id="checkMsg">Nothing checked yet.</span>
+        <span><b id="checkCount">0</b> / 9</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>The maths is the easy half.</h2>
+    <p>
+      Repricing an offer takes an afternoon. Building the machine that turns ad
+      spend into booked calls at the cost above &mdash; the account, the funnel, the
+      follow-up, the people who run the calls &mdash; is the other half, and that is
+      the part we do with you.
+    </p>
+    <a href="#book" id="bookLink">Book a call &rarr;</a>
+  </div>
+
+  <footer>
+    The Coach Offer System &mdash; Chabassol Growth Group. These are models and
+    field-tested structures, not promises: they tell you whether the maths can
+    work, not whether your execution will.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var LTV_CAC = 3, HEADROOM = 1.5, MARKET = 75;
+
+  var ids = ['price','commit','retain','show','close','goal'], el = {};
+  ids.forEach(function (k) { el[k] = document.getElementById(k); });
+
+  var out = {};
+  ['verdict','vtagtext','vhead','vbody','affordV','affordBar','marketV','marketBar',
+   'ltv','maxcac','calls','lever1','lever1p','lever2','lever2p','goalLede',
+   'm1','m2','m3','m4','m5','m6','m7'].forEach(function (k) { out[k] = document.getElementById(k); });
+
+  function money(n) {
+    return isFinite(n) ? '$' + Math.round(n).toLocaleString('en-US') : '—';
+  }
+  function r1(n) { return (Math.round(n * 10) / 10).toLocaleString('en-US'); }
+  function num(k, lo, hi, d) {
+    var v = parseFloat(el[k].value);
+    return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d;
+  }
+  function store(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) {}
+  }
+  function fetchItem(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function calc() {
+    var price  = num('price', 1, 20000, 150),
+        commit = num('commit', 1, 36, 1),
+        retain = num('retain', 1, 60, 3),
+        show   = num('show', 5, 100, 60) / 100,
+        close  = num('close', 1, 100, 20) / 100,
+        goal   = num('goal', 500, 500000, 10000);
+
+    // A client cannot stay for less time than they are committed to.
+    var months     = Math.max(retain, commit),
+        ltv        = price * months,
+        maxCac     = ltv / LTV_CAC,
+        callsPer   = 1 / (show * close),
+        afford     = maxCac / callsPer,
+        target     = MARKET * HEADROOM,
+        costClient = MARKET * callsPer;
+
+    var state, tag, head, body;
+    if (afford >= target) {
+      state = 'good'; tag = 'Clear';
+      head = 'Your price can carry paid ads.';
+      body = 'You can afford <b>' + money(afford) + '</b> for a booked call; they cost about <b>'
+           + money(MARKET) + '</b>. That gap absorbs a bad week, a weak ad, or a dip in close rate. '
+           + 'Your bottleneck is the machine now, not the maths.';
+    } else if (afford >= MARKET * 0.9) {
+      state = 'warn'; tag = 'Thin';
+      head = 'It works on paper. Barely.';
+      body = 'You can afford <b>' + money(afford) + '</b> a booked call against roughly <b>'
+           + money(MARKET) + '</b> to buy one. One soft month and you are paying to acquire clients '
+           + 'you lose. Fix the price before you turn the spend up, not after.';
+    } else {
+      state = 'bad'; tag = 'Blocked';
+      head = 'Ads cannot work at this price.';
+      body = 'A booked call costs about <b>' + money(MARKET) + '</b>. At your price and retention you '
+           + 'can afford <b>' + money(afford) + '</b> — roughly '
+           + (afford > 0 ? Math.round(MARKET / afford) : '∞') + '× short. No targeting, creative or '
+           + 'agency closes a gap that size. The offer changes first.';
+    }
+    out.verdict.className = 'verdict ' + state;
+    out.vtagtext.textContent = tag;
+    out.vhead.textContent = head;
+    out.vbody.innerHTML = body;
+
+    var scale = Math.max(afford, MARKET, target) * 1.08;
+    out.affordV.textContent = money(afford);
+    out.marketV.textContent = money(MARKET);
+    out.affordBar.style.width = Math.max(1.5, (afford / scale) * 100) + '%';
+    out.marketBar.style.width = Math.max(1.5, (MARKET / scale) * 100) + '%';
+    out.affordBar.style.background =
+      state === 'good' ? 'var(--good)' : (state === 'warn' ? 'var(--warn)' : 'var(--bad)');
+
+    out.ltv.textContent = money(ltv);
+    out.maxcac.textContent = money(maxCac);
+    out.calls.textContent = r1(callsPer);
+
+    var ltvNeeded = LTV_CAC * target * callsPer,
+        priceNeeded = ltvNeeded / months,
+        monthsNeeded = ltvNeeded / price;
+
+    out.lever1.textContent = money(priceNeeded);
+    out.lever1p.innerHTML = priceNeeded <= price
+      ? 'You are already above this. Price is not your constraint.'
+      : 'That is <b>' + r1(priceNeeded / price) + '×</b> your current price, with clients still staying '
+        + r1(months) + ' months.';
+
+    out.lever2.textContent = r1(monthsNeeded);
+    out.lever2p.innerHTML = monthsNeeded <= months
+      ? 'You are already above this. Retention is not your constraint.'
+      : 'Up from ' + r1(months) + ' months. ' + (monthsNeeded > 12
+          ? 'Holding a coaching client that long is rare — this lever alone will not get you there.'
+          : 'A minimum commitment is the fastest way to buy this.');
+
+    var clients  = goal / price,
+        callsReq = clients * callsPer,
+        spend    = clients * costClient,
+        lifetime = clients * ltv,
+        roas     = spend > 0 ? lifetime / spend : 0,
+        payback  = costClient / price;
+
+    out.goalLede.innerHTML = 'To add <b>' + money(goal) + '</b> a month at <b>' + money(price)
+      + '</b> per client, here is the bill.';
+    out.m1.textContent = r1(clients);
+    out.m2.textContent = Math.ceil(callsReq).toLocaleString('en-US');
+    out.m3.textContent = money(costClient);
+    out.m4.textContent = money(spend);
+    out.m5.textContent = money(lifetime);
+    out.m6.textContent = r1(roas) + '×';
+    out.m7.textContent = r1(payback);
+
+    try {
+      var s = {};
+      ids.forEach(function (k) { s[k] = el[k].value; });
+      store('cos.inputs.v1', JSON.stringify(s));
+    } catch (e) {}
+  }
+
+  ids.forEach(function (k) {
+    el[k].addEventListener('input', calc);
+    el[k].addEventListener('change', calc);
+  });
+
+  (function loadInputs() {
+    var raw = fetchItem('cos.inputs.v1');
+    if (!raw) return;
+    try {
+      var s = JSON.parse(raw);
+      ids.forEach(function (k) {
+        if (s && s[k] !== undefined && s[k] !== '') el[k].value = s[k];
+      });
+    } catch (e) {}
+  })();
+
+  calc();
+
+  // ---- checklist ----
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#check input[type=checkbox]'));
+  var cCount = document.getElementById('checkCount');
+  var cMsg   = document.getElementById('checkMsg');
+
+  function syncCheck() {
+    var n = boxes.filter(function (b) { return b.checked; }).length;
+    cCount.textContent = n;
+    cMsg.textContent =
+      n === 0 ? 'Nothing checked yet.' :
+      n < 5   ? 'Not ready. Keep the budget at zero.' :
+      n < 9   ? 'Close. Finish the rest before you scale spend.' :
+                'Ready. Start at $20/day and read the data.';
+    try {
+      store('cos.check.v1', JSON.stringify(boxes.map(function (b) { return b.checked; })));
+    } catch (e) {}
+  }
+
+  (function loadCheck() {
+    var raw = fetchItem('cos.check.v1');
+    if (raw) {
+      try {
+        var arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          boxes.forEach(function (b, i) { b.checked = !!arr[i]; });
+        }
+      } catch (e) {}
+    }
+    syncCheck();
+  })();
+
+  boxes.forEach(function (b) { b.addEventListener('change', syncCheck); });
+})();
+</script>
