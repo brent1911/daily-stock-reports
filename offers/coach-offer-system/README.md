@@ -17,12 +17,33 @@ room. So it is sellable.
 The IP already existed as a byproduct of client work. Marginal cost of a
 sale is a Stripe fee.
 
+## The finding the product is built on
+
+At a realistic $100–400 per booked call, and a competent 70% show / 30% close,
+each structure can absorb only so much traffic cost before the 3:1 rule breaks:
+
+| Structure | Lifetime value | Ceiling per booked call |
+|---|---|---|
+| Month-to-month $150 | $450 | **$32** — cannot run paid ads at all |
+| Minimum Commitment $600×4 | $2,400 | $168 |
+| Recurring Renewal $2k/6mo | $3,000 | $210 |
+| Deposit Hybrid $2,500 + $300×6 | $4,300 | **$301** |
+| PIF Intensive $6,000 | $6,000 | **$420** |
+
+Only the last two carry the top of the range. This is the whole argument for
+premium structure, and it is arithmetic rather than opinion — which is what makes
+it survive a prospect who has been burned by an agency before.
+
+The recoup guarantee is the multiplier: lifting close rate from 30% to 40% raises
+every ceiling above by about a third, because it cuts the booked calls needed per
+signed client from 4.8 to 3.6.
+
 ## What is inside
 
 | Module | What it does |
 |---|---|
-| 01 — Price Floor | Live calculator. Takes price, commitment, retention, show rate, close rate. Returns lifetime value, maximum acquisition cost, affordable cost per booked call, and a Clear / Thin / Blocked verdict. Then solves for the price *or* the retention that would make paid ads work. |
-| 02 — Five structures that hold | Five field-tested offer structures with real numbers, who each is for, and why it works. |
+| 01 — Price Floor | Live calculator. Takes price, commitment, retention, show rate, close rate and cost per booked call. Headlines the **ceiling** — the most a booked call can cost before the offer breaks — then shows the verdict across the whole $100–400 range, not at one guessed number. Solves for the price *or* the retention that would fix it. |
+| 02 — Five structures that hold | Five field-tested structures, each carrying its ceiling, so they rank by the traffic cost they can actually absorb. |
 | 03 — Qualifying on money, early | Five-beat call script that surfaces budget inside the first ten minutes. |
 | 04 — Ad-readiness check | Nine-item gate with saved state. Tracking, portfolio hygiene, follow-up, creative, starting budget. |
 
@@ -49,9 +70,9 @@ engagement, and the buyer has now pre-qualified themselves by paying.
 ## Before launch
 
 1. Replace the `#book` placeholder in the CTA with the real booking link.
-2. Replace the `$75` cost-per-booked-call assumption (`MARKET` in the script)
-   with the real blended figure from managed ad accounts. This is the single
-   highest-value edit — a proprietary benchmark is worth more than a generic one,
-   and it is defensible because it is observed rather than borrowed.
+2. Cost per booked call is now a user input defaulting to $200, with $100–400
+   stated as the realistic range. If the blended figure from managed accounts is
+   tighter than that, narrow the `BAND` constant in the script — an observed
+   range is more defensible than a borrowed one.
 3. Decide on the guarantee. A plain 30-day refund is standard at this price and
    rarely abused on a product that delivers in one sitting.

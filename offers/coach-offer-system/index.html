@@ -83,6 +83,20 @@
   input[type=number]::-webkit-outer-spin-button,
   input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 
+  /* ceiling + sensitivity band */
+  .ceiling{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:20px;margin-top:14px;}
+  .ceil-n{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(38px,11vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--good);font-variant-numeric:tabular-nums;margin:9px 0 6px;}
+  .ceiling > p{font-size:13.5px;color:var(--ink-2);margin:0;max-width:52ch;}
+  .band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:17px;}
+  @media (max-width:440px){ .band{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  .bcell{border:1px solid;border-radius:8px;padding:10px 9px;display:flex;flex-direction:column;gap:2px;}
+  .bcell .bc-p{font-family:"JetBrains Mono",monospace;font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums;}
+  .bcell .bc-s{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;}
+  .bcell.good{background:var(--good-bg);border-color:var(--good);} .bcell.good .bc-p,.bcell.good .bc-s{color:var(--good);}
+  .bcell.warn{background:var(--warn-bg);border-color:var(--warn);} .bcell.warn .bc-p,.bcell.warn .bc-s{color:var(--warn);}
+  .bcell.bad{background:var(--bad-bg);border-color:var(--bad);}   .bcell.bad  .bc-p,.bcell.bad  .bc-s{color:var(--bad);}
+  .band-cap{font-size:12px;color:var(--muted);margin-top:11px !important;max-width:54ch;}
+
   /* verdict */
   .verdict{border-radius:12px;padding:22px 20px;border:1px solid;margin-top:18px;}
   .verdict.good{background:var(--good-bg);border-color:var(--good);}
@@ -188,7 +202,8 @@
     <h1>The Coach Offer System</h1>
     <p class="sub">
       Four tools for fixing the thing that breaks every coaching business before
-      the ads ever get a chance: the offer underneath them.
+      the ads get a chance. A booked call costs $100&ndash;400. Most coaching offers
+      cannot survive that, and no amount of ad spend fixes an offer.
     </p>
   </header>
 
@@ -245,7 +260,23 @@
             <input class="has-pre" type="number" id="goal" value="10000" min="500" max="500000" step="500"></div>
           <span class="hint">New recurring revenue on top of what you have now.</span>
         </div>
+        <div class="f">
+          <label for="cpc">What a booked call costs you</label>
+          <div class="inputwrap"><span class="pre">$</span>
+            <input class="has-pre" type="number" id="cpc" value="200" min="25" max="1000" step="25"></div>
+          <span class="hint">$100&ndash;400 is the realistic range. Premium offers attract
+          dearer leads, so the better your offer the higher this sits.</span>
+        </div>
       </div>
+    </div>
+
+    <div class="ceiling">
+      <span class="lbl">Your ceiling</span>
+      <div class="ceil-n" id="ceilN">&mdash;</div>
+      <p id="ceilP">&mdash;</p>
+      <div class="band" id="band" role="group" aria-label="Verdict across the realistic range of booked-call costs"></div>
+      <p class="band-cap">Where your offer stands across the real range. One of these is
+      the market you will actually buy in &mdash; you do not get to choose which.</p>
     </div>
 
     <div class="verdict bad" id="verdict">
@@ -264,7 +295,7 @@
         <span class="k">What a booked call actually costs on Meta</span>
         <span class="v" id="marketV">&mdash;</span>
         <div class="track"><div class="fill market" id="marketBar" style="width:0"></div></div>
-        <span class="note">assumption &mdash; replace with your own cost per booked call once you have 30 days of data</span>
+        <span class="note">from your input above &mdash; replace with your own blended figure once you have 30 days of data</span>
       </div>
     </div>
 
@@ -312,11 +343,15 @@
       <ul>
         <li><b>A client must be worth 3&times; what you pay to get them.</b> Below that
         there is nothing left for delivery, software, your team, or you.</li>
-        <li><b>A booked call costs $75.</b> This is the dial that matters most and it
-        moves with niche, offer and market. One month of your own ad data beats any
-        benchmark, including this one.</li>
+        <li><b>A booked call costs $100&ndash;400.</b> That is the honest range, and it is
+        the dial that matters most. It also moves <i>with</i> your offer: premium
+        positioning buys dearer leads, so raising your price raises this number too.
+        Do not plan on the bottom of the range.</li>
         <li><b>&ldquo;Works&rdquo; means 50% headroom.</b> Break-even on lead cost is a coin
         flip, not a business.</li>
+        <li><b>Structure ceilings assume a competent operator</b> &mdash; 70% of booked
+        calls showing up, 30% of held calls closing. Worse than that and every ceiling
+        on this page drops proportionally.</li>
       </ul>
     </details>
   </div>
@@ -328,8 +363,9 @@
       <h2>Five structures that hold</h2>
     </div>
     <p class="lede">
-      Every one of these is in the field right now. Pick the row that matches your
-      situation, not the one with the biggest number.
+      Every one of these is in the field right now. Each shows its <b>ceiling</b> &mdash;
+      the most a booked call can cost before the structure stops working. Pick for the
+      traffic you will actually buy, not for the biggest headline number.
     </p>
 
     <div class="struct">
@@ -339,6 +375,7 @@
         <dt>Term</dt><dd>Four months, mandatory. Not a discount for committing &mdash; the only way to buy.</dd>
         <dt>Pay in full</dt><dd>10% off. Payment plans get no discount, ever.</dd>
         <dt>Cash per client</dt><dd>$2,400, or $2,160 paid up front.</dd>
+        <dt>Ceiling</dt><dd><b>$168</b> per booked call. Survives cheap traffic, dies above $110.</dd>
       </dl>
       <div class="why"><b>Why it works:</b> body composition takes 12&ndash;16 weeks to show. A month-to-month
       client quits in week six, blames you, and leaves without a testimonial. The commitment isn&rsquo;t
@@ -352,6 +389,7 @@
         <dt>Structure</dt><dd>Large deposit at signing, then modest monthly for the term.</dd>
         <dt>Cash per client</dt><dd>$4,300 over six months, $2,500 of it in week one.</dd>
         <dt>Needs</dt><dd>A buyer with real income. This does not work on a budget audience.</dd>
+        <dt>Ceiling</dt><dd><b>$301</b> per booked call. Comfortable anywhere up to $200.</dd>
       </dl>
       <div class="why"><b>Why it works:</b> the deposit pays for the next client&rsquo;s acquisition.
       It is the only structure on this list that lets you scale ad spend without financing it
@@ -365,6 +403,7 @@
         <dt>The fix</dt><dd>Delete lifetime access. Sell a six-month term that renews.</dd>
         <dt>Cash per client</dt><dd>$4,000 per year, continuing, instead of $4,000 once.</dd>
         <dt>Migration</dt><dd>Grandfather existing buyers. Change it for new ones only.</dd>
+        <dt>Ceiling</dt><dd><b>$210</b> per booked call, assuming one renewal on average.</dd>
       </dl>
       <div class="why"><b>Why it works:</b> lifetime access caps your business at the number of
       humans you can find. It also quietly obliges you to serve people forever on revenue you
@@ -378,6 +417,7 @@
         <dt>Term</dt><dd>Short and dense. Two months, paid in full, no plan offered.</dd>
         <dt>Deliverable</dt><dd>Something that still exists when you stop &mdash; a funnel, a system, an ad account.</dd>
         <dt>Cash per client</dt><dd>$6,000 on day one.</dd>
+        <dt>Ceiling</dt><dd><b>$420</b> per booked call. The only structure here that takes the top of the range.</dd>
       </dl>
       <div class="why"><b>Why it works:</b> a short term with a tangible artefact justifies full
       payment in a way an open-ended coaching relationship never will. Price on the asset
@@ -391,6 +431,7 @@
         <dt>Promise</dt><dd>If they haven&rsquo;t made their investment back by the end of the term, you keep working free.</dd>
         <dt>Not</dt><dd>A refund. You are selling more work, not giving money back.</dd>
         <dt>Requires</dt><dd>Delivery you genuinely control, and an honest view of your own close rate.</dd>
+        <dt>Ceiling</dt><dd>Lifts whatever structure it sits on. Moving close rate from 30% to 40% raises every ceiling above by about a third.</dd>
       </dl>
       <div class="why"><b>Why it works:</b> it transfers the risk without touching the price, and it
       disqualifies you from selling to people you cannot actually help &mdash; which is the real
@@ -529,15 +570,17 @@
 
 <script>
 (function () {
-  var LTV_CAC = 3, HEADROOM = 1.5, MARKET = 75;
+  var LTV_CAC = 3, HEADROOM = 1.5;
+  var BAND = [100, 200, 300, 400];   // the realistic range of booked-call costs
 
-  var ids = ['price','commit','retain','show','close','goal'], el = {};
+  var ids = ['price','commit','retain','show','close','goal','cpc'], el = {};
   ids.forEach(function (k) { el[k] = document.getElementById(k); });
 
   var out = {};
   ['verdict','vtagtext','vhead','vbody','affordV','affordBar','marketV','marketBar',
    'ltv','maxcac','calls','lever1','lever1p','lever2','lever2p','goalLede',
-   'm1','m2','m3','m4','m5','m6','m7'].forEach(function (k) { out[k] = document.getElementById(k); });
+   'ceilN','ceilP','band','m1','m2','m3','m4','m5','m6','m7']
+    .forEach(function (k) { out[k] = document.getElementById(k); });
 
   function money(n) {
     return isFinite(n) ? '$' + Math.round(n).toLocaleString('en-US') : '—';
@@ -560,7 +603,8 @@
         retain = num('retain', 1, 60, 3),
         show   = num('show', 5, 100, 60) / 100,
         close  = num('close', 1, 100, 20) / 100,
-        goal   = num('goal', 500, 500000, 10000);
+        goal   = num('goal', 500, 500000, 10000),
+        MARKET = num('cpc', 25, 1000, 200);
 
     // A client cannot stay for less time than they are committed to.
     var months     = Math.max(retain, commit),
@@ -570,6 +614,25 @@
         afford     = maxCac / callsPer,
         target     = MARKET * HEADROOM,
         costClient = MARKET * callsPer;
+
+    // ---- ceiling and the sensitivity band ----
+    // `afford` IS the ceiling: the most a booked call can cost before the
+    // 3:1 rule breaks. Comfort means carrying 1.5x that cost.
+    var comfy = afford / HEADROOM;
+    out.ceilN.textContent = money(afford);
+    out.ceilP.innerHTML = 'Your offer breaks the moment a booked call costs more than <b>'
+      + money(afford) + '</b>. It is comfortable up to <b>' + money(comfy)
+      + '</b> &mdash; the rest is the margin that absorbs a bad month.';
+
+    out.band.innerHTML = '';
+    BAND.forEach(function (c) {
+      var st = afford >= c * HEADROOM ? 'good' : (afford >= c * 0.9 ? 'warn' : 'bad');
+      var word = st === 'good' ? 'Clear' : (st === 'warn' ? 'Thin' : 'Blocked');
+      var cell = document.createElement('div');
+      cell.className = 'bcell ' + st;
+      cell.innerHTML = '<span class="bc-p">$' + c + '/call</span><span class="bc-s">' + word + '</span>';
+      out.band.appendChild(cell);
+    });
 
     var state, tag, head, body;
     if (afford >= target) {
