@@ -4,202 +4,202 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Booked Call Engine</title>
-<meta name="description" content="The 48-page build guide for online fitness coaches: offer, funnel, scripts, settings and follow-up. Know exactly what a booked call costs you.">
+<meta name="description" content="The exact strategy we used to go from $3k/mo to $48k/mo: a 48-page build guide for online fitness coaches. Offer, both funnels, scripts, settings and follow-up.">
 <style>
 :root{
   --ink:#16181d; --mid:#3f4654; --mute:#6b7280; --line:#e4e7ec;
-  --bg:#ffffff; --bg2:#f7f8fa; --bg3:#fffaf4;
-  --acc:#b3400a; --acc2:#0d5c63; --ok:#15803d;
-  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --bg:#fff; --bg2:#f7f8fa; --bg3:#fffaf4;
+  --acc:#b3400a; --ok:#15803d;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --serif:"Charter","Bitstream Charter",Georgia,"Times New Roman",serif;
-  --max:720px;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --ink:#eceef2; --mid:#b7bdc9; --mute:#8b93a3; --line:#2a2f3a;
-    --bg:#101217; --bg2:#171a21; --bg3:#1d1813;
-    --acc:#ff8a4c; --acc2:#5bc8d1; --ok:#4ade80;
-  }
-}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#eceef2; --mid:#b7bdc9; --mute:#8b93a3; --line:#2a2f3a;
+  --bg:#101217; --bg2:#171a21; --bg3:#1d1813; --acc:#ff8a4c; --ok:#4ade80;}}
 :root[data-theme="dark"]{
   --ink:#eceef2; --mid:#b7bdc9; --mute:#8b93a3; --line:#2a2f3a;
-  --bg:#101217; --bg2:#171a21; --bg3:#1d1813;
-  --acc:#ff8a4c; --acc2:#5bc8d1; --ok:#4ade80;
-}
+  --bg:#101217; --bg2:#171a21; --bg3:#1d1813; --acc:#ff8a4c; --ok:#4ade80;}
 *{box-sizing:border-box;}
 html,body{overflow-x:hidden; max-width:100%;}
-body{overflow-wrap:break-word;}
-.tscroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:20px -4px;}
-.tscroll table{margin:0; min-width:440px;}
 html{-webkit-text-size-adjust:100%;}
-body{margin:0; background:var(--bg); color:var(--ink);
-     font-family:var(--serif); font-size:18px; line-height:1.6;
-     -webkit-font-smoothing:antialiased;}
-h1,h2,h3,.ui,.btn,nav,th,.eyebrow,.kicker{font-family:var(--sans);}
-.wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
-section{padding:60px 0; border-bottom:1px solid var(--line);}
-section:last-of-type{border-bottom:0;}
-.eyebrow{font-size:12px; letter-spacing:.18em; text-transform:uppercase;
-         color:var(--acc); font-weight:700;}
-h1{font-size:clamp(34px,7vw,54px); line-height:1.06; letter-spacing:-.03em;
-   margin:18px 0 0; font-weight:800;}
-h2{font-size:clamp(25px,4.6vw,34px); line-height:1.15; letter-spacing:-.022em;
-   margin:0 0 18px; font-weight:800;}
-h3{font-size:19px; margin:30px 0 8px; letter-spacing:-.01em; font-weight:700;}
-p{margin:0 0 16px;}
-.lead{font-size:clamp(18px,2.4vw,21px); color:var(--mid); line-height:1.52;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--serif);
+     font-size:18px; line-height:1.6; overflow-wrap:break-word; -webkit-font-smoothing:antialiased;}
+h1,h2,h3,.ui,.btn,th,.eyebrow{font-family:var(--sans);}
+.wrap{max-width:700px; margin:0 auto; padding:0 20px;}
+section{padding:52px 0; border-bottom:1px solid var(--line);}
+.eyebrow{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--acc); font-weight:700;}
+h1{font-size:clamp(33px,6.6vw,50px); line-height:1.07; letter-spacing:-.03em; margin:16px 0 0; font-weight:800;}
+h2{font-size:clamp(24px,4.4vw,31px); line-height:1.16; letter-spacing:-.022em; margin:0 0 16px; font-weight:800;}
+h3{font-size:18px; margin:26px 0 8px; font-weight:700;}
+p{margin:0 0 14px;}
+.lead{font-size:clamp(17px,2.3vw,20px); color:var(--mid); line-height:1.52;}
 .mute{color:var(--mute); font-size:15px;}
-strong{font-weight:700;}
 a{color:var(--acc);}
 
-/* hero */
-.hero{padding:52px 0 56px; border-bottom:1px solid var(--line);}
-.stat{margin:28px 0; padding:20px 0; border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);}
-.stat .big{font-family:var(--sans); font-size:clamp(28px,6vw,42px); font-weight:800;
-           letter-spacing:-.035em; line-height:1;}
+.hero{padding:48px 0 50px; border-bottom:1px solid var(--line);}
+.stat{margin:26px 0; padding:19px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.stat .big{font-family:var(--sans); font-size:clamp(27px,5.8vw,40px); font-weight:800; letter-spacing:-.035em; line-height:1;}
 .stat .big .ar{color:var(--acc); margin:0 6px;}
-.stat .cap{font-family:var(--sans); font-size:12px; letter-spacing:.14em;
-           text-transform:uppercase; color:var(--mute); margin-top:10px;}
+.stat .cap{font-family:var(--sans); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute); margin-top:9px;}
 
-/* buttons */
-.btn{display:inline-block; background:var(--acc); color:#fff; text-decoration:none;
-     font-weight:700; font-size:17px; padding:16px 30px; border-radius:7px;
-     border:0; cursor:pointer; letter-spacing:-.01em; transition:transform .12s ease,filter .12s ease;}
-.btn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+.btn{display:inline-block; background:var(--acc); color:#fff; text-decoration:none; font-weight:700;
+     font-size:17px; padding:16px 30px; border-radius:7px; cursor:pointer; letter-spacing:-.01em;}
+.btn:hover{filter:brightness(1.08);}
 .btn.alt{background:transparent; color:var(--ink); border:1.5px solid var(--line);}
-.cta{margin:26px 0 10px;}
-.cta .sub{font-size:14px; color:var(--mute); margin-top:12px; font-family:var(--sans);}
+.cta{margin:24px 0 0;}
+.cta .sub{font-size:14px; color:var(--mute); margin-top:11px; font-family:var(--sans);}
 
-/* lists */
-ul,ol{margin:0 0 16px; padding-left:22px;}
-li{margin-bottom:8px;}
+ul{margin:0 0 14px; padding-left:21px;} li{margin-bottom:7px;}
 .plain{list-style:none; padding:0;}
-.plain li{display:flex; gap:11px; align-items:flex-start; margin-bottom:11px;}
-.plain li::before{content:"→"; color:var(--acc); font-weight:700; flex-shrink:0;
-                  font-family:var(--sans);}
+.plain li{display:flex; gap:10px; align-items:flex-start; margin-bottom:10px;}
+.plain li::before{content:"→"; color:var(--acc); font-weight:700; flex-shrink:0; font-family:var(--sans);}
 .no li::before{content:"✕"; color:var(--mute);}
 .yes li::before{content:"✓"; color:var(--ok);}
 
-/* cards */
-.card{background:var(--bg2); border:1px solid var(--line); border-radius:11px;
-      padding:26px; margin:18px 0;}
-.quote{border-left:3px solid var(--acc); background:var(--bg3); padding:20px 22px;
-       border-radius:0 8px 8px 0; margin:22px 0;}
+.quote{border-left:3px solid var(--acc); background:var(--bg3); padding:18px 20px; border-radius:0 8px 8px 0; margin:20px 0;}
 .quote p:last-child{margin-bottom:0;}
 
-/* contents grid */
-.toc{display:grid; grid-template-columns:1fr; gap:0; margin:20px 0 0;}
-.toc .row{display:flex; gap:14px; padding:13px 0; border-bottom:1px solid var(--line);
-          align-items:baseline;}
-.toc .n{font-family:var(--sans); font-size:13px; font-weight:700; color:var(--acc);
-        min-width:26px;}
-.toc .t{font-weight:700; font-size:16px; font-family:var(--sans);}
-.toc .d{color:var(--mute); font-size:14px; display:block; margin-top:3px;
-        font-weight:400; font-family:var(--serif);}
+/* proof */
+.shots{display:grid; grid-template-columns:1fr; gap:14px; margin:22px 0;}
+@media(min-width:640px){.shots{grid-template-columns:1fr 1fr;}}
+.shot{border:1px solid var(--line); border-radius:9px; overflow:hidden; background:var(--bg2);}
+.shot img{width:100%; display:block;}
+.shot .cap2{font-family:var(--sans); font-size:13px; color:var(--mute); padding:10px 13px; border-top:1px solid var(--line);}
+.slot{border:2px dashed var(--line); border-radius:9px; padding:26px 18px; text-align:center;
+      color:var(--mute); font-family:var(--sans); font-size:13.5px; line-height:1.5; background:var(--bg2);}
+.slot b{display:block; color:var(--ink); font-size:14px; margin-bottom:5px;}
 
-/* table */
-table{width:100%; border-collapse:collapse; margin:20px 0; font-family:var(--sans);
-      font-size:15px;}
-th{text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.08em;
-   padding:10px 8px; border-bottom:2px solid var(--ink); font-weight:700;}
-td{padding:11px 8px; border-bottom:1px solid var(--line); vertical-align:top;}
+.figs{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line);
+      border:1px solid var(--line); border-radius:9px; overflow:hidden; margin:20px 0;}
+@media(min-width:640px){.figs{grid-template-columns:repeat(4,1fr);}}
+.figs div{background:var(--bg); padding:17px 14px;}
+.figs .v{font-family:var(--sans); font-size:23px; font-weight:800; letter-spacing:-.03em;}
+.figs .l{font-family:var(--sans); font-size:11px; color:var(--mute); text-transform:uppercase; letter-spacing:.08em; margin-top:5px;}
+
+.tscroll{overflow-x:auto; margin:20px -4px;}
+.fun{display:flex; align-items:center; gap:4px; overflow-x:auto; padding:16px 2px; margin:4px -4px 14px;}
+.fun .s{flex:0 0 auto; text-align:center; background:var(--bg2); border:1px solid var(--line);
+        border-radius:8px; padding:10px 9px; min-width:64px;}
+.fun .s b{display:block; font-family:var(--sans); font-size:15.5px; font-weight:800; letter-spacing:-.025em;}
+.fun .s span{display:block; font-family:var(--sans); font-size:9.5px; color:var(--mute);
+             text-transform:uppercase; letter-spacing:.07em; margin-top:3px;}
+.fun .r{flex:0 0 auto; font-family:var(--sans); font-size:10px; font-weight:700; color:var(--acc); white-space:nowrap;}
+table{width:100%; border-collapse:collapse; font-family:var(--sans); font-size:15px; min-width:430px;}
+th{text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; padding:9px 8px; border-bottom:2px solid var(--ink); font-weight:700;}
+td{padding:10px 8px; border-bottom:1px solid var(--line);}
 td:first-child{color:var(--mute);}
 .num{font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:700;}
 
-/* pricing */
-.prices{display:grid; grid-template-columns:1fr; gap:18px; margin:26px 0 0;}
+.groups{margin:18px 0 0;}
+.groups .g{display:flex; gap:13px; padding:12px 0; border-bottom:1px solid var(--line); align-items:baseline;}
+.groups .n{font-family:var(--sans); font-size:12px; font-weight:700; color:var(--acc); min-width:38px;}
+.groups .t{font-family:var(--sans); font-weight:700; font-size:15.5px;}
+.groups .d{color:var(--mute); font-size:14.5px; display:block; margin-top:2px;}
+
+.card{background:var(--bg2); border:1px solid var(--line); border-radius:11px; padding:24px; margin:18px 0;}
+.prices{display:grid; grid-template-columns:1fr; gap:17px; margin:24px 0 0;}
 @media(min-width:700px){.prices{grid-template-columns:1fr 1fr;}}
-.price{border:1.5px solid var(--line); border-radius:12px; padding:28px;
-       display:flex; flex-direction:column; background:var(--bg);}
+.price{border:1.5px solid var(--line); border-radius:12px; padding:25px; display:flex; flex-direction:column; background:var(--bg);}
 .price.feature{border-color:var(--acc); border-width:2px; position:relative;}
-.price .tag{position:absolute; top:-11px; left:24px; background:var(--acc); color:#fff;
-            font-family:var(--sans); font-size:11px; font-weight:700; letter-spacing:.1em;
-            text-transform:uppercase; padding:4px 11px; border-radius:20px;}
-.price .name{font-family:var(--sans); font-weight:700; font-size:17px;}
-.price .amt{font-family:var(--sans); font-size:40px; font-weight:800; letter-spacing:-.035em;
-            margin:10px 0 2px; line-height:1;}
-.price .per{font-family:var(--sans); font-size:13px; color:var(--mute); margin-bottom:18px;}
-.price ul{flex:1; margin-bottom:22px;}
+.price .tag{position:absolute; top:-11px; left:22px; background:var(--acc); color:#fff; font-family:var(--sans);
+            font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 11px; border-radius:20px;}
+.price .name{font-family:var(--sans); font-weight:700; font-size:16.5px;}
+.price .amt{font-family:var(--sans); font-size:38px; font-weight:800; letter-spacing:-.035em; margin:9px 0 2px; line-height:1;}
+.price .per{font-family:var(--sans); font-size:13px; color:var(--mute); margin-bottom:16px;}
+.price ul{flex:1; margin-bottom:20px;}
 .price .btn{text-align:center; width:100%;}
 
-/* faq */
-details{border-bottom:1px solid var(--line); padding:16px 0;}
-details summary{cursor:pointer; font-weight:700; font-family:var(--sans); font-size:17px;
-                list-style:none; display:flex; justify-content:space-between; gap:14px;}
+/* guarantee */
+.guar{border:2px solid var(--acc); border-radius:12px; padding:26px; text-align:center; background:var(--bg3);}
+.guar .n{font-family:var(--sans); font-size:clamp(30px,6vw,42px); font-weight:800; letter-spacing:-.035em; line-height:1; color:var(--acc);}
+.guar .t{font-family:var(--sans); font-size:17px; font-weight:700; margin-top:8px;}
+.guar p{margin:12px 0 0; color:var(--mid); font-size:16px;}
+
+details{border-bottom:1px solid var(--line); padding:15px 0;}
+details summary{cursor:pointer; font-weight:700; font-family:var(--sans); font-size:16.5px; list-style:none; display:flex; justify-content:space-between; gap:13px;}
 details summary::-webkit-details-marker{display:none;}
-details summary::after{content:"+"; color:var(--acc); font-weight:700; flex-shrink:0;}
+details summary::after{content:"+"; color:var(--acc); font-weight:700;}
 details[open] summary::after{content:"–";}
-details .a{padding-top:12px; color:var(--mid);}
+details .a{padding-top:11px; color:var(--mid); font-size:17px;}
 details .a p:last-child{margin-bottom:0;}
 
-footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(--sans);}
-.bar{position:sticky; bottom:0; background:var(--bg); border-top:1px solid var(--line);
-     padding:12px 0; display:none; z-index:10;}
+footer{padding:34px 0 70px; color:var(--mute); font-size:12.5px; line-height:1.55; font-family:var(--sans);}
+footer p{margin:0 0 11px;}
+footer .legal{border-top:1px solid var(--line); padding-top:18px; margin-top:6px;}
+footer a{color:var(--mute); text-decoration:underline;}
+.bar{position:sticky; bottom:0; background:var(--bg); border-top:1px solid var(--line); padding:11px 0; display:none; z-index:10;}
 @media(max-width:620px){
-  .stat .cap{letter-spacing:.07em; font-size:11px;}
-  h1{letter-spacing:-.02em;}
-  .price{padding:22px;}
   .bar{display:block;}
   .bar .wrap{display:flex; align-items:center; gap:12px; justify-content:space-between;}
   .bar .btn{padding:13px 20px; font-size:15px;}
   .bar .p{font-family:var(--sans); font-weight:800; font-size:17px;}
-  section{padding:46px 0;}
+  section{padding:42px 0;}
 }
 </style>
 </head>
 <body>
 
-<!-- ============ HERO ============ -->
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">For online fitness coaches</div>
-    <h1>Book calls with Meta ads. Know exactly what each one costs you.</h1>
+    <h1>The exact strategy we used inside our own business to go from $3k/mo to $48k/mo</h1>
 
-    <div class="stat">
-      <div class="big">$3,000 <span class="ar">&rarr;</span> $48,000</div>
-      <div class="cap">Monthly revenue &middot; four months &middot; my own business</div>
-    </div>
-
-    <p class="lead">A 48-page build guide: the offer, both funnels, every ad account setting, the DM scripts, the follow-up that makes people actually show up. Written down exactly as I run it.</p>
+    <p class="lead">Four months, no new audience and no rebuild. A 48-page build guide with the offer, both funnels, every ad account setting, the DM scripts and the follow-up that makes people actually turn up &mdash; written down exactly as we run it.</p>
 
     <div class="cta">
       <a class="btn" href="YOUR_CHECKOUT_LINK">Get the Engine &mdash; $397</a>
-      <div class="sub">Instant access &middot; 14-day guarantee &middot; no calls required</div>
+      <div class="sub">Instant access &middot; 30-day refund guarantee &middot; no calls required</div>
     </div>
   </div>
 </header>
 
-<!-- ============ STORY ============ -->
+<!-- ============ PROOF ============ -->
 <section>
   <div class="wrap">
-    <h2>Nothing about it was clever</h2>
-    <p>I didn't grow an audience, rebuild a website, or find targeting nobody else knew about.</p>
-    <p>I fixed the offer first. Then I worked out what a booked call was actually allowed to cost me. Then I built the funnel that fit. Then I made sure people turned up to the calls I'd already paid for.</p>
-    <div class="quote">
-      <p><strong>Four things, in that order.</strong> The order is most of it &mdash; I'd spent a long time doing the fourth one first.</p>
+    <h2>What it looks like running</h2>
+    <p class="mute">One account we run. Thirty-one days.</p>
+
+    <div class="figs">
+      <div><div class="v">$19,000</div><div class="l">Ad spend</div></div>
+      <div><div class="v">$72,000</div><div class="l">Cash collected</div></div>
+      <div><div class="v">3.79&times;</div><div class="l">Return on spend</div></div>
+      <div><div class="v">$250</div><div class="l">Per booked call</div></div>
     </div>
-    <p>That's the whole method, and it's what this guide is. Not theory about Meta ads. The settings, the scripts, the messages and the numbers, in the sequence that makes them work.</p>
+
+    <div class="fun">
+      <div class="s"><b>547,000</b><span>Impressions</span></div>
+      <div class="r">1.72%</div>
+      <div class="s"><b>9,420</b><span>Clicks</span></div>
+      <div class="r">2.57%</div>
+      <div class="s"><b>242</b><span>Leads</span></div>
+      <div class="r">31.4%</div>
+      <div class="s"><b>76</b><span>Booked</span></div>
+      <div class="r">72.4%</div>
+      <div class="s"><b>55</b><span>Held</span></div>
+      <div class="r">32.7%</div>
+      <div class="s"><b>18</b><span>Clients</span></div>
+    </div>
+
+    <p class="mute">Every rate between every step &mdash; that's the point. Most coaches can't name one of these numbers for their own business, which is why they can't tell which part is broken.</p>
+
+    <div class="shots">
+      <div class="slot"><b>Screenshot 1</b>Ads Manager &mdash; cost per result and spend</div>
+      <div class="slot"><b>Screenshot 2</b>Booking calendar for the same period</div>
+    </div>
   </div>
 </section>
 
-<!-- ============ PROBLEM ============ -->
+<!-- ============ WHY IT FAILS ============ -->
 <section>
   <div class="wrap">
     <h2>Why ads don't work for most coaches</h2>
-    <p>It's almost never the targeting. It's one of these four, and they compound:</p>
-
-    <h3>Your offer can't afford traffic</h3>
-    <p>A $150 month-to-month offer can afford about <strong>$32</strong> per booked call. Nothing you can buy comes close to $32. No targeting, creative or budget decision rescues it &mdash; the structure has to change first. Most coaches never run this number.</p>
-
-    <h3>Nothing is tracked, so nothing learns</h3>
-    <p>If no conversion carries a value, Meta can't report a return and can't optimise toward revenue. Your account spends for weeks and learns almost nothing. This is a settings problem that takes twenty minutes and almost nobody does it.</p>
-
-    <h3>The funnel doesn't match the budget</h3>
-    <p>Meta needs roughly 50 conversion events a week to optimise. Run a call funnel at $40/day optimising for bookings and it will never leave the learning phase. You'll conclude call funnels don't work. What didn't work was the budget.</p>
-
-    <h3>Half the booked calls never happen</h3>
-    <p>Most coaches run at a 50% show rate and treat it as normal. Going to 75% cuts your cost per <em>held</em> call by a third and costs nothing in ad spend. It's the cheapest money in the entire funnel and it's sitting there untouched.</p>
+    <p>It's almost never the targeting. It's one of four things, and they compound:</p>
+    <ul class="plain">
+      <li><strong>The offer can't afford traffic.</strong> A $150 month-to-month offer can afford about $32 per booked call. Nothing you can buy costs $32.</li>
+      <li><strong>Nothing is tracked, so nothing learns.</strong> If no conversion carries a value, Meta can't optimise toward revenue. Twenty-minute fix that almost nobody does.</li>
+      <li><strong>The funnel doesn't match the budget.</strong> Meta needs ~50 events a week to optimise. Run a call funnel at $40/day and it never leaves the learning phase.</li>
+      <li><strong>Half the booked calls never happen.</strong> Most coaches sit at a 50% show rate. Going to 75% cuts cost per <em>held</em> call by a third, at no extra ad spend.</li>
+    </ul>
   </div>
 </section>
 
@@ -207,22 +207,18 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section>
   <div class="wrap">
     <h2>Both funnels, built separately</h2>
-    <p>Most guides teach one and mention the other in a footnote. You get both, with the real numbers so you can pick before you spend.</p>
-
+    <p>You get both, with the numbers to pick before you spend.</p>
     <div class="tscroll">
     <table>
       <tr><th>&nbsp;</th><th>DM funnel</th><th>Call funnel</th></tr>
-      <tr><td>Cost per booked call</td><td class="num">$30&ndash;80</td><td class="num">$60&ndash;200</td></tr>
-      <tr><td>Show rate</td><td class="num">70&ndash;80%</td><td class="num">45&ndash;65%</td></tr>
+      <tr><td>Cost per booked call</td><td class="num">$30&ndash;80</td><td class="num">$60&ndash;250</td></tr>
+      <tr><td>Show rate</td><td class="num">70&ndash;80%</td><td class="num">45&ndash;75%</td></tr>
       <tr><td>Cost per call held</td><td class="num">$40&ndash;115</td><td class="num">$110&ndash;350</td></tr>
       <tr><td>Minimum daily budget</td><td class="num">$20</td><td class="num">$70&ndash;100</td></tr>
       <tr><td>Your time per booking</td><td class="num">10&ndash;20 min</td><td class="num">0 min</td></tr>
     </table>
     </div>
-
-    <div class="quote">
-      <p><strong>The gap nobody mentions:</strong> DM funnels show up about 20 points better, because the person already spoke to a human. So you compare the two on cost per call <em>held</em>, never booked &mdash; and the guide shows you how to run both at once once they work.</p>
-    </div>
+    <p class="mute">DM funnels show up about 20 points better, because the person already spoke to a human. So you compare on cost per call <em>held</em>, never booked.</p>
   </div>
 </section>
 
@@ -230,25 +226,15 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section>
   <div class="wrap">
     <h2>What's in it</h2>
-    <p class="mute">Sixteen sections, 48 pages. Everything built to be copied, not studied.</p>
-
-    <div class="toc">
-      <div class="row"><div class="n">01</div><div><span class="t">Build the offer</span><span class="d">Eight fill-in parts assembled into one offer statement</span></div></div>
-      <div class="row"><div class="n">02</div><div><span class="t">Test it: your ceiling</span><span class="d">The arithmetic, and an explicit go/no-go before you spend</span></div></div>
-      <div class="row"><div class="n">03</div><div><span class="t">Choose your funnel</span><span class="d">DM or call funnel, on real costs and budgets</span></div></div>
-      <div class="row"><div class="n">04</div><div><span class="t">Ad account setup</span><span class="d">Every setting, field by field</span></div></div>
-      <div class="row"><div class="n">05</div><div><span class="t">Tracking</span><span class="d">Five installs in order, each with the test that proves it</span></div></div>
-      <div class="row"><div class="n">06</div><div><span class="t">Ad scripts</span><span class="d">Six fill-in-the-blank frameworks, plus compliance rewrites</span></div></div>
-      <div class="row"><div class="n">07</div><div><span class="t">Creative</span><span class="d">Shot list, specs, the seven-question testimonial interview</span></div></div>
-      <div class="row"><div class="n">08</div><div><span class="t">DM campaign build</span><span class="d">Exact $20/day settings</span></div></div>
-      <div class="row"><div class="n">09</div><div><span class="t">DM scripts</span><span class="d">First reply to booked call, including every stall</span></div></div>
-      <div class="row"><div class="n">10</div><div><span class="t">Call campaign build</span><span class="d">Budget floor, optimisation event, retargeting</span></div></div>
-      <div class="row"><div class="n">11</div><div><span class="t">The page and the video</span><span class="d">Page order, headline formulas, 7-beat video script, the form</span></div></div>
-      <div class="row"><div class="n">12</div><div><span class="t">Booking page and calendar</span><span class="d">The settings that quietly lose a third of your calls</span></div></div>
-      <div class="row"><div class="n">13</div><div><span class="t">The show-up system</span><span class="d">Seven touches, with the exact copy for each</span></div></div>
-      <div class="row"><div class="n">14</div><div><span class="t">Optimization</span><span class="d">Symptom to fix, scale triggers, kill criteria</span></div></div>
-      <div class="row"><div class="n">15</div><div><span class="t">The weekly scorecard</span><span class="d">Four numbers. An explicit list of what to ignore</span></div></div>
-      <div class="row"><div class="n">16</div><div><span class="t">Troubleshooting</span><span class="d">Twenty things that break, and the fix for each</span></div></div>
+    <p class="mute">Sixteen sections, 48 pages. Built to be copied, not studied.</p>
+    <div class="groups">
+      <div class="g"><div class="n">01–02</div><div><span class="t">Offer &amp; economics</span><span class="d">Build the offer in eight fill-in parts, then prove it can survive paid traffic</span></div></div>
+      <div class="g"><div class="n">03–05</div><div><span class="t">Setup &amp; tracking</span><span class="d">Pick your funnel, configure the account, install tracking that actually reports</span></div></div>
+      <div class="g"><div class="n">06–07</div><div><span class="t">Ads &amp; creative</span><span class="d">Six fill-in ad frameworks, compliance rewrites, shot list, testimonial interview</span></div></div>
+      <div class="g"><div class="n">08–09</div><div><span class="t">The DM funnel</span><span class="d">Exact $20/day settings, and scripts from first reply to booked call</span></div></div>
+      <div class="g"><div class="n">10–11</div><div><span class="t">The call funnel</span><span class="d">Budget floor, retargeting, page structure, 7-beat video script, the form</span></div></div>
+      <div class="g"><div class="n">12–13</div><div><span class="t">Booking &amp; show-up</span><span class="d">Calendar settings, and seven reminder touches with the exact copy</span></div></div>
+      <div class="g"><div class="n">14–16</div><div><span class="t">Running it</span><span class="d">Symptom-to-fix tables, scale and kill rules, weekly scorecard, troubleshooting</span></div></div>
     </div>
   </div>
 </section>
@@ -257,22 +243,18 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section>
   <div class="wrap">
     <h2>Want me in the room for an hour?</h2>
-    <p>The guide is built to work without me. Some people would rather not do it alone &mdash; so you can add an hour.</p>
-
+    
     <div class="card">
       <h3 style="margin-top:0">One hour, one-to-one &mdash; $699</h3>
-      <p>Bring your offer and your ad account. We build it together, live, on the call.</p>
-      <ul class="plain">
-        <li>Your offer and your ceiling, worked out properly, on your real numbers</li>
-        <li>Your ad account opened and configured while you watch</li>
-        <li>Your campaign built live &mdash; you leave with it running</li>
+      <p>Bring your offer and your ad account. We build it together, live.</p>
+      <ul class="plain yes">
+        <li>Your offer and ceiling worked out on your real numbers</li>
+        <li>Your campaign built on the call &mdash; you leave with it running</li>
         <li>Your DM scripts or landing page reviewed line by line</li>
         <li>Recording of the whole call, yours to keep</li>
       </ul>
-      <p class="mute">Strictly limited &mdash; I take a small number of these a month, and when they're gone the option comes off this page.</p>
+      <p class="mute">A small number of these a month. Same price if you add it later.</p>
     </div>
-
-    <p>Add it at checkout, or buy it later at the same price. There's no discount for deciding now and no penalty for deciding later.</p>
   </div>
 </section>
 
@@ -280,7 +262,6 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section id="pricing">
   <div class="wrap">
     <h2>Pick one</h2>
-
     <div class="prices">
       <div class="price">
         <div class="name">The Engine</div>
@@ -288,13 +269,12 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
         <div class="per">One payment &middot; lifetime access</div>
         <ul class="plain yes">
           <li>All 16 sections, 48 pages</li>
-          <li>Both funnels built out in full</li>
+          <li>Both funnels in full</li>
           <li>Every script, setting and template</li>
-          <li>Free updates, forever</li>
+          <li>Free updates forever</li>
         </ul>
         <a class="btn alt" href="YOUR_CHECKOUT_LINK">Get the Engine</a>
       </div>
-
       <div class="price feature">
         <div class="tag">Most direct</div>
         <div class="name">The Engine + an hour with me</div>
@@ -304,47 +284,36 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
           <li>Everything in The Engine</li>
           <li>60 minutes, one-to-one, live</li>
           <li>We build your campaign on the call</li>
-          <li>Offer, ceiling and scripts reviewed</li>
           <li>Recording yours to keep</li>
         </ul>
         <a class="btn" href="YOUR_CHECKOUT_LINK_UPGRADE">Get both</a>
       </div>
     </div>
-
-    <p class="mute" style="margin-top:22px">Payment plan available on the guide: 3 &times; $149. The plan is priced slightly above the one-off because it removes a cash objection, not because it's the better deal.</p>
-  </div>
-</section>
-
-<!-- ============ FIT ============ -->
-<section>
-  <div class="wrap">
-    <h2>Who this is for</h2>
-    <ul class="plain yes">
-      <li>You coach online or in person, and you already have paying clients</li>
-      <li>You charge $300/month or more, or sell packages above $1,200</li>
-      <li>You can put $600 or so into ad spend while you learn what works</li>
-      <li>You'll take the sales calls yourself</li>
-      <li>You want to run your own ads rather than hand them over</li>
-    </ul>
-
-    <h3>And who it isn't</h3>
-    <ul class="plain no">
-      <li>Pre-revenue, with no offer that's sold yet &mdash; ads amplify an offer, they don't create one</li>
-      <li>Charging under $200/month &mdash; the arithmetic in Section 2 rules you out, and I'd rather you knew that now</li>
-      <li>Looking for someone to do it for you &mdash; that's a different conversation</li>
-      <li>Not able to fund ad spend &mdash; a guide with no budget behind it produces nothing</li>
-    </ul>
+    <p class="mute" style="margin-top:20px">Payment plan on the guide: 3 &times; $149.</p>
   </div>
 </section>
 
 <!-- ============ GUARANTEE ============ -->
 <section>
   <div class="wrap">
-    <h2>The guarantee</h2>
-    <div class="quote">
-      <p><strong>Watch the first three sections. If you don't think it's worth it, email me inside 14 days and I'll refund you in full.</strong></p>
+    <div class="guar">
+      <div class="n">30 days</div>
+      <div class="t">Refund guarantee</div>
+      <p>Use it, and if you don't think it was worth it, email me inside 30 days and I'll refund you in full.</p>
     </div>
-    <p>Three sections is about ninety minutes, and it's long enough to know. The condition is there because I'd rather refund someone who looked at it than someone who bought it on impulse and never opened it.</p>
+  </div>
+</section>
+
+<!-- ============ FIT ============ -->
+<section>
+  <div class="wrap">
+    <h2>Who it's for</h2>
+    <ul class="plain yes">
+      <li>You already have paying clients, at $300/month or packages above $1,200</li>
+      <li>You can put around $600 into ad spend while you learn what works</li>
+      <li>You'll take the sales calls yourself, and you want to run your own ads</li>
+    </ul>
+    <p class="mute" style="margin-top:18px"><strong>Not for you</strong> if you're pre-revenue with no offer that's sold yet, charging under $200/month (the arithmetic rules you out, and I'd rather you knew now), or looking for someone to do it for you.</p>
   </div>
 </section>
 
@@ -352,30 +321,14 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section>
   <div class="wrap">
     <h2>Questions</h2>
-
     <details><summary>Do I need to have run ads before?</summary>
-      <div class="a"><p>No. It starts at the account setup screen and names every field. If you've run ads before you'll move faster through sections 4 and 5, and the rest is the same either way.</p></div></details>
-
-    <details><summary>How long does it take to build?</summary>
-      <div class="a"><p>A focused weekend gets you live. Then 90 days of running it before you know your real numbers &mdash; and the guide is honest that the first couple of weeks buy data, not clients.</p></div></details>
-
+      <div class="a"><p>No. It starts at the account setup screen and names every field.</p></div></details>
     <details><summary>What ad budget do I need?</summary>
-      <div class="a"><p>$20/day for the DM funnel. $70&ndash;100/day minimum for the call funnel, for a reason explained in Section 3 &mdash; below that Meta can't optimise and the funnel genuinely won't work. If you've got $20/day, run the DM funnel. It's the better starting point anyway.</p></div></details>
-
+      <div class="a"><p>$20/day for the DM funnel. $70&ndash;100/day minimum for the call funnel &mdash; below that Meta can't optimise and it genuinely won't work. If you've got $20/day, run the DM funnel; it's the better start anyway.</p></div></details>
     <details><summary>Is there coaching or support included?</summary>
-      <div class="a"><p>No, and that's deliberate. It keeps the price at $397 instead of four figures, and it's why so much of the guide is decision trees and troubleshooting rather than lecture &mdash; every place you'd normally need to ask someone, there's an answer in the book. If you'd rather have me there, add the hour.</p></div></details>
-
-    <details><summary>Will this work in my niche?</summary>
-      <div class="a"><p>It's built for coaches selling 1:1 or group coaching to consumers &mdash; fat loss, strength, performance, postnatal, masters, shift workers. If you sell to gyms or other businesses, the arithmetic still holds but the scripts won't fit.</p></div></details>
-
-    <details><summary>What if my offer isn't right yet?</summary>
-      <div class="a"><p>Section 1 is entirely about building it, and Section 2 tells you whether it can survive paid traffic before you spend anything. For a lot of people that's the most valuable part &mdash; it's cheaper to find out now than after $2,000 of spend.</p></div></details>
-
+      <div class="a"><p>No, and that's deliberate &mdash; it's why this is $397 and not four figures. Every place you'd normally need to ask someone, there's a decision tree or a troubleshooting entry instead. If you'd rather have me there, add the hour.</p></div></details>
     <details><summary>How does the $699 hour work?</summary>
-      <div class="a"><p>You book a time, bring your offer and your ad account, and we build it together on the call. You leave with a campaign running and a recording of the whole thing. Add it at checkout or buy it later &mdash; same price either way.</p></div></details>
-
-    <details><summary>PDF or online?</summary>
-      <div class="a"><p>Both. You get the PDF to keep and a web version you can read on anything.</p></div></details>
+      <div class="a"><p>You book a time, bring your offer and ad account, and we build it together. You leave with a campaign running and a recording. Add it at checkout or later &mdash; same price.</p></div></details>
   </div>
 </section>
 
@@ -383,16 +336,22 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
 <section>
   <div class="wrap" style="text-align:center">
     <h2>Know what a booked call costs you</h2>
-    <p class="lead" style="margin-bottom:28px">Most coaches never find out. It's the number everything else depends on.</p>
+    <p class="lead" style="margin-bottom:24px">It's the number everything else depends on, and most coaches never find out.</p>
     <a class="btn" href="YOUR_CHECKOUT_LINK">Get the Engine &mdash; $397</a>
-    <p class="mute" style="margin-top:16px">Instant access &middot; 14-day guarantee &middot; add the hour for $699</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p>Brent Chabassol &middot; The Booked Call Engine</p>
-    <p style="font-size:13px">Results described are my own and are not typical. Nothing here is a guarantee of income &mdash; what you get is the method, the settings and the scripts. What you make with them depends on your offer, your market and your work.</p>
+    <p><strong>Brent Chabassol &middot; The Booked Call Engine</strong></p>
+    <div class="legal">
+      <p><strong>Refund guarantee.</strong> Refunds are available within 30 days of purchase, on request by email, where you have worked through Section 1 (Build the offer) and Section 2 (your ceiling). The condition is there so the guarantee stays available to people actually using the material.</p>
+      <p><strong>The one-to-one hour.</strong> Sold separately at $699. Refundable in full if cancelled 24 or more hours before the booked time. Non-refundable once the call has taken place, as the time cannot be recovered. Where a bundle is refunded after the hour has been delivered, the refund covers the guide only.</p>
+      <p><strong>Earnings disclaimer.</strong> The figures described are my own results and are not typical. This is not a guarantee of income or of any particular result. What you receive is a method, a set of settings and a set of scripts; what you achieve with them depends on your offer, your market, your ad spend and your own work. Advertising costs vary and you are responsible for your own ad budget.</p>
+      <p><strong>Not affiliated with Meta.</strong> This site is not a part of Facebook or Meta Platforms, Inc., and is not endorsed by Meta in any way. FACEBOOK, INSTAGRAM and META are trademarks of Meta Platforms, Inc. This product is not affiliated with, endorsed by or sponsored by Meta.</p>
+      <p><a href="/privacy">Privacy policy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="mailto:YOUR_EMAIL">Contact</a></p>
+      <p>&copy; <span id="yr">2026</span> Brent Chabassol. All rights reserved.</p>
+    </div>
   </div>
 </footer>
 
@@ -402,6 +361,6 @@ footer{padding:40px 0 60px; color:var(--mute); font-size:14px; font-family:var(-
     <a class="btn" href="YOUR_CHECKOUT_LINK">Get the Engine</a>
   </div>
 </div>
-
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 </body>
 </html>
