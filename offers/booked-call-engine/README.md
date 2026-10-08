@@ -170,3 +170,42 @@ together.** They are sold to the same buyer.
    tier yields ~13.5 sales; at 15/month it yields one. The Meta account has
    had no data since 27 August 2026, so first sales come from the existing
    audience, not cold traffic.
+
+## The sales page
+
+`sales.html` — self-contained, responsive, light/dark. Upload anywhere.
+
+Structure: hero with the $3,000 → $48,000 result, the four-things story, why
+ads fail for coaches (the four compounding causes), the both-funnels
+comparison table, the 16-section contents, the $699 hour, a two-card pricing
+block, fit/anti-fit lists, guarantee, eight FAQs, closing CTA, and a sticky
+mobile buy bar.
+
+### The $699 upgrade
+
+An hour, one-to-one, sold as an add-on rather than bundled support:
+
+| | |
+|---|---|
+| The Engine | $397 |
+| The Engine + the hour | $1,096 |
+| The hour bought later | $699 — same price, no penalty |
+
+It is deliberately *not* delivery. The guide still works alone; this is a
+premium add-on at a rate that pays properly for the time, and scarcity is
+stated honestly ("a small number a month") rather than faked. Anyone who buys
+it is also the strongest agency candidate on the list, which is the real
+reason it earns its place in the funnel.
+
+At ~8% take from course buyers this is roughly one hour a month at the
+volumes modelled — time reintroduced, but bounded and well paid.
+
+### Before it goes live
+
+1. Replace `YOUR_CHECKOUT_LINK` (4 places) and `YOUR_CHECKOUT_LINK_UPGRADE`
+   (1 place).
+2. Decide whether the hour is an order bump at checkout or a second product.
+3. The footer carries an earnings disclaimer. Keep it.
+4. **Do not reproduce the income figures in Meta ad creative.** They are fine
+   on an owned page; in ad creative they are restricted and routinely
+   rejected.
