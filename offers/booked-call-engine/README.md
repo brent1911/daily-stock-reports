@@ -1,11 +1,66 @@
 # The Booked Call Engine — $397
 
-The implementation product for online fitness coaches: a 32-page, fully
-self-paced build guide that takes a coach from no paid traffic to a live
-Meta ads funnel booking calls, with a known cost per call.
+The implementation product for online fitness coaches: a 48-page, fully
+self-paced build guide that takes a coach from building the offer itself
+through to a live Meta ads funnel booking calls at a known cost.
 
 **Format:** `index.html` (self-contained, hostable as-is) and
-`Booked-Call-Engine.pdf` (32 pages, generated from the same file).
+`Booked-Call-Engine.pdf` (48 pages, generated from the same file).
+
+## It opens on the offer, not the ads
+
+Section 1 builds the offer from scratch — eight parts, each fill-in-the-blank,
+assembled into one sentence that becomes the ad hook, the landing page headline
+and the opening line of every sales call. Only then does Section 2 test it with
+the ceiling arithmetic.
+
+That order is deliberate and it is the product's main structural argument: ads
+amplify an offer, they never create one. The mechanism component (part 3) is
+the piece that carries the most weight — it is the difference between selling
+"coaching", priced by the hour, and selling a named method, priced by outcome.
+Most coaches already have one and have never written it down.
+
+The guarantee is framed as an economic lever rather than a reassurance: moving
+close rate from 30% to 40% raises every ceiling by about a third, because it
+cuts booked calls per signed client from 4.8 to 3.6. Same effect as making
+traffic a third cheaper, achieved by changing a sentence.
+
+## Both funnels, built separately
+
+The product covers the two routes a coach actually uses, as parallel tracks
+rather than one path with a footnote:
+
+- **Path A — DM funnel.** Ad → Messenger → qualify in conversation → book.
+  Sections 7–8.
+- **Path B — call funnel.** Ad → landing page → form → calendar. Sections 9–10.
+
+Section 2 makes the reader choose before spending, on real numbers:
+
+| | Path A — DM | Path B — call funnel |
+|---|---|---|
+| Cost per booked call | $30–80 | $60–200 |
+| Show rate | 70–80% | 45–65% |
+| **Cost per call held** | **$40–115** | **$110–350** |
+| Minimum daily budget | $20 | $70–100 |
+| Coach time per booking | 10–20 min | 0 min |
+
+Two things in there are the product's sharpest claims and both are load-bearing:
+
+**The show-rate gap.** Path A shows up roughly 20 points better because the
+person already spoke to a human. So the guide insists on comparing the paths
+on cost per call *held*, never booked — on the booked number Path A looks
+twice as good, on the held number it is often three times as good.
+
+**Path B's budget floor.** Meta needs ~50 conversion events a week to optimise.
+At $60–200 per booking, optimising for Schedule needs $430+/day. The guide
+therefore tells anyone under $150/day to optimise for the form submit (Lead)
+instead, and states plainly that a call funnel under $70/day will not learn.
+This is the most common reason a coach concludes "call funnels don't work."
+
+The recommended sequence is DM first, then build the landing page *from the DM
+transcripts* — the objection answered nineteen times is the headline. Coaches
+who start with Path B typically spend $1,500 learning what forty DM
+conversations would have taught them for $300.
 
 ## Where it sits
 
@@ -59,29 +114,33 @@ Known residual risks, to watch rather than assume away:
 
 | § | Section | What it gives the buyer |
 |---|---|---|
-| 1 | Start here: your ceiling | The calculation, the five structures, an explicit go/no-go at $150 |
-| 2 | Ad account setup | Every setting as a table; the 2FA/backup-card failure mode |
-| 3 | Tracking | Five installs in order, each with the test that proves it |
-| 4 | Ad scripts | Six fill-in-the-blank frameworks + compliance rewrites |
-| 5 | Creative | Shot list, specs, the seven-question testimonial interview |
-| 6 | Campaign build | Exact launch settings at $20/day, field by field |
-| 7 | DM scripts | First reply to booked call, including every stall branch |
-| 8 | Booking page and calendar | The settings that quietly lose a third of calls |
-| 9 | The show-up system | Seven touches with the copy at each |
-| 10 | Optimization | Symptom→cause→fix, scale triggers, kill criteria |
-| 11 | The weekly scorecard | Four numbers; an explicit ignore list |
-| 12 | Troubleshooting | Twenty failures with fixes |
+| 1 | Build the offer | Eight fill-in parts, assembled into one offer statement |
+| 2 | Test the offer: your ceiling | The arithmetic, and an explicit go/no-go at $150 |
+| 3 | Choose your funnel | DM vs call funnel on real costs, budgets and show rates |
+| 4 | Ad account setup | Every setting as a table; the 2FA/backup-card failure mode |
+| 5 | Tracking | Five installs in order, each with the test that proves it |
+| 6 | Ad scripts | Six fill-in-the-blank frameworks + compliance rewrites |
+| 7 | Creative | Shot list, specs, the seven-question testimonial interview |
+| 8 | Path A — DM campaign | Exact $20/day settings, the keyword-per-ad attribution trick |
+| 9 | Path A — DM scripts | First reply to booked call, including every stall branch |
+| 10 | Path B — call campaign | Budget floor, optimisation event, retargeting from day one |
+| 11 | Path B — page and video | Page order, headline formulas, 7-beat video script, the form |
+| 12 | Booking page and calendar | The settings that quietly lose a third of calls |
+| 13 | The show-up system | Seven touches with the copy at each |
+| 14 | Optimization | Symptom→cause→fix for both paths, scale triggers, kill criteria |
+| 15 | The weekly scorecard | Four numbers per path; an explicit ignore list |
+| 16 | Troubleshooting | Twenty failures with fixes |
 
 ## The two sections that carry the product
 
-**Section 9, the show-up system.** The cheapest money in the funnel. Moving
+**Section 13, the show-up system.** The cheapest money in the funnel. Moving
 50% → 75% show rate cuts cost per *held* call by a third at zero extra ad
 spend. The lever is the 60-second SMS asking for a one-character reply — a
 buyer who has typed "Y" to a person shows up materially more often. The
 day-before message deliberately offers a reschedule, trading a few moved
 calls for far fewer silent no-shows.
 
-**Section 3, attaching a value to the booking event.** Sending `value:` with
+**Section 5, attaching a value to the booking event.** Sending `value:` with
 the Schedule event (client value × show% × close%) is what makes a return
 figure exist at all. Almost nobody does it, which is why so many coach
 accounts report nothing in that column.
