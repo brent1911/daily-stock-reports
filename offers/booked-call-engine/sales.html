@@ -119,6 +119,12 @@ footer a{color:var(--mute);}
 .bar .p{font-family:var(--sans); font-weight:800; font-size:18px; white-space:nowrap;}
 .bar .p s{font-weight:400; font-size:14px; color:var(--mute); margin-right:5px;}
 
+
+.seg{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:11px;padding:5px;margin:0 0 16px}
+.seg button{flex:1;font-family:var(--sans);font-size:15px;font-weight:700;color:var(--mute);
+  background:none;border:0;border-radius:8px;padding:13px 8px;cursor:pointer;min-height:48px}
+.seg button.on{background:var(--acc);color:#fff}
 #leadForm{margin-top:16px}
 #leadForm input{width:100%;font-family:var(--sans);font-size:16px;padding:15px 16px;
   border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);
@@ -227,33 +233,24 @@ footer a{color:var(--mute);}
 <section id="pricing">
   <div class="wrap">
     <h2>Get it</h2>
+
+    <div class="seg" role="tablist" aria-label="Choose what you're buying">
+      <button class="on" role="tab" aria-selected="true"  data-plan="guide">Guide</button>
+      <button          role="tab" aria-selected="false" data-plan="bundle">Guide + hour</button>
+    </div>
+
     <div class="price feature">
-      <div class="name">The Booked Call Engine</div>
-      <div class="amt">$197</div>
-      <div class="was">Launch price &mdash; going to $397</div>
-      <ul class="plain yes">
+      <div class="name" id="p_name">The Booked Call Engine</div>
+      <div class="amt"  id="p_amt">$197</div>
+      <div class="was"  id="p_was">Launch price &mdash; going to $397</div>
+      <ul class="plain yes" id="p_list">
         <li>All 16 sections, 48 pages</li>
         <li>Both funnels in full</li>
         <li>Every script, setting and template</li>
         <li>Instant access, free updates forever</li>
       </ul>
-      <a class="btn" href="https://whop.com/sales-ascent/the-booked-call-engine/">Get it &mdash; $197</a>
-      <p class="sub" style="margin-top:11px">Apple Pay, Google Pay or card</p>
-    </div>
-
-    <div class="price">
-      <div class="name">Engine + an hour with me</div>
-      <div class="amt">$896</div>
-      <div class="was">or 2 payments of $448</div>
-      <ul class="plain yes">
-        <li>Everything above, plus 60 minutes one-to-one</li>
-        <li>Your offer and ceiling on your real numbers</li>
-        <li>Your campaign built live &mdash; you leave with it running</li>
-        <li>Scripts or landing page reviewed line by line</li>
-        <li>Recording yours to keep</li>
-      </ul>
-      <a class="btn alt" href="https://whop.com/sales-ascent/the-booked-call-engine-1-1-call/">Get both</a>
-      <p class="mute" style="margin:12px 0 0">A few of these a month. You can also add the hour later from inside your account, same price.</p>
+      <a class="btn" id="p_btn" href="https://whop.com/sales-ascent/the-booked-call-engine/">Get it &mdash; $197</a>
+      <p class="sub" id="p_note" style="margin-top:11px">Apple Pay, Google Pay or card</p>
     </div>
   </div>
 </section>
@@ -387,6 +384,74 @@ var GHL_WEBHOOK = "YOUR_GHL_INBOUND_WEBHOOK_URL";
       say("Something went wrong. Email me instead and I'll send it over.", "err");
     });
   });
+})();
+</script>
+<script>
+(function () {
+  var GUIDE  = "https://whop.com/sales-ascent/the-booked-call-engine/",
+      BUNDLE = "https://whop.com/sales-ascent/the-booked-call-engine-1-1-call/";
+
+  var PLANS = {
+    guide: {
+      name: "The Booked Call Engine", amt: "$197",
+      was: "Launch price &mdash; going to $397",
+      btn: "Get it &mdash; $197", url: GUIDE,
+      note: "Apple Pay, Google Pay or card",
+      list: ["All 16 sections, 48 pages", "Both funnels in full",
+             "Every script, setting and template", "Instant access, free updates forever"]
+    },
+    bundle: {
+      name: "Engine + an hour with me", amt: "$896",
+      was: "or 2 payments of $448",
+      btn: "Get both &mdash; $896", url: BUNDLE,
+      note: "A few of these a month",
+      list: ["Everything in the guide", "60 minutes, one-to-one, live",
+             "We build your campaign on the call", "Scripts or landing page reviewed",
+             "Recording yours to keep"]
+    }
+  };
+
+  // carry ad attribution through to checkout
+  function withParams(u) {
+    var q = location.search.replace(/^\?/, "");
+    return q ? u + (u.indexOf("?") > -1 ? "&" : "?") + q : u;
+  }
+
+  var el = {
+    name: document.getElementById("p_name"), amt: document.getElementById("p_amt"),
+    was:  document.getElementById("p_was"),  btn: document.getElementById("p_btn"),
+    note: document.getElementById("p_note"), list: document.getElementById("p_list")
+  };
+  if (!el.btn) return;
+
+  function show(key) {
+    var p = PLANS[key];
+    el.name.textContent = p.name;
+    el.amt.textContent  = p.amt;
+    el.was.innerHTML    = p.was;
+    el.btn.innerHTML    = p.btn;
+    el.btn.href         = withParams(p.url);
+    el.note.textContent = p.note;
+    el.list.innerHTML   = p.list.map(function (i) { return "<li>" + i + "</li>"; }).join("");
+  }
+
+  var tabs = document.querySelectorAll(".seg button");
+  Array.prototype.forEach.call(tabs, function (t) {
+    t.addEventListener("click", function () {
+      Array.prototype.forEach.call(tabs, function (x) {
+        x.classList.remove("on"); x.setAttribute("aria-selected", "false");
+      });
+      t.classList.add("on"); t.setAttribute("aria-selected", "true");
+      show(t.dataset.plan);
+    });
+  });
+
+  // every other checkout link keeps attribution too
+  Array.prototype.forEach.call(document.querySelectorAll('a[href*="whop.com"]'), function (a) {
+    if (a.id !== "p_btn") a.href = withParams(a.getAttribute("href"));
+  });
+
+  show("guide");
 })();
 </script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
