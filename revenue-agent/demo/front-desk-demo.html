@@ -1,0 +1,660 @@
+<title>Iron House Front Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:      #F3F2EE;
+    --surface:     #FCFCFB;
+    --surface-sunk:#EDECE7;
+    --ink:         #16191C;
+    --ink-2:       #4A5158;
+    --muted:       #767C83;
+    --line:        #E1DFD9;
+    --line-strong: #CFCCC4;
+    --money:       #0E7A55;
+    --money-soft:  #E2F0E9;
+    --working:     #B47216;
+    --working-soft:#F7ECD8;
+    --shadow:      0 1px 2px rgba(22,25,28,.05), 0 8px 20px -12px rgba(22,25,28,.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #111316;
+      --surface:     #191C20;
+      --surface-sunk:#22262B;
+      --ink:         #ECEAE5;
+      --ink-2:       #B3B8BE;
+      --muted:       #868C93;
+      --line:        #2A2F35;
+      --line-strong: #3A4047;
+      --money:       #41C79A;
+      --money-soft:  #17342A;
+      --working:     #E0A046;
+      --working-soft:#332816;
+      --shadow:      0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #111316;
+    --surface:     #191C20;
+    --surface-sunk:#22262B;
+    --ink:         #ECEAE5;
+    --ink-2:       #B3B8BE;
+    --muted:       #868C93;
+    --line:        #2A2F35;
+    --line-strong: #3A4047;
+    --money:       #41C79A;
+    --money-soft:  #17342A;
+    --working:     #E0A046;
+    --working-soft:#332816;
+    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 28px 64px;
+  }
+
+  h1, h2, .fig {
+    font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 26px;
+  }
+  .masthead h1 { font-size: 19px; font-weight: 600; letter-spacing: -.01em; }
+  .masthead .sep { color: var(--line-strong); }
+
+  .sample-tag {
+    margin-left: auto;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px dashed var(--line-strong);
+    border-radius: 3px;
+    padding: 3px 7px;
+    white-space: nowrap;
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 26px 24px 24px;
+    margin-bottom: 14px;
+  }
+  .hero .fig {
+    font-size: clamp(46px, 13vw, 68px);
+    font-weight: 700;
+    letter-spacing: -.035em;
+    line-height: 1;
+    color: var(--money);
+    font-variant-numeric: tabular-nums;
+    margin: 10px 0 8px;
+  }
+  .hero .caption { color: var(--ink-2); font-size: 14px; max-width: 46ch; }
+
+  .ledger {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .ledger div { display: flex; flex-direction: column; gap: 2px; }
+  .ledger .v {
+    font-family: Archivo, sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+  .ledger .k { font-size: 12.5px; color: var(--muted); }
+
+  /* ---------- section ---------- */
+  section { margin-top: 34px; }
+  section > h2 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.005em;
+    margin-bottom: 4px;
+  }
+  section > .lede {
+    color: var(--ink-2);
+    font-size: 13.5px;
+    margin: 0 0 16px;
+    max-width: 54ch;
+  }
+
+  /* ---------- breakdown bars ---------- */
+  .bars { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+  .bar-label { font-size: 13.5px; color: var(--ink); }
+  .bar-val {
+    font-family: Archivo, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    align-self: end;
+  }
+  .bar-track {
+    grid-column: 1 / -1;
+    height: 9px;
+    background: var(--surface-sunk);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--money);
+    border-radius: 0 4px 4px 0;
+    transform-origin: left center;
+    animation: grow .75s cubic-bezier(.22,.8,.3,1) both;
+  }
+  .bar-sub {
+    grid-column: 1 / -1;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; }
+  }
+
+  /* ---------- scenario player ---------- */
+  .player {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .player-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .who { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .who .n { font-size: 14px; font-weight: 600; }
+  .who .m {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--surface-sunk);
+    border: 1px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    font-family: Archivo, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+
+  button.run {
+    margin-left: auto;
+    flex: none;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--surface);
+    background: var(--ink);
+    border: 0;
+    border-radius: 6px;
+    padding: 9px 15px;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  button.run:hover { opacity: .85; }
+  button.run:focus-visible { outline: 2px solid var(--money); outline-offset: 2px; }
+  button.run[disabled] { opacity: .4; cursor: default; }
+
+  .feed {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 268px;
+    background: var(--surface-sunk);
+  }
+  .feed .idle {
+    margin: auto;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 30ch;
+  }
+
+  .ev { display: flex; gap: 10px; align-items: flex-start; }
+  .ev .t {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 3px;
+    flex: none;
+    width: 42px;
+    font-variant-numeric: tabular-nums;
+  }
+  .ev .body { flex: 1; min-width: 0; }
+
+  .sys {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 7px 10px;
+  }
+  .sys b { font-weight: 600; color: var(--ink); }
+
+  .msg {
+    font-size: 13.5px;
+    border-radius: 12px;
+    padding: 9px 12px;
+    max-width: 88%;
+    width: fit-content;
+    line-height: 1.45;
+  }
+  .msg.out { background: var(--ink); color: var(--surface); border-bottom-left-radius: 3px; }
+  .msg.in  {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    margin-left: auto;
+    border-bottom-right-radius: 3px;
+  }
+  .msg-who {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .msg-who.r { text-align: right; }
+
+  .verdict {
+    border-radius: 8px;
+    padding: 13px 14px;
+    background: var(--money-soft);
+    border: 1px solid var(--money);
+  }
+  .verdict .vh {
+    font-family: Archivo, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--money);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 5px;
+  }
+  .verdict ul {
+    margin: 0;
+    padding-left: 17px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .verdict li { margin-top: 2px; }
+
+  .fade { animation: fade .34s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fade { animation: none; }
+  }
+
+  .status-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border-top: 1px solid var(--line);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 100px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+  .pill.working { background: var(--working-soft); color: var(--working); border-color: var(--working); }
+  .pill.won     { background: var(--money-soft);   color: var(--money);   border-color: var(--money); }
+  .pill.none    { background: var(--surface-sunk); color: var(--muted);   border-color: var(--line-strong); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+
+  /* ---------- not counted ---------- */
+  .skipped {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .skip-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .skip-row:last-child { border-bottom: 0; }
+  .skip-row .nm { font-size: 13.5px; font-weight: 500; }
+  .skip-row .amt {
+    font-family: Archivo, sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+  }
+  .skip-row .rsn {
+    grid-column: 1 / -1;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .skip-total {
+    padding: 13px 16px;
+    background: var(--surface-sunk);
+    font-size: 13px;
+    color: var(--ink-2);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .skip-total b { font-family: Archivo, sans-serif; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 58ch;
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <h1>Iron House Fitness</h1>
+    <span class="sep">/</span>
+    <span class="eyebrow">Downtown &middot; 384 members</span>
+    <span class="sample-tag">Sample data</span>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Recovered in September, so far</div>
+    <p class="fig">$4,470</p>
+    <p class="caption">
+      Money that was leaving and came back &mdash; declined cards chased, members
+      caught before they cancelled, and after-hours callers booked in.
+    </p>
+    <div class="ledger">
+      <div><span class="v">$400</span><span class="k">Your monthly cost</span></div>
+      <div><span class="v">11.2&times;</span><span class="k">Return this month</span></div>
+      <div><span class="v">83</span><span class="k">Calls answered</span></div>
+      <div><span class="v">0</span><span class="k">Calls missed</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Where it came from</h2>
+    <p class="lede">Four ways money leaks out of a gym. Each one worked automatically.</p>
+    <div class="bars">
+
+      <div class="bar-row">
+        <span class="bar-label">Declined cards chased</span>
+        <span class="bar-val">$2,384</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;animation-delay:.05s"></div></div>
+        <span class="bar-sub">16 of 23 recovered &middot; $149/mo plan</span>
+      </div>
+
+      <div class="bar-row">
+        <span class="bar-label">New leads &amp; missed calls</span>
+        <span class="bar-val">$894</span>
+        <div class="bar-track"><div class="bar-fill" style="width:37.5%;animation-delay:.15s"></div></div>
+        <span class="bar-sub">34 enquiries &middot; 12 trials attended &middot; 6 joined</span>
+      </div>
+
+      <div class="bar-row">
+        <span class="bar-label">Members caught drifting</span>
+        <span class="bar-val">$745</span>
+        <div class="bar-track"><div class="bar-fill" style="width:31.3%;animation-delay:.25s"></div></div>
+        <span class="bar-sub">11 worked &middot; 5 came back and paid</span>
+      </div>
+
+      <div class="bar-row">
+        <span class="bar-label">Cancellations saved</span>
+        <span class="bar-val">$447</span>
+        <div class="bar-track"><div class="bar-fill" style="width:18.8%;animation-delay:.35s"></div></div>
+        <span class="bar-sub">7 asked to cancel &middot; 3 stayed</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Watch one happen</h2>
+    <p class="lede">
+      A real sequence, sped up. Dana&rsquo;s card expired at 6am on a Tuesday &mdash;
+      nobody at the gym was awake.
+    </p>
+
+    <div class="player">
+      <div class="player-head">
+        <div class="avatar" aria-hidden="true">DR</div>
+        <div class="who">
+          <span class="n">Dana Reyes</span>
+          <span class="m">Unlimited Monthly &middot; $149</span>
+        </div>
+        <button class="run" id="runBtn" type="button">Run it</button>
+      </div>
+
+      <div class="feed" id="feed" aria-live="polite">
+        <p class="idle" id="idle">Press <b>Run it</b> to watch the agent work a declined card.</p>
+      </div>
+
+      <div class="status-strip">
+        <span>Case status</span>
+        <span class="pill none" id="statusPill"><span class="dot"></span>Not opened</span>
+        <span id="atRisk" style="margin-left:auto">&mdash;</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What we chose not to count</h2>
+    <p class="lede">
+      Money that came back this month that we are <em>not</em> billing you for,
+      because we cannot prove we caused it.
+    </p>
+
+    <div class="skipped">
+      <div class="skip-row">
+        <span class="nm">Marcus Webb</span>
+        <span class="amt">$149</span>
+        <span class="rsn">Paid 19 days after we texted &mdash; outside our 14-day window.</span>
+      </div>
+      <div class="skip-row">
+        <span class="nm">Priya Nair</span>
+        <span class="amt">$149</span>
+        <span class="rsn">Your coach Sam texted her first. That one&rsquo;s his.</span>
+      </div>
+      <div class="skip-row">
+        <span class="nm">Tomas Oliveira</span>
+        <span class="amt">$149</span>
+        <span class="rsn">Booked a trial through us, didn&rsquo;t show up, joined later on his own.</span>
+      </div>
+      <div class="skip-row">
+        <span class="nm">6 others</span>
+        <span class="amt">$894</span>
+        <span class="rsn">Same three reasons. Full list in your monthly statement.</span>
+      </div>
+      <div class="skip-total">
+        <span>Recovered, not billed</span>
+        <span><b>$1,341</b></span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Sample data for demonstration &mdash; Iron House Fitness is not a real gym.
+    Figures model a 384-member studio on a $149 monthly plan.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var feed    = document.getElementById('feed');
+  var idle    = document.getElementById('idle');
+  var btn     = document.getElementById('runBtn');
+  var pill    = document.getElementById('statusPill');
+  var atRisk  = document.getElementById('atRisk');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timers  = [];
+
+  var steps = [
+    { at: 0,    t: '06:14', kind: 'sys',
+      html: 'Stripe: monthly payment <b>failed</b> &mdash; $149.00, card expired.' },
+    { at: 500,  t: '06:14', kind: 'sys',
+      html: 'Case opened. <b>$149.00</b> at risk.',
+      status: ['working', 'Working'], risk: '$149.00 at risk' },
+    { at: 1350, t: '06:15', kind: 'out', who: 'Front desk',
+      html: 'Hi Dana &mdash; Iron House here. Your card on file expired so this month didn&rsquo;t go through. You can update it in 30 seconds: ironhouse.gym/pay' },
+    { at: 2600, t: '09:02', kind: 'in',  who: 'Dana',
+      html: 'oh whoops &mdash; just updated it, thanks!' },
+    { at: 3500, t: '09:03', kind: 'out', who: 'Front desk',
+      html: 'Got it, you&rsquo;re all set. See you Thursday.' },
+    { at: 4400, t: '11:20', kind: 'sys',
+      html: 'Stripe: retry <b>succeeded</b> &mdash; $149.00 cleared.',
+      status: ['won', 'Recovered'], risk: '$149.00 recovered' },
+    { at: 5200, t: '', kind: 'verdict' }
+  ];
+
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls)  n.className = cls;
+    if (html) n.innerHTML = html;
+    return n;
+  }
+
+  function render(s) {
+    var row = el('div', 'ev' + (reduced ? '' : ' fade'));
+    row.appendChild(el('span', 't', s.t));
+    var body = el('div', 'body');
+
+    if (s.kind === 'sys') {
+      body.appendChild(el('div', 'sys', s.html));
+    } else if (s.kind === 'verdict') {
+      var v = el('div', 'verdict');
+      v.appendChild(el('div', 'vh', '&#10003; Counted as recovered &mdash; $149.00'));
+      var ul = el('ul');
+      ul.appendChild(el('li', '', 'We contacted her first &mdash; no staff member had.'));
+      ul.appendChild(el('li', '', 'She paid 5 hours later, well inside the 14-day window.'));
+      ul.appendChild(el('li', '', 'Total time a human spent on this: none.'));
+      v.appendChild(ul);
+      body.appendChild(v);
+    } else {
+      var w = el('div', 'msg-who' + (s.kind === 'in' ? ' r' : ''), s.who);
+      body.appendChild(w);
+      body.appendChild(el('div', 'msg ' + s.kind, s.html));
+    }
+
+    row.appendChild(body);
+    feed.appendChild(row);
+
+    if (s.status) {
+      pill.className = 'pill ' + s.status[0];
+      pill.innerHTML = '<span class="dot"></span>' + s.status[1];
+    }
+    if (s.risk) atRisk.textContent = s.risk;
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    feed.innerHTML = '';
+    pill.className = 'pill none';
+    pill.innerHTML = '<span class="dot"></span>Not opened';
+    atRisk.innerHTML = '&mdash;';
+  }
+
+  btn.addEventListener('click', function () {
+    reset();
+    if (idle && idle.parentNode) idle.remove();
+    btn.disabled = true;
+    btn.textContent = 'Running';
+
+    var last = 0;
+    steps.forEach(function (s) {
+      var d = reduced ? 0 : s.at;
+      last = Math.max(last, d);
+      timers.push(setTimeout(function () { render(s); }, d));
+    });
+
+    timers.push(setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = 'Run again';
+    }, last + 150));
+  });
+})();
+</script>
