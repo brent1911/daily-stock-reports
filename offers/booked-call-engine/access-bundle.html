@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>You're in — The Booked Call Engine</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#101217" media="(prefers-color-scheme:dark)">
+<style>
+:root{
+  --ink:#16181d; --mid:#434a59; --mute:#6b7280; --line:#e4e7ec;
+  --bg:#fff; --bg2:#f6f7f9; --bg3:#fffaf4; --acc:#b3400a; --ok:#15803d;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Charter","Bitstream Charter",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#eceef2; --mid:#b9bfca; --mute:#8b93a3; --line:#2a2f3a;
+  --bg:#101217; --bg2:#171a21; --bg3:#1d1813; --acc:#ff8a4c; --ok:#4ade80;}}
+*{box-sizing:border-box;}
+html,body{overflow-x:hidden; max-width:100%;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--serif);
+     font-size:17.5px; line-height:1.58; -webkit-font-smoothing:antialiased;}
+h1,h2,h3,.btn,.ui,.eyebrow{font-family:var(--sans);}
+.wrap{max-width:620px; margin:0 auto; padding:0 20px;}
+header{padding:38px 0 30px; border-bottom:1px solid var(--line);}
+.eyebrow{font-size:11.5px; letter-spacing:.17em; text-transform:uppercase; color:var(--acc); font-weight:700;}
+h1{font-size:clamp(28px,7vw,36px); line-height:1.12; letter-spacing:-.028em; margin:12px 0 0; font-weight:800;}
+h2{font-size:20px; letter-spacing:-.015em; margin:0 0 6px; font-weight:800;}
+p{margin:0 0 13px;}
+.lead{color:var(--mid);}
+.mute{color:var(--mute); font-size:14.5px;}
+
+.step{padding:30px 0; border-bottom:1px solid var(--line);}
+.n{display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
+   border-radius:50%; background:var(--acc); color:#fff; font-family:var(--sans);
+   font-weight:800; font-size:14px; margin-bottom:12px;}
+.btn{display:block; width:100%; background:var(--acc); color:#fff; text-decoration:none;
+     font-weight:700; font-size:17px; padding:16px 22px; border-radius:9px; text-align:center;
+     min-height:54px; margin:14px 0 0;}
+.btn.alt{background:transparent; color:var(--ink); border:1.5px solid var(--line);}
+.note{background:var(--bg3); border-left:3px solid var(--acc); padding:14px 16px;
+      border-radius:0 8px 8px 0; margin:14px 0 0; font-size:16px;}
+.note p:last-child{margin-bottom:0;}
+ul{margin:10px 0 0; padding-left:0; list-style:none;}
+li{position:relative; padding-left:24px; margin-bottom:9px;}
+li::before{content:"□"; position:absolute; left:0; color:var(--acc); font-weight:700;
+           font-family:var(--sans); font-size:17px;}
+.cal{margin:16px 0 0; border:1px solid var(--line); border-radius:11px; overflow:hidden;
+     background:var(--bg2);}
+.calendly-inline-widget{min-width:280px; height:680px;}
+@media(max-width:620px){.calendly-inline-widget{height:900px;}}
+footer{padding:28px 0 46px; color:var(--mute); font-size:13.5px; font-family:var(--sans);}
+footer a{color:var(--mute);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Payment received</div>
+    <h1>You're in. Two things to do now.</h1>
+    <p class="lead" style="margin-top:12px">Book your call first — slots go quickly and you want the right one. Then download the guide.</p>
+  </div>
+</header>
+
+<div class="step">
+  <div class="wrap">
+    <div class="n">1</div>
+    <h2>Book your hour</h2>
+    <p>Sixty minutes, one-to-one. We'll work on your offer and ceiling, then build your campaign live — you'll leave the call with it running.</p>
+
+    <div class="note">
+      <p><strong>Book it 5–7 days out, not tomorrow.</strong> Work through Section 1 (Build the offer) and Section 2 (your ceiling) first. If you turn up having done those, we spend the hour building instead of catching up — it's worth roughly double.</p>
+    </div>
+
+    <div class="cal">
+      <div class="calendly-inline-widget" data-url="https://calendly.com/brentlongevityphysiquegroup/30min"></div>
+    </div>
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+    <p class="mute" style="margin-top:12px">Calendar not loading? Book here instead: <a href="https://calendly.com/brentlongevityphysiquegroup/30min">https://calendly.com/brentlongevityphysiquegroup/30min</a></p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="wrap">
+    <div class="n">2</div>
+    <h2>Get the guide</h2>
+    <p>48 pages, 16 sections. Both funnels, every setting, all the scripts.</p>
+    <a class="btn" href="YOUR_PDF_LINK">Download the PDF</a>
+    <a class="btn alt" href="YOUR_WEB_GUIDE_LINK">Read it in your browser</a>
+  </div>
+</div>
+
+<div class="step">
+  <div class="wrap">
+    <div class="n">3</div>
+    <h2>Before we talk</h2>
+    <p>Have these ready and the hour goes a lot further:</p>
+    <ul>
+      <li>Section 1 filled in — your offer statement, in one sentence</li>
+      <li>Section 2 filled in — your ceiling, with your real show and close rates</li>
+      <li>Access to your Meta ad account, logged in on the device you'll use</li>
+      <li>What one client pays you in total, and roughly how long they stay</li>
+      <li>Any ads you've run before, winners or losers — both are useful</li>
+    </ul>
+    <div class="note">
+      <p>Don't have real show and close numbers yet? Fine — bring your best honest guess and we'll work from that. Guessing is normal at the start; pretending to know isn't.</p>
+    </div>
+  </div>
+</div>
+
+<div class="step" style="border-bottom:0">
+  <div class="wrap">
+    <h2>Start here while you wait</h2>
+    <p>Open Section 1 and build your offer. It's the part everything else depends on, and it's the thing most coaches skip straight past on their way to the ad settings.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Questions before the call? <a href="mailto:YOUR_EMAIL">YOUR_EMAIL</a></p>
+    <p>Brent Chabassol · The Booked Call Engine</p>
+  </div>
+</footer>
+
+</body>
+</html>
