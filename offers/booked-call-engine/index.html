@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Booked Call Engine</title>
+<style>
+  @page { size: letter; margin: 18mm 16mm 16mm 16mm; }
+  * { box-sizing: border-box; }
+  :root{
+    --ink:#16181d; --mid:#4a5263; --mute:#6b7280;
+    --acc:#b3400a; --acc2:#0d5c63;
+    --rule:#e2e6ec; --bg:#f6f7f9; --bgw:#fffaf4;
+  }
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Bitstream Charter","Liberation Serif",Georgia,serif;
+    font-size:10.4pt; line-height:1.5; color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.ui{font-family:"Liberation Sans",Helvetica,Arial,sans-serif;}
+
+  /* ---------- cover ---------- */
+  .cover{height:252mm; display:flex; flex-direction:column; justify-content:space-between; page-break-after:always;}
+  .cover .top{border-top:3px solid var(--ink); padding-top:5mm;}
+  .eyebrow{font-size:8.2pt; letter-spacing:.22em; text-transform:uppercase; color:var(--acc); font-weight:700;}
+  .cover h1{font-size:46pt; line-height:1.02; margin:14mm 0 0; letter-spacing:-.025em; font-weight:700;}
+  .cover .sub{font-size:14pt; color:var(--mid); margin-top:7mm; max-width:132mm; line-height:1.42;}
+  .cover .promise{margin-top:10mm; padding:6mm 7mm; background:var(--bg); border-left:3px solid var(--acc);}
+  .cover .promise p{margin:0; font-size:11pt; line-height:1.5;}
+  .cover .foot{border-top:1px solid var(--rule); padding-top:4mm; font-size:9pt; color:var(--mute);
+               display:flex; justify-content:space-between; font-family:"Liberation Sans",sans-serif;}
+
+  /* ---------- toc ---------- */
+  .toc{page-break-after:always;}
+  .toc h2{font-size:15pt; margin:0 0 6mm; padding-bottom:3mm; border-bottom:2px solid var(--ink);}
+  .toc ol{list-style:none; margin:0; padding:0; counter-reset:t;}
+  .toc li{counter-increment:t; display:flex; gap:5mm; padding:2.4mm 0; border-bottom:1px solid var(--rule);
+          font-family:"Liberation Sans",sans-serif; font-size:10pt;}
+  .toc li::before{content:counter(t,decimal-leading-zero); color:var(--acc); font-weight:700; font-size:9pt; min-width:9mm;}
+  .toc .tl{font-weight:600;}
+  .toc .td{color:var(--mute); font-size:9pt; display:block; margin-top:.8mm; font-weight:400;}
+
+  /* ---------- sections ---------- */
+  section{page-break-before:always;}
+  .sechead{border-top:3px solid var(--ink); padding-top:4mm; margin-bottom:6mm;}
+  .secnum{font-family:"Liberation Sans",sans-serif; font-size:8.2pt; letter-spacing:.2em;
+          text-transform:uppercase; color:var(--acc); font-weight:700;}
+  h2{font-size:21pt; line-height:1.12; margin:2.5mm 0 0; letter-spacing:-.018em;}
+  .lede{font-size:11pt; color:var(--mid); margin:3.5mm 0 0; line-height:1.48;}
+  h3{font-size:12pt; margin:7mm 0 2.5mm; letter-spacing:-.01em;}
+  h4{font-size:10pt; margin:5mm 0 2mm; text-transform:uppercase; letter-spacing:.09em; color:var(--acc2);}
+  p{margin:0 0 3mm;}
+  strong{font-weight:700;}
+  ul,ol{margin:0 0 3mm; padding-left:5.5mm;}
+  li{margin-bottom:1.6mm;}
+  .tight li{margin-bottom:.8mm;}
+
+  /* ---------- tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:3mm 0 4mm; font-size:9.2pt;
+        font-family:"Liberation Sans",sans-serif; page-break-inside:avoid;}
+  th{text-align:left; background:var(--ink); color:#fff; padding:2.2mm 2.6mm; font-size:8.4pt;
+     text-transform:uppercase; letter-spacing:.07em; font-weight:700;}
+  td{padding:2.2mm 2.6mm; border-bottom:1px solid var(--rule); vertical-align:top;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  td.n{font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .set td:first-child{font-weight:600; width:38%;}
+  .set td:last-child{font-family:"DejaVu Sans Mono",monospace; font-size:8.6pt;}
+
+  /* ---------- scripts ---------- */
+  .script{background:var(--bg); border:1px solid var(--rule); border-left:3px solid var(--acc2);
+          padding:4mm 4.5mm; margin:3mm 0 4mm; page-break-inside:avoid;}
+  .script .lbl{font-family:"Liberation Sans",sans-serif; font-size:7.8pt; text-transform:uppercase;
+               letter-spacing:.14em; color:var(--acc2); font-weight:700; margin-bottom:2.5mm;}
+  .script p{margin:0 0 2.2mm; font-size:9.8pt; line-height:1.52;}
+  .script p:last-child{margin-bottom:0;}
+  .fill{background:#ffe9d4; border-bottom:1px solid var(--acc); padding:0 .6mm;
+        font-family:"DejaVu Sans Mono",monospace; font-size:8.6pt; font-weight:700; color:#8a2f06;}
+  .eg{font-size:9pt; color:var(--mute); font-style:italic; margin-top:2.5mm; padding-top:2.5mm;
+      border-top:1px dashed #cfd5de;}
+
+  /* ---------- callouts ---------- */
+  .box{background:var(--bgw); border:1px solid #f0d8bd; border-left:3px solid var(--acc);
+       padding:4mm 4.5mm; margin:4mm 0; page-break-inside:avoid;}
+  .box .lbl{font-family:"Liberation Sans",sans-serif; font-size:7.8pt; text-transform:uppercase;
+            letter-spacing:.14em; color:var(--acc); font-weight:700; margin-bottom:2mm;}
+  .box p{margin:0 0 2mm;} .box p:last-child{margin:0;}
+  .rule{background:#eef4f4; border-left:3px solid var(--acc2); padding:3mm 4mm; margin:3mm 0;
+        font-family:"Liberation Sans",sans-serif; font-size:9.4pt;}
+  .rule b{color:var(--acc2);}
+
+  /* ---------- checklist ---------- */
+  .chk{list-style:none; padding:0; margin:3mm 0 4mm; font-family:"Liberation Sans",sans-serif; font-size:9.4pt;}
+  .chk li{display:flex; gap:3mm; padding:1.8mm 0; border-bottom:1px solid var(--rule); margin:0;}
+  .chk li::before{content:""; display:inline-block; min-width:3.6mm; height:3.6mm; margin-top:.6mm;
+                  border:1.4px solid var(--mid); border-radius:.6mm;}
+
+  /* ---------- misc ---------- */
+  .kpi{display:flex; gap:3mm; margin:4mm 0; page-break-inside:avoid;}
+  .kpi div{flex:1; background:var(--bg); border-top:2.5px solid var(--acc2); padding:3.5mm;}
+  .kpi .k{font-family:"Liberation Sans",sans-serif; font-size:17pt; font-weight:700; letter-spacing:-.02em;}
+  .kpi .v{font-family:"Liberation Sans",sans-serif; font-size:8pt; color:var(--mute);
+          text-transform:uppercase; letter-spacing:.08em; margin-top:1mm;}
+  .formula{background:var(--ink); color:#fff; padding:5mm; margin:4mm 0; text-align:center;
+           font-family:"Liberation Sans",sans-serif; font-size:13pt; font-weight:700; letter-spacing:-.01em;}
+  .nb{font-size:9.2pt; color:var(--mute); font-style:italic;}
+  .end{border-top:3px solid var(--ink); margin-top:8mm; padding-top:4mm;
+       font-family:"Liberation Sans",sans-serif; font-size:9pt; color:var(--mute);}
+  h3,h4{page-break-after:avoid;}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="top">
+    <div class="eyebrow">Paid acquisition for coaches</div>
+    <h1>The Booked<br>Call Engine</h1>
+    <div class="sub">Build a Meta ads funnel that puts qualified calls on your calendar — and know exactly what each one costs you.</div>
+    <div class="promise">
+      <p><strong>Everything in this guide is built to be copied, not studied.</strong> Fill in the brackets, match the settings, send the messages. If a section doesn't give you something usable in the next ten minutes, it has failed.</p>
+    </div>
+  </div>
+  <div class="foot">
+    <span>Work sections 1&ndash;3 first. They are the ones everybody skips.</span>
+    <span>v1.0</span>
+  </div>
+</div>
+
+<!-- ============ TOC ============ -->
+<div class="toc">
+  <h2>What's inside</h2>
+  <ol>
+    <li><span><span class="tl">Start here: your ceiling</span><span class="td">The 20-minute calculation that decides whether to spend at all</span></span></li>
+    <li><span><span class="tl">Ad account setup</span><span class="td">Every setting, field by field</span></span></li>
+    <li><span><span class="tl">Tracking</span><span class="td">Five things, in order, each with the test that proves it</span></span></li>
+    <li><span><span class="tl">Ad scripts</span><span class="td">Six fill-in-the-blank frameworks</span></span></li>
+    <li><span><span class="tl">Creative</span><span class="td">What to film, the specs, the testimonial interview</span></span></li>
+    <li><span><span class="tl">Campaign build</span><span class="td">Exact launch settings at $20/day</span></span></li>
+    <li><span><span class="tl">DM scripts</span><span class="td">First reply to booked call, every branch</span></span></li>
+    <li><span><span class="tl">Booking page and calendar</span><span class="td">The settings that decide whether a lead becomes a call</span></span></li>
+    <li><span><span class="tl">The show-up system</span><span class="td">Seven touches, with the copy. Where most money is lost</span></span></li>
+    <li><span><span class="tl">Optimization</span><span class="td">If-then rules, scale triggers, kill criteria</span></span></li>
+    <li><span><span class="tl">The weekly scorecard</span><span class="td">Four numbers. Everything else is noise</span></span></li>
+    <li><span><span class="tl">Troubleshooting</span><span class="td">Twenty things that break, and the fix for each</span></span></li>
+  </ol>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section One</div>
+    <h2>Start here: your ceiling</h2>
+    <p class="lede">Before you spend a dollar, work out the most you can afford to pay for one booked call. If you skip this, everything downstream is guesswork.</p>
+  </div>
+
+  <div class="formula">Ceiling = Show&nbsp;% &times; Close&nbsp;% &times; (Client value &divide; 3)</div>
+
+  <p>The divide-by-three is the rule that keeps you solvent: a client has to be worth at least three times what you pay to acquire them. Anything tighter and one refund or one bad month wipes the account.</p>
+
+  <h3>Fill this in</h3>
+  <table class="set">
+    <tr><td>A &mdash; What one client pays you in total</td><td>$________</td></tr>
+    <tr><td>B &mdash; Of people who book, how many show up</td><td>_____ %</td></tr>
+    <tr><td>C &mdash; Of people who show, how many buy</td><td>_____ %</td></tr>
+    <tr><td>D &mdash; Your ceiling: B &times; C &times; (A &divide; 3)</td><td>$________</td></tr>
+  </table>
+
+  <p class="nb">Don't have B and C? Use 70% and 30%. Those are competent-operator numbers, not best case. If your real numbers come in lower, your ceiling drops with them.</p>
+
+  <h3>What different offers can afford</h3>
+  <table>
+    <tr><th>Offer structure</th><th>Client value</th><th>Ceiling</th><th>Verdict</th></tr>
+    <tr><td>Month-to-month, $150</td><td class="n">$450</td><td class="n">$32</td><td>Cannot run ads at all</td></tr>
+    <tr><td>Minimum commitment, $600 &times; 4</td><td class="n">$2,400</td><td class="n">$168</td><td>Workable</td></tr>
+    <tr><td>Recurring renewal, $2,000 / 6mo</td><td class="n">$3,000</td><td class="n">$210</td><td>Workable</td></tr>
+    <tr><td>Deposit hybrid, $2,500 + $300 &times; 6</td><td class="n">$4,300</td><td class="n">$301</td><td>Strong</td></tr>
+    <tr><td>Paid in full, $6,000</td><td class="n">$6,000</td><td class="n">$420</td><td>Strong</td></tr>
+  </table>
+  <p class="nb">That first row is the one to sit with. A $150 month-to-month offer can afford <strong>$32</strong> per booked call. Nothing you could buy comes close, which is why no amount of ad skill rescues it &mdash; the structure has to change first.</p>
+  <p class="nb">All five assume 70% show and 30% close. Change those and every number moves.</p>
+
+  <div class="box">
+    <div class="lbl">The go / no-go</div>
+    <p><strong>If your ceiling is under $150, stop. Do not run ads yet.</strong></p>
+    <p>$150 is roughly the cheapest a booked call realistically gets in this market, with a little headroom. Below it you are blocked against even the best traffic you could buy, and no targeting, creative or budget decision rescues that.</p>
+    <p><strong>Fix the offer instead.</strong> Raise the price, extend the commitment, or add an upfront payment. Then recalculate. This is not a delay — it is the only move that works.</p>
+  </div>
+
+  <h3>If you need to raise your ceiling</h3>
+  <p>Four levers, in the order they are easiest to move:</p>
+  <ol class="tight">
+    <li><strong>Add an upfront payment.</strong> $1,500 down then monthly beats pure monthly on day-one cash and on retention.</li>
+    <li><strong>Extend the minimum term.</strong> Four months instead of month-to-month. Body composition results take 12&ndash;16 weeks; a one-month offer promises something it can't deliver.</li>
+    <li><strong>Raise the price.</strong> The fastest lever and the one most coaches avoid. A 20% increase moves your ceiling 20%.</li>
+    <li><strong>Fix show rate before close rate.</strong> Easier to move, and Section 9 is entirely about it.</li>
+  </ol>
+  <p class="nb">Don't model retention past 12 months. You can't forecast it honestly, and building a budget on it is how accounts go broke slowly.</p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Two</div>
+    <h2>Ad account setup</h2>
+    <p class="lede">Forty minutes of admin that prevents the two most expensive failures: a restricted account, and an account that never learns.</p>
+  </div>
+
+  <h3>Business Manager</h3>
+  <table class="set">
+    <tr><td>Business portfolio</td><td>One, under your own name or business</td></tr>
+    <tr><td>Two-factor auth</td><td>Required on every admin account</td></tr>
+    <tr><td>Admins</td><td>Two people minimum</td></tr>
+    <tr><td>Ad account name</td><td>Business name &mdash; Acquisition</td></tr>
+    <tr><td>Time zone</td><td>Your own. Cannot change later</td></tr>
+    <tr><td>Currency</td><td>Your own. Cannot change later</td></tr>
+    <tr><td>Payment methods</td><td>Two. A declined card pauses everything</td></tr>
+    <tr><td>Spending limit</td><td>Leave unset</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">Do this before anything else</div>
+    <p>Turn on two-factor authentication and add a second admin and a backup card. A locked account with one admin and one declined card is the single most common way a coach loses a working funnel for three weeks.</p>
+  </div>
+
+  <h3>Assets to connect</h3>
+  <table class="set">
+    <tr><td>Facebook page</td><td>Published, profile photo, 3+ posts</td></tr>
+    <tr><td>Instagram account</td><td>Connected in Business settings</td></tr>
+    <tr><td>Domain</td><td>Verified via DNS TXT record</td></tr>
+    <tr><td>Pixel / dataset</td><td>One, named after the business</td></tr>
+    <tr><td>Attribution setting</td><td>7-day click, 1-day view</td></tr>
+  </table>
+  <p>Verify your domain even if you think you don't need to. Without it you cannot prioritise your own conversion events, and iOS traffic reports badly.</p>
+
+  <h3>A page that doesn't get you rejected</h3>
+  <ul class="tight">
+    <li>Real profile and cover photo, not a logo on white</li>
+    <li>At least three posts, none of them ads</li>
+    <li>Contact details and a website link filled in</li>
+    <li>No before/after body images in the page's recent posts &mdash; they trip health policy review</li>
+  </ul>
+
+  <div class="rule"><b>Policy rule:</b> never use before/after body photos, never imply weight-loss amounts, never address someone's body directly. "Lose 30lbs" and "tired of being overweight?" both get rejected. Section 4 writes around this.</div>
+
+  <ul class="chk">
+    <li>Two-factor on, second admin added</li>
+    <li>Two payment methods on file</li>
+    <li>Domain verified by DNS</li>
+    <li>Page and Instagram connected</li>
+    <li>Attribution set to 7-day click</li>
+  </ul>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Three</div>
+    <h2>Tracking</h2>
+    <p class="lede">Do this before you write a single ad. An account that learns from day one is worth more than a prettier ad, and an account that was never instrumented can never tell you what a call costs.</p>
+  </div>
+
+  <p>Five things, in this order. Each has a test. Don't move on until the test passes.</p>
+
+  <table>
+    <tr><th>#</th><th>Install</th><th>The test that proves it</th></tr>
+    <tr><td class="n">1</td><td>Pixel on every page</td><td>Meta Pixel Helper shows it firing on your offer page</td></tr>
+    <tr><td class="n">2</td><td>Domain verified</td><td>Green tick in Business settings &rarr; Brand safety</td></tr>
+    <tr><td class="n">3</td><td>Lead or Schedule event on booking confirmation</td><td>Book a test call yourself. Event appears in Events Manager within 20 minutes</td></tr>
+    <tr><td class="n">4</td><td>Conversions API</td><td>Event shows <em>Server</em> as well as <em>Browser</em> in Events Manager</td></tr>
+    <tr><td class="n">5</td><td>Event prioritised</td><td>Your booking event sits at position 1 in Aggregated Event Measurement</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">Why the Conversions API is not optional</div>
+    <p>Browser-only tracking loses a meaningful share of conversions to ad blockers, privacy settings and iOS. Those conversions still happen — Meta just never learns from them, so it keeps optimising on partial data.</p>
+    <p>Most booking tools (GoHighLevel, Calendly, Hubspot) have a native Meta CAPI integration. Turn it on. It is a settings toggle, not a development project.</p>
+  </div>
+
+  <h3>Attach a value to the booking</h3>
+  <p>Send your booking event with a value, not bare. Use <strong>client value &times; show&nbsp;% &times; close&nbsp;%</strong> — the expected revenue of one booked call.</p>
+  <div class="script">
+    <div class="lbl">Worked example</div>
+    <p>$2,400 client value &times; 0.70 show &times; 0.30 close = <strong>$504</strong> per booked call.</p>
+    <p>Send <span class="fill">value: 504</span> and <span class="fill">currency: USD</span> with every Schedule event.</p>
+  </div>
+  <p>This is what lets Meta report a return figure at all, and it is why most coaches' accounts show nothing in that column. It takes two minutes and almost nobody does it.</p>
+
+  <h3>The test transaction</h3>
+  <ol class="tight">
+    <li>Open your offer page in a private window</li>
+    <li>Book a call using a real email and phone</li>
+    <li>Open Events Manager &rarr; Test events</li>
+    <li>Confirm the event lands, carries a value, and shows both Browser and Server</li>
+    <li>Cancel the test booking</li>
+  </ol>
+  <div class="rule"><b>Do not skip this.</b> Watching one event land end to end is the only proof that any of the above actually works. Assuming it works is how coaches spend $2,000 before discovering nothing was recorded.</div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Four</div>
+    <h2>Ad scripts</h2>
+    <p class="lede">Six frameworks. Replace the bracketed parts and you have a running ad. Build at least eight before you launch — one ad is a guess, eight is a test.</p>
+  </div>
+
+  <div class="rule"><b>Before you write:</b> the first two seconds carry everything. Never open with "Hey guys" or your own name. Open with the reader's situation.</div>
+
+  <h3>1. The specific result</h3>
+  <p>Your strongest ad, every time. Works because it is a claim about a named person, not about the reader's body.</p>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p><span class="fill">[FIRST NAME]</span> is a <span class="fill">[AGE]</span>-year-old <span class="fill">[JOB]</span> with <span class="fill">[CONSTRAINT — two kids, 60-hour weeks, shift work]</span>.</p>
+    <p>Twelve weeks ago she couldn't <span class="fill">[SPECIFIC THING SHE COULDN'T DO]</span>.</p>
+    <p>Last week she <span class="fill">[SPECIFIC THING SHE DID]</span>.</p>
+    <p>She trains <span class="fill">[NUMBER]</span> times a week for <span class="fill">[MINUTES]</span> minutes. No <span class="fill">[THING THEY FEAR — meal prep Sundays, 5am starts, giving up wine]</span>.</p>
+    <p>I coach <span class="fill">[WHO YOU WORK WITH]</span> in <span class="fill">[CITY / ONLINE]</span>. If you want the same, send me the word <span class="fill">[KEYWORD]</span> and I'll show you what her plan looked like.</p>
+    <div class="eg">Sarah is a 41-year-old nurse with two kids and rotating night shifts. Twelve weeks ago she couldn't get through a shift without three coffees and a crash at 3pm. Last week she ran her first 5k. She trains three times a week for 40 minutes. No 5am starts, no giving up wine. Send me the word ENERGY and I'll show you her plan.</div>
+  </div>
+
+  <h3>2. Problem, agitate, solve</h3>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p>You're <span class="fill">[DOING THE RIGHT THING]</span> and still <span class="fill">[NOT GETTING THE RESULT]</span>.</p>
+    <p>So you try harder. <span class="fill">[THING THEY ESCALATE TO]</span>. Then <span class="fill">[NEXT THING]</span>. Three weeks later you're <span class="fill">[WHERE THEY END UP]</span> and quietly wondering if it's just you.</p>
+    <p>It isn't. It's that <span class="fill">[THE ACTUAL MECHANISM THEY'RE MISSING]</span>.</p>
+    <p>I've walked <span class="fill">[NUMBER]</span> <span class="fill">[WHO]</span> through fixing exactly that. Send <span class="fill">[KEYWORD]</span> and I'll tell you where to start.</p>
+    <div class="eg">You're in the gym five days a week and the scale hasn't moved since February. So you add cardio. Then you cut carbs. Three weeks later you're exhausted, eating 1,200 calories, and quietly wondering if it's just you. It isn't. It's that you've been under-eating protein badly enough that you're losing muscle, not fat.</div>
+  </div>
+
+  <h3>3. Myth bust</h3>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p><span class="fill">[COMMON ADVICE]</span> is why <span class="fill">[WHO]</span> stay stuck.</p>
+    <p>Here's what actually happens: <span class="fill">[THE MECHANISM, IN ONE SENTENCE]</span>.</p>
+    <p>What works instead is <span class="fill">[YOUR APPROACH, IN ONE SENTENCE]</span> — and it takes <span class="fill">[LESS TIME / LESS RESTRICTION]</span> than what you're doing now.</p>
+    <p>Send <span class="fill">[KEYWORD]</span> if you want the detail.</p>
+    <div class="eg">"Eat less, move more" is why busy professionals stay stuck. Here's what actually happens: you cut 800 calories, your body cuts your daily movement by about the same, and you stall at a lower intake than you started with. What works instead is eating more while training in a way that makes your body want to keep the muscle.</div>
+  </div>
+
+  <h3>4. The callout</h3>
+  <p>Cheap conversations, loose qualification. Good for volume, pair it with tight DM screening.</p>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p>This is for you if:</p>
+    <p>&bull; You're <span class="fill">[SITUATION ONE]</span><br>
+       &bull; You've tried <span class="fill">[FAILED APPROACH]</span> and it didn't hold<br>
+       &bull; You have <span class="fill">[REALISTIC TIME]</span> a week, not <span class="fill">[UNREALISTIC TIME]</span><br>
+       &bull; You want <span class="fill">[OUTCOME]</span> without <span class="fill">[THE THING THEY WON'T DO]</span></p>
+    <p>If that's three out of four, send me <span class="fill">[KEYWORD]</span>.</p>
+    <p class="nb">It isn't for you if you're after <span class="fill">[WHAT YOU DON'T DO]</span>.</p>
+  </div>
+
+  <h3>5. The objection pre-handle</h3>
+  <p>Run this as your second ad to anyone who engaged and didn't convert.</p>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p>"<span class="fill">[THEIR EXACT OBJECTION, IN THEIR WORDS]</span>"</p>
+    <p>I hear it most weeks. It's fair, and here's the honest answer: <span class="fill">[THE ANSWER, WITHOUT SELLING]</span>.</p>
+    <p><span class="fill">[CLIENT NAME]</span> said the same thing before starting. <span class="fill">[WHAT HAPPENED]</span>.</p>
+    <p>Still unsure? Send <span class="fill">[KEYWORD]</span> and ask me directly. I'll tell you if it's not a fit.</p>
+    <div class="eg">"I don't have time to meal prep." I hear it most weeks. It's fair, and here's the honest answer: none of my clients meal prep. We build your plan around what you already eat. Marcus said the same thing before starting — he eats out four nights a week and he's down two trouser sizes.</div>
+  </div>
+
+  <h3>6. Direct offer</h3>
+  <p>Your best performer with warm audiences and retargeting. Weakest cold.</p>
+  <div class="script">
+    <div class="lbl">Script</div>
+    <p>I'm taking on <span class="fill">[NUMBER]</span> new <span class="fill">[WHO]</span> this month.</p>
+    <p>You get <span class="fill">[DELIVERABLE ONE]</span>, <span class="fill">[DELIVERABLE TWO]</span>, and <span class="fill">[DELIVERABLE THREE]</span>.</p>
+    <p>It's for people who <span class="fill">[QUALIFIER]</span>. It's not for people who <span class="fill">[DISQUALIFIER]</span>.</p>
+    <p>Send <span class="fill">[KEYWORD]</span> and I'll send you the details and what it costs.</p>
+  </div>
+
+  <div class="box">
+    <div class="lbl">Compliance rewrites that still convert</div>
+    <table style="margin:2mm 0 0;">
+      <tr><th>Gets rejected</th><th>Write this instead</th></tr>
+      <tr><td>Lose 30lbs in 12 weeks</td><td>What 12 weeks looked like for Sarah</td></tr>
+      <tr><td>Tired of being overweight?</td><td>Tired of starting over every January?</td></tr>
+      <tr><td>Before and after photo</td><td>Client on camera saying what changed</td></tr>
+      <tr><td>Transform your body</td><td>Train in a way that holds up around a real job</td></tr>
+      <tr><td>Are you struggling with your weight?</td><td>Most plans assume you have two spare hours a day</td></tr>
+    </table>
+    <p style="margin-top:2.5mm;">The pattern: talk about <em>your work and your clients</em>, never about the reader's body. Meta's health policy objects to implied personal attributes, not to fitness.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Five</div>
+    <h2>Creative</h2>
+    <p class="lede">You need ten assets to launch. Filmed on a phone, in one afternoon.</p>
+  </div>
+
+  <h3>Specs</h3>
+  <table class="set">
+    <tr><td>Aspect ratio</td><td>9:16 vertical</td></tr>
+    <tr><td>Resolution</td><td>1080 &times; 1920</td></tr>
+    <tr><td>Length</td><td>15&ndash;45 seconds</td></tr>
+    <tr><td>Captions</td><td>Burned in, always</td></tr>
+    <tr><td>Hook</td><td>First words out, no intro</td></tr>
+    <tr><td>Audio</td><td>Phone mic is fine indoors, close up</td></tr>
+    <tr><td>Framing</td><td>Eyes at upper third, head not centred</td></tr>
+  </table>
+  <div class="rule"><b>Burn the captions in.</b> Most of your audience watches on mute. An uncaptioned ad is an ad nobody hears.</div>
+
+  <h3>The shot list</h3>
+  <table>
+    <tr><th>Asset</th><th>Count</th><th>What it is</th></tr>
+    <tr><td>Client testimonial</td><td class="n">2</td><td>A real client on camera, interviewed</td></tr>
+    <tr><td>Talking head</td><td class="n">3</td><td>You, straight to camera, one script each</td></tr>
+    <tr><td>Hook variants</td><td class="n">3</td><td>Same talking head, three different openings</td></tr>
+    <tr><td>Static with text</td><td class="n">2</td><td>One claim on a plain background</td></tr>
+  </table>
+  <p class="nb">Three hook variants on one body is the cheapest test you will ever run. The hook does most of the work.</p>
+
+  <h3>The testimonial interview</h3>
+  <p>Ask these seven, in order. Don't script their answers; the unpolished version converts better. Twenty minutes per client, cut to 45 seconds.</p>
+  <div class="script">
+    <div class="lbl">Ask exactly this</div>
+    <p>1. What was going on for you before we started?</p>
+    <p>2. What had you already tried?</p>
+    <p>3. What made you finally reach out?</p>
+    <p>4. What were you worried about before you said yes?</p>
+    <p>5. What's different now — something specific, not a number?</p>
+    <p>6. What surprised you?</p>
+    <p>7. What would you say to someone sitting where you were?</p>
+  </div>
+  <div class="box">
+    <div class="lbl">The two that matter</div>
+    <p>Questions 4 and 5. Question 4 gives you your objection-handling ad in the client's own words. Question 5 gives you the specific, non-numeric result that passes policy review — "I can get through a shift without crashing" rather than "I lost 18lbs."</p>
+    <p>Lead the cut with their answer to 4 or 5. Never with "I was so sceptical but..."</p>
+  </div>
+
+  <h3>Three talking-head hooks to film</h3>
+  <div class="script">
+    <div class="lbl">Film all three, same outfit, same spot</div>
+    <p><strong>A.</strong> "If you're <span class="fill">[DOING THE RIGHT THING]</span> and nothing's moving, it's almost always one of three things."</p>
+    <p><strong>B.</strong> "<span class="fill">[CLIENT NAME]</span> trains three times a week for forty minutes. Here's what we changed."</p>
+    <p><strong>C.</strong> "The advice to <span class="fill">[COMMON ADVICE]</span> is why <span class="fill">[WHO]</span> stay stuck. Here's what actually happens."</p>
+  </div>
+  <p class="nb">Rough beats polished. An ad that looks like a post outperforms an ad that looks like an ad, and version one filmed today beats version two filmed never.</p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Six</div>
+    <h2>Campaign build</h2>
+    <p class="lede">One campaign, one ad set, four ads, $20 a day. Exact settings below. Small on purpose &mdash; you are buying information before you buy clients.</p>
+  </div>
+
+  <h3>Campaign level</h3>
+  <table class="set">
+    <tr><td>Objective</td><td>Engagement</td></tr>
+    <tr><td>Conversion location</td><td>Messaging apps</td></tr>
+    <tr><td>Campaign budget optimisation</td><td>Off</td></tr>
+    <tr><td>Special ad category</td><td>None</td></tr>
+    <tr><td>A/B test</td><td>Off</td></tr>
+    <tr><td>Campaign name</td><td>Cold &mdash; DM &mdash; <span class="fill">[MONTH]</span></td></tr>
+  </table>
+  <p class="nb">Messaging ads let people start a conversation in one tap, which is why they produce cheap conversations. Section 7 is how you turn those into calls. If you would rather send traffic straight to a booking page, use objective <strong>Leads</strong> with conversion location <strong>Website</strong> and optimise for your Schedule event — everything else below stays the same.</p>
+
+  <h3>Ad set level</h3>
+  <table class="set">
+    <tr><td>Daily budget</td><td>$20.00</td></tr>
+    <tr><td>Optimisation event</td><td>Conversations</td></tr>
+    <tr><td>Messaging apps</td><td>Messenger + Instagram Direct</td></tr>
+    <tr><td>Schedule</td><td>Run continuously</td></tr>
+    <tr><td>Location</td><td><span class="fill">[CITY + 25mi]</span> or whole country if online</td></tr>
+    <tr><td>Age</td><td><span class="fill">[YOUR RANGE, e.g. 28-55]</span></td></tr>
+    <tr><td>Gender</td><td>Your client base, honestly</td></tr>
+    <tr><td>Detailed targeting</td><td>Empty</td></tr>
+    <tr><td>Advantage detailed targeting</td><td>On</td></tr>
+    <tr><td>Advantage+ placements</td><td>On</td></tr>
+    <tr><td>Audience size shown</td><td>500,000 &ndash; 3,000,000</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">Leave the interests empty</div>
+    <p>Hand-picked interests were how this worked in 2018. Meta's targeting now reads your creative and finds the audience faster than you can describe it, and interest stacks mostly shrink your pool and raise your costs.</p>
+    <p>Your creative is your targeting. An ad that opens "if you're a nurse on rotating shifts" finds nurses on rotating shifts.</p>
+  </div>
+
+  <h3>Ad level</h3>
+  <table class="set">
+    <tr><td>Number of ads</td><td>4, all in the one ad set</td></tr>
+    <tr><td>Format</td><td>Single image or video</td></tr>
+    <tr><td>Primary text</td><td>One script from Section 4</td></tr>
+    <tr><td>Call to action</td><td>Send message</td></tr>
+    <tr><td>Message template</td><td>Custom &mdash; see Section 7</td></tr>
+    <tr><td>Advantage+ creative</td><td>Off while testing</td></tr>
+  </table>
+  <p>Four ads, four different scripts, same ad set. Meta will push spend to the winner within a few days. Turning Advantage+ creative off while testing matters — you want to know which <em>script</em> won, not which auto-crop won.</p>
+
+  <h3>The one audience to add in week two</h3>
+  <p>Upload your existing client list as a Custom Audience, then build a 1% Lookalike from it. Your buyers are the only first-party signal you own, and a lookalike off thirty real clients beats any interest stack you could assemble.</p>
+
+  <ul class="chk">
+    <li>Tracking verified (Section 3) before launch</li>
+    <li>Four ads live in one ad set</li>
+    <li>Detailed targeting left empty</li>
+    <li>$20/day, running continuously</li>
+    <li>DM auto-reply live and tested (Section 7)</li>
+    <li>Calendar open and tested (Section 8)</li>
+    <li>Reminder sequence armed (Section 9)</li>
+  </ul>
+
+  <div class="rule"><b>Then leave it alone for 72 hours.</b> Every edit restarts the learning phase and throws away what the account just learned. The urge to fix it on day one is the single most expensive instinct in paid media.</div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Seven</div>
+    <h2>DM scripts</h2>
+    <p class="lede">From their first message to a booked call. One question at a time, never a wall of text, and no price until you have earned the right to give it.</p>
+  </div>
+
+  <div class="rule"><b>The rule that beats every script:</b> reply within five minutes. Conversion roughly halves after the first hour. If you cannot answer inside five minutes during your stated hours, you need an auto-reply holding the slot.</div>
+
+  <h3>Step 1 &mdash; The auto-reply</h3>
+  <p>Fires the second they send your keyword. Buys you time without feeling like a bot.</p>
+  <div class="script">
+    <div class="lbl">Send immediately</div>
+    <p>Hey <span class="fill">[FIRST NAME]</span> — thanks for reaching out 👋</p>
+    <p>Quick one so I point you at the right thing: what's the main thing you're trying to sort out right now?</p>
+  </div>
+  <p class="nb">One question. Open-ended. No link, no pitch, no "I'll get back to you." You are starting a conversation, not acknowledging a ticket.</p>
+
+  <h3>Step 2 &mdash; Qualify in three questions</h3>
+  <p>One message at a time. Wait for each answer. Three questions, then you decide.</p>
+  <div class="script">
+    <div class="lbl">Question one &mdash; the situation</div>
+    <p>Got it. How long's that been going on?</p>
+  </div>
+  <div class="script">
+    <div class="lbl">Question two &mdash; what they've tried</div>
+    <p>And what have you tried so far for it?</p>
+  </div>
+  <div class="script">
+    <div class="lbl">Question three &mdash; the constraint</div>
+    <p>Makes sense. Realistically, how many days a week could you train — and roughly how long per session?</p>
+  </div>
+  <div class="box">
+    <div class="lbl">What you're listening for</div>
+    <p><strong>Qualified:</strong> a specific problem, a real attempt to fix it, and three or more realistic days a week.</p>
+    <p><strong>Not qualified:</strong> "just browsing", no timeline, under two days a week, or looking for a free plan. Be warm and close it out — see the exit script below.</p>
+  </div>
+
+  <h3>Step 3 &mdash; The transition</h3>
+  <p>The move everyone fumbles. Ask permission, then offer a specific time. Never "here's my link."</p>
+  <div class="script">
+    <div class="lbl">The ask</div>
+    <p>Okay — based on what you've said I think this is fixable, and it's probably not what you'd expect.</p>
+    <p>Easier to walk you through it than type it. I've got <span class="fill">[DAY]</span> at <span class="fill">[TIME]</span> or <span class="fill">[DAY]</span> at <span class="fill">[TIME]</span> — 20 minutes, no pitch, I'll tell you straight if I'm not the right fit. Which works?</p>
+  </div>
+  <div class="rule"><b>Two specific times, not a link.</b> A calendar link asks them to do work and decide alone. Two times asks them to pick. Send the link only after they choose one.</div>
+
+  <h3>Step 4 &mdash; Lock it in</h3>
+  <div class="script">
+    <div class="lbl">After they pick</div>
+    <p>Perfect. Here's the link to lock it in: <span class="fill">[BOOKING LINK]</span></p>
+    <p>Takes 30 seconds. Use the phone number you actually answer — I'll call that one.</p>
+  </div>
+
+  <h4>If they book</h4>
+  <div class="script">
+    <div class="lbl">Immediately</div>
+    <p>You're in for <span class="fill">[DAY, TIME]</span> 🙌</p>
+    <p>One thing before we talk: have a think about what you'd want to be different in 90 days. Doesn't need to be a number — just what you'd notice. That's where we'll start.</p>
+    <p>Anything comes up, message me here. Don't just no-show, I'd rather move it.</p>
+  </div>
+  <p class="nb">That last line is worth real money. It gives permission to reschedule, which converts a silent no-show into a kept appointment on another day.</p>
+
+  <h3>The branches</h3>
+
+  <h4>"How much is it?" &mdash; before the call</h4>
+  <div class="script">
+    <div class="lbl">Answer, don't dodge</div>
+    <p>Depends what you need — it runs between <span class="fill">[LOW]</span> and <span class="fill">[HIGH]</span> depending on how much support you want.</p>
+    <p>I won't quote you properly without knowing your situation, which is what the 20 minutes is for. If it's miles outside your budget I'll say so on the call rather than waste your time.</p>
+  </div>
+  <p class="nb">Refusing to give a range reads as evasive and kills the thread. A range plus a reason keeps it alive.</p>
+
+  <h4>No reply after your first question</h4>
+  <div class="script">
+    <div class="lbl">+4 hours</div>
+    <p>No rush — still want me to take a look at this?</p>
+  </div>
+  <div class="script">
+    <div class="lbl">+1 day</div>
+    <p>Hey <span class="fill">[FIRST NAME]</span>, didn't want to leave you hanging. Want me to send over what I'd do in your situation, or leave it for now?</p>
+  </div>
+  <div class="script">
+    <div class="lbl">+3 days, then stop</div>
+    <p>All good if the timing's off — I'll leave it here. If it comes back round, just message me. 👍</p>
+  </div>
+  <p class="nb">Three follow-ups, then stop. A fourth costs you more in goodwill than it recovers in bookings.</p>
+
+  <h4>"I need to think about it"</h4>
+  <div class="script">
+    <div class="lbl">Reply</div>
+    <p>Course. What's the bit you're unsure about — whether it'd work for you, or the money?</p>
+  </div>
+  <p class="nb">Never argue. Name the two real options and let them tell you which. You cannot handle an objection you haven't identified.</p>
+
+  <h4>Not a fit &mdash; the exit</h4>
+  <div class="script">
+    <div class="lbl">Close it warmly</div>
+    <p>Being straight with you — at <span class="fill">[THEIR CONSTRAINT]</span> I don't think I'd be able to get you a result worth what I charge, so I'd rather not take your money.</p>
+    <p>What I'd do in your position: <span class="fill">[ONE GENUINELY USEFUL THING]</span>.</p>
+    <p>If things change, message me.</p>
+  </div>
+  <p class="nb">These people refer. Turning someone down well is marketing.</p>
+
+  <div class="box">
+    <div class="lbl">Three things that break DM conversion</div>
+    <p><strong>Walls of text.</strong> One idea per message. If it needs scrolling, it needs splitting.</p>
+    <p><strong>Pitching before qualifying.</strong> Three questions, then the ask. Never the other way round.</p>
+    <p><strong>Leading with the link.</strong> The link goes out after they pick a time, never before.</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Eight</div>
+    <h2>Booking page and calendar</h2>
+    <p class="lede">Most coaches lose a third of their booked calls to settings they have never looked at.</p>
+  </div>
+
+  <h3>Calendar settings</h3>
+  <table class="set">
+    <tr><td>Booking window</td><td>Next 3 days only</td></tr>
+    <tr><td>Minimum notice</td><td>2 hours</td></tr>
+    <tr><td>Slot length</td><td>30 minutes</td></tr>
+    <tr><td>Buffer after</td><td>15 minutes</td></tr>
+    <tr><td>Max per day</td><td>4</td></tr>
+    <tr><td>Phone number</td><td>Required field</td></tr>
+    <tr><td>Time zone</td><td>Auto-detect from visitor</td></tr>
+    <tr><td>Reschedule link</td><td>On</td></tr>
+    <tr><td>Cancel link</td><td>Off</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">Why three days, not three weeks</div>
+    <p>Show rate falls roughly with every day between booking and call. A call booked for next Thursday is a call they have already half forgotten.</p>
+    <p>A short window feels busy, which is also true — you are only taking four a day.</p>
+  </div>
+
+  <div class="rule"><b>Reschedule on, cancel off.</b> Someone who can't make it will either move it or vanish. Make moving it the easy option and you keep the appointment instead of losing the lead.</div>
+
+  <h3>What the booking page must say</h3>
+  <ul class="tight">
+    <li><strong>What actually happens on the call</strong> — in one line, plainly</li>
+    <li><strong>How long</strong> — and keep to it</li>
+    <li><strong>Who you are</strong> — one photo, one sentence of credibility</li>
+    <li><strong>One testimonial</strong> — ideally the answer to interview question 4</li>
+    <li><strong>What it is not</strong> — "this isn't a hard sell" if that's true</li>
+  </ul>
+  <div class="script">
+    <div class="lbl">Page copy you can lift</div>
+    <p><strong>A 20-minute call about your situation.</strong></p>
+    <p>I'll ask what you've tried, what's getting in the way, and what you want to be different in 90 days. Then I'll tell you what I'd do — and whether I'm the right person to do it with you.</p>
+    <p>No presentation, no pressure. If it's not a fit I'll say so and point you somewhere better.</p>
+    <p class="nb">Use the phone number you actually answer. I'll call that one.</p>
+  </div>
+
+  <h3>The confirmation page</h3>
+  <p>Don't waste it on "thanks, you're booked." Give them one job.</p>
+  <div class="script">
+    <div class="lbl">Confirmation page copy</div>
+    <p><strong>You're booked for <span class="fill">[DAY, TIME]</span>.</strong></p>
+    <p>Check your phone — I've just sent a text. Reply <strong>Y</strong> to it so I know you've got it.</p>
+    <p>Before we talk, have a think about one thing: what would you want to be different in 90 days? Not a number — just what you'd notice day to day.</p>
+  </div>
+  <p class="nb">That reply-Y instruction is the start of the show-up system, and it is the highest-leverage sentence on the page.</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Nine</div>
+    <h2>The show-up system</h2>
+    <p class="lede">The cheapest money in the whole funnel. Going from 50% to 75% show rate cuts your cost per <em>held</em> call by a third and costs you nothing in ad spend.</p>
+  </div>
+
+  <div class="kpi">
+    <div><div class="k">50%</div><div class="v">No system</div></div>
+    <div><div class="k">65%</div><div class="v">Reminders only</div></div>
+    <div><div class="k">75&ndash;85%</div><div class="v">Full system below</div></div>
+  </div>
+
+  <h3>Seven touches</h3>
+  <table>
+    <tr><th>When</th><th>Channel</th><th>Job</th></tr>
+    <tr><td>Within 60 seconds</td><td>SMS</td><td>Get a reply out of them</td></tr>
+    <tr><td>Within 5 minutes</td><td>Email</td><td>Calendar file and the detail</td></tr>
+    <tr><td>Same day</td><td>DM</td><td>A human line from you</td></tr>
+    <tr><td>Day before, 6pm</td><td>SMS</td><td>Confirm it's still on</td></tr>
+    <tr><td>1 hour before</td><td>SMS</td><td>Prime them</td></tr>
+    <tr><td>5 minutes before</td><td>SMS</td><td>Remove the last excuse</td></tr>
+    <tr><td>8 minutes after a no-show</td><td>Call, then SMS</td><td>Recover the appointment</td></tr>
+  </table>
+
+  <h3>The copy</h3>
+
+  <div class="script">
+    <div class="lbl">1 &mdash; SMS, within 60 seconds</div>
+    <p>Hey <span class="fill">[FIRST NAME]</span>, it's <span class="fill">[YOUR NAME]</span>. You're booked for <span class="fill">[DAY]</span> at <span class="fill">[TIME]</span> — I'll call this number.</p>
+    <p>Reply <strong>Y</strong> so I know you've got this 👍</p>
+  </div>
+  <div class="box">
+    <div class="lbl">Why the reply matters more than the reminder</div>
+    <p>Someone who has typed one character back has made a small commitment to a person. That single reply is the biggest step up in show rate of anything in this section.</p>
+    <p>If they don't reply within two hours, send: <em>"Just checking this number's right for <span class="fill">[DAY]</span>?"</em> A non-reply is your earliest warning of a no-show — chase it now, not on the day.</p>
+  </div>
+
+  <div class="script">
+    <div class="lbl">2 &mdash; Email, within 5 minutes</div>
+    <p><strong>Subject:</strong> Your call &mdash; <span class="fill">[DAY]</span> at <span class="fill">[TIME]</span></p>
+    <p>Hi <span class="fill">[FIRST NAME]</span>,</p>
+    <p>Booked in for <span class="fill">[DAY, DATE]</span> at <span class="fill">[TIME]</span>. Calendar invite attached. I'll call <span class="fill">[THEIR NUMBER]</span>.</p>
+    <p>It's 20 minutes. I'll ask what you've tried, what's in the way, and what you want different in 90 days — then tell you what I'd do and whether I'm the right fit.</p>
+    <p>One thing to think about: what would you notice day to day if this were sorted? That's where we'll start.</p>
+    <p>Can't make it, use this to move it: <span class="fill">[RESCHEDULE LINK]</span> — just don't leave me hanging.</p>
+    <p><span class="fill">[YOUR NAME]</span></p>
+  </div>
+
+  <div class="script">
+    <div class="lbl">3 &mdash; DM, same day</div>
+    <p>Just saw you booked for <span class="fill">[DAY]</span> — nice one. Looking forward to it.</p>
+    <p>Anything you specifically want me to cover, send it over beforehand and I'll come prepared.</p>
+  </div>
+
+  <div class="script">
+    <div class="lbl">4 &mdash; SMS, day before at 6pm</div>
+    <p>Hey <span class="fill">[FIRST NAME]</span> — still good for <span class="fill">[TIME]</span> tomorrow?</p>
+    <p>If something's come up just say and we'll move it, no problem.</p>
+  </div>
+  <p class="nb">Offering the reschedule is counter-intuitive and it raises net held calls. You trade a handful of moved calls for far fewer silent no-shows.</p>
+
+  <div class="script">
+    <div class="lbl">5 &mdash; SMS, 1 hour before</div>
+    <p>Speaking in an hour <span class="fill">[FIRST NAME]</span>. Have a think on that question — what would be different in 90 days?</p>
+  </div>
+
+  <div class="script">
+    <div class="lbl">6 &mdash; SMS, 5 minutes before</div>
+    <p>Calling you in 5 👍 Grab somewhere you can talk for 20.</p>
+  </div>
+
+  <div class="script">
+    <div class="lbl">7 &mdash; No-show recovery</div>
+    <p><strong>At +8 min, call again.</strong> A third of no-shows answer the second call.</p>
+    <p><strong>Then SMS:</strong> Tried you just now — guessing something came up. Want to grab <span class="fill">[TOMORROW, TIME]</span> instead? <span class="fill">[RESCHEDULE LINK]</span></p>
+    <p><strong>Next day:</strong> Still worth a conversation, <span class="fill">[FIRST NAME]</span>? Happy to work around you — just send a day that suits.</p>
+    <p><strong>+3 days, last one:</strong> I'll stop chasing 🙂 If you want to pick it up, message me any time. Either way, good luck with it.</p>
+  </div>
+
+  <h3>The pre-call question</h3>
+  <p>Notice it appears five times: on the confirmation page, in the email, in the DM, an hour before, and as the opening of the call itself.</p>
+  <p>It does two jobs. It gives them a reason to show that isn't about you, and it means they arrive having already pictured the outcome — which makes the call shorter and the close easier.</p>
+  <div class="rule"><b>Never ask for homework that takes effort.</b> A form to fill in or a food diary lowers show rate. One question they can answer in the shower raises it.</div>
+
+  <ul class="chk">
+    <li>SMS fires within 60 seconds of booking</li>
+    <li>It asks for a one-character reply</li>
+    <li>Non-repliers chased within 2 hours</li>
+    <li>Day-before SMS offers the reschedule</li>
+    <li>5-minute warning sends</li>
+    <li>Second call at +8 minutes, not just a text</li>
+    <li>Pre-call question appears in all five places</li>
+    <li>Cancel link disabled, reschedule link live</li>
+  </ul>
+</section>
+
+<!-- ============ 10 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Ten</div>
+    <h2>Optimization</h2>
+    <p class="lede">What to change, when, and &mdash; mostly &mdash; when to leave it alone.</p>
+  </div>
+
+  <div class="rule"><b>The first rule:</b> change nothing for 72 hours or 50 conversations, whichever comes later. Every edit restarts the learning phase. Most accounts are ruined by their owner on day two.</div>
+
+  <h3>Diagnose by symptom</h3>
+  <table>
+    <tr><th>What you see</th><th>What it means</th><th>What to do</th></tr>
+    <tr><td>Click-through under 1%</td><td>The hook isn't landing</td><td>Three new first lines on the same video</td></tr>
+    <tr><td>Click-through fine, no conversations</td><td>Ad and offer don't match</td><td>Rewrite the ad to match what you actually sell</td></tr>
+    <tr><td>Conversations start, nobody replies</td><td>Auto-reply is doing the wrong job</td><td>Open with a question, not an acknowledgement</td></tr>
+    <tr><td>Conversations don't become calls</td><td>Qualifying or the transition</td><td>Two specific times, never a bare link</td></tr>
+    <tr><td>Calls booked, nobody shows</td><td>No show-up system</td><td>Section 9, all seven touches</td></tr>
+    <tr><td>They show, nobody buys</td><td>Price, or the wrong people</td><td>Tighten qualifying before touching price</td></tr>
+    <tr><td>Cost per conversation climbing</td><td>Creative fatigue</td><td>New creative. Frequency above 2.5 confirms it</td></tr>
+    <tr><td>CPM spiked overnight</td><td>Auction, seasonal, or a policy flag</td><td>Check account quality, then wait 48h</td></tr>
+    <tr><td>Spend won't leave the ad set</td><td>Audience too narrow or budget too low</td><td>Empty the interests, widen the location</td></tr>
+    <tr><td>One ad eating everything</td><td>Working as designed</td><td>Leave it. Build variations of the winner</td></tr>
+  </table>
+
+  <h3>When to scale</h3>
+  <p>All three must be true:</p>
+  <ol class="tight">
+    <li>Cost per booked call is under your ceiling from Section 1</li>
+    <li>At least 20 booked calls of data</li>
+    <li>Show rate above 60%</li>
+  </ol>
+  <div class="script">
+    <div class="lbl">How to scale</div>
+    <p>Raise the daily budget <strong>20&ndash;30%</strong>, then wait <strong>4 days</strong>. If cost per call holds, raise again.</p>
+    <p>Doubling the budget overnight resets learning and usually costs you a week.</p>
+  </div>
+
+  <h3>When to kill</h3>
+  <table>
+    <tr><th>Kill</th><th>When</th></tr>
+    <tr><td>An ad</td><td>Spent 2&times; your target cost per conversation with none</td></tr>
+    <tr><td>An ad set</td><td>Spent 3&times; your target cost per booked call with none</td></tr>
+    <tr><td>The whole test</td><td>$600 spent, no booked call, and Sections 3, 7 and 9 all verified</td></tr>
+  </table>
+  <div class="box">
+    <div class="lbl">The honest read at $600</div>
+    <p>Six hundred dollars with tracking verified, DMs answered inside five minutes and the reminder system live, and still no booked call, is not an ads problem. It is an offer problem.</p>
+    <p>Go back to Section 1. Either your ceiling was never high enough, or what you are selling isn't what this audience wants to buy. More budget will not fix either, and will cost you another $600 to confirm.</p>
+  </div>
+
+  <h3>The creative calendar</h3>
+  <p>Creative volume is what decides whether you can ever scale past a few hundred a day. Build the habit now, at $20.</p>
+  <table>
+    <tr><th>Daily spend</th><th>New creatives per month</th></tr>
+    <tr><td>$20</td><td class="n">4&ndash;6</td></tr>
+    <tr><td>$100</td><td class="n">10&ndash;15</td></tr>
+    <tr><td>$300</td><td class="n">30&ndash;50</td></tr>
+  </table>
+  <p class="nb">Three new hooks on an existing winner counts as three creatives. That is the cheapest and most reliable way to hit these numbers.</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Eleven</div>
+    <h2>The weekly scorecard</h2>
+    <p class="lede">Four numbers, once a week, same day. Everything else on the dashboard is there to distract you.</p>
+  </div>
+
+  <table>
+    <tr><th>Number</th><th>How to get it</th><th>Aim for</th></tr>
+    <tr><td>Cost per conversation</td><td>Spend &divide; conversations started</td><td>$4&ndash;12</td></tr>
+    <tr><td>Conversation to booked</td><td>Calls booked &divide; conversations</td><td>15&ndash;30%</td></tr>
+    <tr><td>Show rate</td><td>Calls held &divide; calls booked</td><td>70%+</td></tr>
+    <tr><td>Close rate</td><td>Clients &divide; calls held</td><td>25%+</td></tr>
+  </table>
+
+  <div class="formula">Cost per booked call = Spend &divide; Calls booked</div>
+  <p>That one number, against your ceiling from Section 1, is the entire scoreboard. Under your ceiling, scale. Over it, the four numbers above tell you which stage is broken.</p>
+
+  <h3>Fill this in every week</h3>
+  <table class="set">
+    <tr><td>Week ending</td><td>____________</td></tr>
+    <tr><td>Spend</td><td>$________</td></tr>
+    <tr><td>Conversations started</td><td>________</td></tr>
+    <tr><td>Calls booked</td><td>________</td></tr>
+    <tr><td>Calls held</td><td>________</td></tr>
+    <tr><td>Clients signed</td><td>________</td></tr>
+    <tr><td>Cost per booked call</td><td>$________</td></tr>
+    <tr><td>Your ceiling</td><td>$________</td></tr>
+    <tr><td>Verdict</td><td>Scale / Fix / Stop</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">Ignore these, genuinely</div>
+    <p><strong>Impressions, reach, CTR, CPC, engagement, video views, follower growth.</strong></p>
+    <p>None of them pay you. They are diagnostic at best — CTR tells you something about a hook when you already know conversations are expensive — and the rest of the time they are a way to feel busy while the only number that matters goes unexamined.</p>
+    <p>A campaign with a 4% click-through and no booked calls is a failing campaign.</p>
+  </div>
+
+  <div class="rule"><b>Same day, every week, 15 minutes.</b> Checking daily makes you tamper; checking monthly means you burn three weeks on a broken funnel. Weekly is the rhythm that matches how fast the data actually arrives.</div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section>
+  <div class="sechead">
+    <div class="secnum">Section Twelve</div>
+    <h2>Troubleshooting</h2>
+    <p class="lede">The twenty things that break, and what to do about each.</p>
+  </div>
+
+  <h4>Account and policy</h4>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>Ad rejected, health policy</td><td>Remove any reference to the reader's body or weight. Talk about your clients and your work instead (Section 4)</td></tr>
+    <tr><td>Ad account restricted</td><td>Request review once. Don't create a second account &mdash; that compounds it. Meanwhile check 2FA and payment methods</td></tr>
+    <tr><td>Page flagged</td><td>Remove before/after images from recent posts, then request review</td></tr>
+    <tr><td>Payment failed, ads off</td><td>Add the backup card. This is why you added two</td></tr>
+    <tr><td>Can't verify domain</td><td>DNS TXT can take 72 hours. If it won't take, use the HTML file upload method instead</td></tr>
+  </table>
+
+  <h4>Tracking</h4>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>Pixel not firing</td><td>Check it's on every page including the confirmation page. Pixel Helper tells you where it's missing</td></tr>
+    <tr><td>Events show Browser only</td><td>CAPI isn't connected. Turn on the native integration in your booking tool</td></tr>
+    <tr><td>Conversions counted twice</td><td>Add a deduplication event ID, or you have the pixel installed twice</td></tr>
+    <tr><td>Return column shows nothing</td><td>You're sending events without a value. Section 3</td></tr>
+    <tr><td>Events Manager shows nothing at all</td><td>Run the test transaction in a private window. Ad blockers hide your own events from you</td></tr>
+  </table>
+
+  <h4>Delivery</h4>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>Zero spend after 24 hours</td><td>Audience too small or ads still in review. Empty the interests, widen the location</td></tr>
+    <tr><td>Stuck in learning phase</td><td>You're editing too often. 50 conversions a week gets you out &mdash; raise budget or stop touching it</td></tr>
+    <tr><td>CPM doubled</td><td>Check account quality first. If clean, wait 48 hours before reacting</td></tr>
+    <tr><td>Frequency above 3</td><td>Audience exhausted. New creative, or widen the location</td></tr>
+    <tr><td>Spend all on one ad</td><td>Normal. That's the algorithm finding the winner</td></tr>
+  </table>
+
+  <h4>Conversion</h4>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>Conversations start, nobody replies</td><td>Your auto-reply isn't asking a question. Section 7, Step 1</td></tr>
+    <tr><td>Good chats, no bookings</td><td>You're sending a link instead of offering two specific times</td></tr>
+    <tr><td>Bookings, no shows</td><td>Section 9. Start with the 60-second SMS asking for a reply</td></tr>
+    <tr><td>Everyone asks the price immediately</td><td>Your ad promised a price. Promise a conversation instead</td></tr>
+    <tr><td>Shows but nobody buys</td><td>Qualify harder in the DM before you book. Volume of calls isn't the goal</td></tr>
+  </table>
+
+  <div class="box">
+    <div class="lbl">If you're stuck and nothing above fits</div>
+    <p>Work the funnel backwards, not forwards. Start at the last stage that works and look at the one immediately after it.</p>
+    <p>Almost every "ads don't work for me" turns out to be one specific stage: no tracking, a slow DM reply, or no show-up system. In that order of likelihood.</p>
+  </div>
+
+  <div class="end">
+    <p><strong>The Booked Call Engine</strong> &mdash; work sections 1, 3, 7 and 9 before you blame the ads. They are where the money is, and they are the four that almost nobody does properly.</p>
+  </div>
+</section>
+
+</body>
+</html>
