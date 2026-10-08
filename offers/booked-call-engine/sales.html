@@ -92,6 +92,14 @@ ul{margin:0 0 13px; padding-left:20px;} li{margin-bottom:7px;}
 .fun .v{font-family:var(--sans); font-size:19px; font-weight:800; letter-spacing:-.025em;
         min-width:62px; text-align:right;}
 
+
+.shots{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
+@media(min-width:600px){.shots{grid-template-columns:1fr 1fr}.shots .wide{grid-column:1/-1}}
+.shots figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.shots img{width:100%;display:block}
+.shots figcaption{font-family:var(--sans);font-size:13px;color:var(--mute);
+  padding:9px 12px;border-top:1px solid var(--line);background:var(--bg2)}
+.shots figcaption b{color:var(--ink);font-weight:800;font-size:14px}
 .cmp{display:grid; grid-template-columns:1fr; gap:13px; margin:16px 0;}
 @media(min-width:620px){.cmp{grid-template-columns:1fr 1fr;}}
 .cmp .c{border:1px solid var(--line); border-radius:11px; padding:18px; background:var(--bg2);}
@@ -194,6 +202,22 @@ footer a{color:var(--mute);}
       <div class="row"><span class="lbl">Clients</span><span class="v">18</span></div>
     </div>
     <p class="mute">Every rate between every step. Most coaches can't name one of these for their own business &mdash; which is exactly why they can't tell which part is broken.</p>
+
+    <h3 style="margin-top:28px">Straight from Ads Manager</h3>
+    <p class="mute">Five ad sets. Cost per <em>Website Schedule</em> is a booked call.</p>
+
+    <div class="shots">
+      <figure><img src="img/proof/p1-644.png" alt="Ads Manager: 2 website schedules at $6.44 each, $12.88 spent" loading="lazy"><figcaption><b>$6.44</b> per booked call</figcaption></figure>
+      <figure><img src="img/proof/p2-1758.jpg" alt="Ads Manager: 2 website schedules at $17.58 each, $35.15 spent" loading="lazy"><figcaption><b>$17.58</b> per booked call</figcaption></figure>
+      <figure><img src="img/proof/p3-4457.png" alt="Ads Manager: 4 website schedules at $44.57 each, $178.26 spent" loading="lazy"><figcaption><b>$44.57</b> per booked call</figcaption></figure>
+      <figure><img src="img/proof/p4-5625.jpg" alt="Ads Manager: website schedules at $56.25 each and leads at $9.69" loading="lazy"><figcaption><b>$56.25</b> per call &middot; <b>$9.69</b> per lead</figcaption></figure>
+      <figure class="wide"><img src="img/proof/p5-10065.jpg" alt="Ads Manager: website schedules at $100.65 each across $1,409.12 spent" loading="lazy"><figcaption><b>$100.65</b> per booked call across $1,409 of spend</figcaption></figure>
+    </div>
+
+    <div class="quote">
+      <p><strong>Across those five: $1,804 spent, 25 calls booked — $72 each on average.</strong> The cheap ones are small samples and the $100 one is the most reliable, which is exactly why the guide teaches you to judge on blended cost rather than on your best screenshot.</p>
+    </div>
+
   </div>
 </section>
 
