@@ -93,6 +93,16 @@ ul{margin:0 0 13px; padding-left:20px;} li{margin-bottom:7px;}
         min-width:62px; text-align:right;}
 
 
+
+.bio{display:flex;gap:16px;align-items:flex-start}
+.bio img,.bio .ph{width:104px;height:104px;min-width:104px;border-radius:14px;object-fit:cover;
+  object-position:center top;background:var(--bg2);border:1px solid var(--line)}
+.bio .ph{display:flex;align-items:center;justify-content:center;font-family:var(--sans);
+  font-weight:800;font-size:30px;color:var(--mute);letter-spacing:-.02em}
+.bio h3{margin:0 0 7px;font-size:17px}
+.bio p{margin:0 0 9px;font-size:16.5px}
+.bio p:last-child{margin:0}
+@media(max-width:430px){.bio{gap:14px}.bio img,.bio .ph{width:84px;height:84px;min-width:84px}}
 .shots{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
 @media(min-width:600px){.shots{grid-template-columns:1fr 1fr}.shots .wide{grid-column:1/-1}}
 .shots figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
@@ -298,6 +308,21 @@ footer a{color:var(--mute);}
       </ul>
       <a class="btn" id="p_btn" href="https://whop.com/sales-ascent/the-booked-call-engine/">Get it &mdash; $197</a>
       <p class="sub" id="p_note" style="margin-top:11px">Apple Pay, Google Pay or card</p>
+    </div>
+  </div>
+</section>
+
+<section id="whois">
+  <div class="wrap">
+    <div class="bio">
+      <img src="img/brent.jpg" alt="Brent Chabassol" id="bioimg"
+           onerror="this.style.display='none';document.getElementById('bioph').style.display='flex'">
+      <div class="ph" id="bioph" style="display:none" aria-hidden="true">BC</div>
+      <div class="bt">
+        <h3>Who you'd be on the call with</h3>
+        <p>I'm Brent. I run paid acquisition for coaching businesses, and I built this inside my own &mdash; $3k a month to $48k in four months, then again across the accounts we manage.</p>
+        <p class="mute">The hour isn't a consultation. Bring your ad account and we build the thing, together, while you watch.</p>
+      </div>
     </div>
   </div>
 </section>
