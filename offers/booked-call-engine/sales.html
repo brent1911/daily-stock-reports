@@ -7,6 +7,28 @@
 <meta name="description" content="The exact strategy we used to go from $3k/mo to $48k/mo. A 48-page build guide for online fitness coaches: offer, both funnels, scripts, settings, follow-up.">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
 <meta name="theme-color" content="#101217" media="(prefers-color-scheme:dark)">
+<!-- Meta pixel -->
+<script>
+var META_PIXEL_ID = "YOUR_PIXEL_ID";
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+if (META_PIXEL_ID.indexOf("YOUR_") !== 0) {
+  fbq('init', META_PIXEL_ID);
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent', {
+    content_name: 'The Booked Call Engine',
+    content_type: 'product',
+    content_ids: ['bce-guide'],
+    value: 197.00,
+    currency: 'USD'
+  });
+}
+</script>
+<noscript><img height="1" width="1" style="display:none"
+ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1" alt=""></noscript>
 <style>
 :root{
   --ink:#16181d; --mid:#434a59; --mute:#6b7280; --line:#e4e7ec;
@@ -321,7 +343,7 @@ footer a{color:var(--mute);}
       <p><strong>The one-to-one hour.</strong> Included in the $896 bundle, or $699 on its own. Refundable in full if cancelled 24+ hours before the booked time; non-refundable once the call has taken place, as the time can't be recovered. If a bundle is refunded after the hour is delivered, the refund covers the guide portion only. Where a payment plan is used, refunds are net of instalments already taken and remaining instalments are cancelled.</p>
       <p><strong>Earnings disclaimer.</strong> Figures described are our own results and are not typical. This is not a guarantee of income or any particular result. You receive a method, settings and scripts; what you achieve depends on your offer, market, ad spend and work. Advertising costs vary and your ad budget is your own responsibility.</p>
       <p><strong>Not affiliated with Meta.</strong> This site is not part of Facebook or Meta Platforms, Inc., and is not endorsed by Meta in any way. FACEBOOK, INSTAGRAM and META are trademarks of Meta Platforms, Inc.</p>
-      <p><a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="mailto:YOUR_EMAIL">Contact</a></p>
+      <p><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="mailto:YOUR_EMAIL">Contact</a></p>
       <p>&copy; <span id="yr">2026</span> Brent Chabassol.</p>
     </div>
   </div>
@@ -457,6 +479,31 @@ var GHL_WEBHOOK = "YOUR_GHL_INBOUND_WEBHOOK_URL";
   });
 
   show("guide");
+})();
+</script>
+<script>
+(function () {
+  function fire(ev, data) { if (window.fbq && META_PIXEL_ID.indexOf("YOUR_") !== 0) fbq('track', ev, data); }
+
+  // checkout clicks -> InitiateCheckout, with the right product and value
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href*="whop.com"]');
+    if (!a) return;
+    var bundle = a.href.indexOf('1-1-call') > -1;
+    fire('InitiateCheckout', {
+      content_name: bundle ? 'Engine + 1:1 Hour' : 'The Booked Call Engine',
+      content_ids: [bundle ? 'bce-bundle' : 'bce-guide'],
+      content_type: 'product',
+      value: bundle ? 896.00 : 197.00,
+      currency: 'USD'
+    });
+  }, true);
+
+  // opt-in -> Lead
+  var f = document.getElementById('leadForm');
+  if (f) f.addEventListener('submit', function () {
+    fire('Lead', { content_name: 'Section 1 opt-in', value: 0.00, currency: 'USD' });
+  });
 })();
 </script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
