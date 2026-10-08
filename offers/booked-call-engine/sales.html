@@ -118,6 +118,21 @@ footer a{color:var(--mute);}
 .bar .wrap{display:flex; align-items:center; gap:13px;}
 .bar .p{font-family:var(--sans); font-weight:800; font-size:18px; white-space:nowrap;}
 .bar .p s{font-weight:400; font-size:14px; color:var(--mute); margin-right:5px;}
+
+#leadForm{margin-top:16px}
+#leadForm input{width:100%;font-family:var(--sans);font-size:16px;padding:15px 16px;
+  border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);
+  margin-bottom:10px;min-height:54px}
+#leadForm input:focus{outline:none;border-color:var(--acc)}
+#leadForm input.bad{border-color:#c0392b}
+#leadForm button{margin-top:4px}
+#leadForm button[disabled]{opacity:.6}
+.formmsg{font-family:var(--sans);font-size:14.5px;margin:11px 0 0;min-height:1px}
+.formmsg.ok{color:var(--ok);font-weight:600}
+.formmsg.err{color:#c0392b}
+.done{background:var(--bg3);border-left:3px solid var(--ok);padding:16px 18px;
+  border-radius:0 8px 8px 0;font-size:16.5px}
+.done p:last-child{margin-bottom:0}
 .bar .btn{width:auto; flex:1; padding:14px 18px; font-size:16px; min-height:50px;}
 </style>
 </head>
@@ -265,6 +280,21 @@ footer a{color:var(--mute);}
   </div>
 </section>
 
+<section id="free">
+  <div class="wrap">
+    <h2>Not ready? Take Section 1 free.</h2>
+    <p>Build the offer first &mdash; the eight fill-in parts that end in one sentence you'll use in every ad and every sales call. It's the section everything else depends on, and it's genuinely useful on its own.</p>
+
+    <form id="leadForm" novalidate>
+      <input type="text" id="lf_name" name="firstName" placeholder="First name" autocomplete="given-name" required>
+      <input type="email" id="lf_email" name="email" placeholder="Email" autocomplete="email" inputmode="email" required>
+      <button class="btn" type="submit" id="lf_btn">Send me Section 1</button>
+      <p class="formmsg" id="lf_msg" role="status" aria-live="polite"></p>
+      <p class="mute" style="margin-top:10px;font-size:13px">No spam. One email with the section, then a few on making it work. Leave any time.</p>
+    </form>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <h2>Questions</h2>
@@ -301,6 +331,64 @@ footer a{color:var(--mute);}
     <a class="btn" href="https://whop.com/sales-ascent/the-booked-call-engine/">Get it</a>
   </div>
 </div>
+<script>
+// Replace with your GoHighLevel inbound webhook URL (Workflows -> new workflow -> Inbound Webhook trigger)
+var GHL_WEBHOOK = "YOUR_GHL_INBOUND_WEBHOOK_URL";
+
+(function () {
+  var f = document.getElementById("leadForm");
+  if (!f) return;
+  var nameEl = document.getElementById("lf_name"),
+      mailEl = document.getElementById("lf_email"),
+      btn    = document.getElementById("lf_btn"),
+      msg    = document.getElementById("lf_msg");
+
+  function qp(k) {
+    return new URLSearchParams(location.search).get(k) || "";
+  }
+  function say(t, cls) { msg.textContent = t; msg.className = "formmsg " + (cls || ""); }
+
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    nameEl.classList.remove("bad"); mailEl.classList.remove("bad");
+
+    var name = nameEl.value.trim(), mail = mailEl.value.trim();
+    if (!name) { nameEl.classList.add("bad"); nameEl.focus(); return say("What should I call you?", "err"); }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) {
+      mailEl.classList.add("bad"); mailEl.focus(); return say("That email doesn't look right.", "err");
+    }
+    if (GHL_WEBHOOK.indexOf("http") !== 0) return say("Form isn't connected yet.", "err");
+
+    btn.disabled = true; btn.textContent = "Sending...";
+    say("");
+
+    fetch(GHL_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName: name,
+        email: mail,
+        source: "booked-call-engine-sales-page",
+        tag: "bce-section-1",
+        pipeline: "CGGos",
+        page: location.href,
+        utm_source: qp("utm_source"), utm_medium: qp("utm_medium"),
+        utm_campaign: qp("utm_campaign"), utm_content: qp("utm_content"),
+        fbclid: qp("fbclid"),
+        submittedAt: new Date().toISOString()
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      f.innerHTML = '<div class="done"><p><strong>Check your inbox.</strong> Section 1 is on its way to ' +
+        mail.replace(/</g, "&lt;") + '.</p><p>Not there in a few minutes? Look in promotions or spam ' +
+        '&mdash; and reply to it so we land in your inbox next time.</p></div>';
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = "Send me Section 1";
+      say("Something went wrong. Email me instead and I'll send it over.", "err");
+    });
+  });
+})();
+</script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 </body>
 </html>
